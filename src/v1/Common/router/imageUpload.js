@@ -14,7 +14,9 @@ const { __SUCCESS, __SOME_ERROR } = require("../../../utils/variable");
 
 // for multiple images
 router.post("/AddImage", __uploadImage, async (req, res) => {
-  console.log(req.files, "files");
+  // console.log(req.files, "files");
+  console.log("BODY:", req.body);
+  console.log("FILES:", req.files);
   try {
     if (!req.files || !req.files.file || req.files.file.length === 0) {
       return res.json(__requestResponse("400", "No files uploaded"));
@@ -54,6 +56,8 @@ router.post("/AddImage", __uploadImage, async (req, res) => {
 });
 
 router.post("/AddImage_with_limit", __uploadImage, async (req, res) => {
+  console.log(req.files, "files");
+
   try {
     const MAX_FILES = 5;
     const ALLOWED_TYPES = [
