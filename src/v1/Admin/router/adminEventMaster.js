@@ -3,6 +3,8 @@ const router = express.Router();
 
 const tlbEventMaster = require("../../../models/EventMaster");
 const VenueMaster = require("../../../models/VenueMaster");
+const SubVenue = require("../../../models/SubVenueMaster");
+
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const {
   __SUCCESS,
@@ -303,6 +305,90 @@ router.post("/VenueList", async (req, res) => {
     return res.json(__requestResponse("200", __SUCCESS, __deepClone(venues)));
   } catch (error) {
     console.log(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// Sub venue Master
+//  Add multiple SubVenues
+router.post("/SaveSubVenues", async (req, res) => {
+  try {
+    const { data } = req.body; // data: array of subvenue objects
+
+    if (!Array.isArray(data) || data.length === 0)
+      return res.json(__requestResponse("400", "Invalid or empty data"));
+
+    const savedRecords = await SubVenue.insertMany(data);
+
+    await __CreateAuditLog(
+      "sub_venue_master",
+      "SubVenue.Add",
+      null,
+      null,
+      data,
+      null,
+      null,
+      null
+    );
+
+    return res.json(__requestResponse("200", __SUCCESS, savedRecords));
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+//  NOTE:-
+// If we are adding multiple values at once (as an array), we should:
+// Use a separate bulk insert API (insertMany)
+// ❌ Not use the same API as the add/edit single record pattern — because handling both add + edit in bulk complicates error handling,
+//  especially when mixing new and existing _ids.
+
+// Edit SubVenue
+router.post("/EditSubVenue", async (req, res) => {
+  try {
+    const { _id, ...updateData } = req.body;
+
+    if (!_id)
+      return res.json(__requestResponse("400", "SubVenue ID is required"));
+
+    const oldData = await SubVenue.findById(_id);
+    if (!oldData) return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+
+    const updated = await SubVenue.updateOne({ _id }, { $set: updateData });
+
+    await __CreateAuditLog(
+      "sub_venue_master",
+      "SubVenue.Edit",
+      null,
+      oldData,
+      updateData,
+      _id,
+      null,
+      null
+    );
+
+    return res.json(__requestResponse("200", __SUCCESS, updated));
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// List SubVenues by Event
+router.post("/ListSubVenues", async (req, res) => {
+  try {
+    const { Event_Id } = req.body;
+    const filter = Event_Id ? { Event_Id } : {};
+
+    const list = await SubVenue.find(filter)
+      .populate("Event_Id", "EventTitle")
+      .populate("Venue_Id", "City_Exhibition_Centre_Name")
+      .populate("SubVenueTypeId", "lookup_value")
+      .lean();
+
+    return res.json(__requestResponse("200", __SUCCESS, __deepClone(list)));
+  } catch (error) {
+    console.error(error);
     return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
 });
