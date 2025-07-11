@@ -82,7 +82,69 @@ router.post("/SaveEvent", validateSaveEvent, async (req, res) => {
   }
 });
 
+
 router.post("/EventList", async (req, res) => {
+  try {
+    const { type } = req.body; // 'ongoing', 'upcoming', 'past'
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to compare by date
+    let filter = {};
+
+    if (type === "ongoing") {
+      filter = {
+        StartDate: { $lte: today },
+        EndDate: { $gte: today },
+      };
+    } else if (type === "upcoming") {
+      filter = {
+        StartDate: { $gt: today },
+      };
+    } else if (type === "past") {
+      filter = {
+        EndDate: { $lt: today },
+      };
+    }
+
+    const eventList = await tlbEventMaster
+      .find(filter)
+      .populate([
+        {
+          path: "EventTypeId",
+          select: "lookup_value",
+        },
+      ])
+      .sort({ StartDate: -1 })
+      .lean();
+
+    const result = __deepClone(eventList).map((event) => {
+      const eventDate = new Date(event.StartDate);
+      eventDate.setHours(0, 0, 0, 0);
+      const diffTime = eventDate.getTime() - today.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+      let status = "";
+      if (diffDays === 0) status = "Today";
+      else if (diffDays > 0)
+        status = `In ${diffDays} day${diffDays > 1 ? "s" : ""}`;
+      else
+        status = `${Math.abs(diffDays)} day${
+          Math.abs(diffDays) > 1 ? "s" : ""
+        } ago`;
+
+      return {
+        ...event,
+        Status: status,
+      };
+    });
+
+    return res.json(__requestResponse("200", __SUCCESS, result));
+  } catch (error) {
+    console.log(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+router.post("/EventListx", async (req, res) => {
   try {
     const eventList = await tlbEventMaster
       .find({})
