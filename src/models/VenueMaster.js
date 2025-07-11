@@ -9,7 +9,7 @@ const _SchemaDesign = new mongoose.Schema(
     },
     Event_Id: {
       type: mongoose.SchemaTypes.ObjectId,
-      ref: "event_masters",
+      ref: "event_master",
       // Event Type Values - City, Exhibition Centre
     },
     City_Exhibition_Centre_Name: String,
