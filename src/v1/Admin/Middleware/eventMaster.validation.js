@@ -38,6 +38,10 @@ const saveEventSchema = Joi.object({
     "any.required": "Event Catalogue is required",
     "string.empty": "Event Catalogue cannot be empty",
   }),
+  EventVenueType: Joi.string().required().messages({
+    "any.required": "Event Venue Type is required",
+    "string.empty": "Event Venue Type cannot be empty",
+  }),
   Comments: Joi.string().allow("", null).optional(),
 });
 

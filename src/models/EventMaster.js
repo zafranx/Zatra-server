@@ -14,6 +14,7 @@ const _SchemaDesign = new mongoose.Schema(
     Logo: String,
     EventOrganisers: [String],
     EventCatalogue: String,
+    EventVenueType: String,
     Comments: String,
   },
   {

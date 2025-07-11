@@ -23,6 +23,7 @@ router.post("/SaveEvent", validateSaveEvent, async (req, res) => {
       Logo,
       EventOrganisers,
       EventCatalogue,
+      EventVenueType,
       Comments,
     } = req.body;
 
@@ -35,6 +36,7 @@ router.post("/SaveEvent", validateSaveEvent, async (req, res) => {
       Logo,
       EventOrganisers,
       EventCatalogue,
+      EventVenueType,
       Comments,
     };
 
