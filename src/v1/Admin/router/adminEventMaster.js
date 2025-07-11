@@ -158,7 +158,7 @@ router.post("/EventList", async (req, res) => {
   }
 });
 
-router.post("/EventList3", async (req, res) => {
+router.post("/EventListx", async (req, res) => {
   try {
     const { type } = req.body; // 'ongoing', 'upcoming', 'past'
     const today = new Date();
@@ -219,33 +219,12 @@ router.post("/EventList3", async (req, res) => {
   }
 });
 
-router.post("/EventListx", async (req, res) => {
-  try {
-    const eventList = await tlbEventMaster
-      .find({})
-      .populate([
-        {
-          path: "EventTypeId",
-          select: "lookup_value",
-        },
-      ])
-      .sort({ StartDate: -1 })
-      .lean();
-
-    return res.json(
-      __requestResponse("200", __SUCCESS, __deepClone(eventList))
-    );
-  } catch (error) {
-    console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
-  }
-});
-
 // Venue Master API
 router.post("/SaveVenue", validateSaveVenue, async (req, res) => {
   try {
     const {
       Venue_Id,
+      Event_Id,
       VenueTypeId,
       City_Exhibition_Centre_Name,
       Layout_Doc,
@@ -259,6 +238,7 @@ router.post("/SaveVenue", validateSaveVenue, async (req, res) => {
 
     const venueData = {
       VenueTypeId,
+      Event_Id,
       City_Exhibition_Centre_Name,
       Layout_Doc,
       Address_line1,

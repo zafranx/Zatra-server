@@ -65,6 +65,10 @@ const saveVenueSchema = Joi.object({
     "any.required": "Venue Type is required",
     "string.empty": "Venue Type cannot be empty",
   }),
+  Event_Id: Joi.string().required().messages({
+    "any.required": "Event_Id is required",
+    "string.empty": "Event_Id cannot be empty",
+  }),
 
   City_Exhibition_Centre_Name: Joi.string().required().messages({
     "any.required": "City / Exhibition Centre Name is required",
