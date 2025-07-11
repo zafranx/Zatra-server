@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { __requestResponse } = require("../../../utils/constent");
 
 const saveEventSchema = Joi.object({
   event_id: Joi.string().optional(),
@@ -48,11 +49,16 @@ const saveEventSchema = Joi.object({
 const validateSaveEvent = (req, res, next) => {
   const { error } = saveEventSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({
-      status: "400",
-      message: "Validation Error",
-      error: error.details.map((d) => d.message),
-    });
+    // return res.json({
+    //   status: "400",
+    //   message: "Validation Error",
+    //   error: error.details.map((d) => d.message),
+    // });
+    return res.json(
+      __requestResponse("400", "Validation Error", {
+        error: error.details.map((d) => d.message),
+      })
+    );
   }
   next();
 };
@@ -127,11 +133,12 @@ const saveVenueSchema = Joi.object({
 const validateSaveVenue = (req, res, next) => {
   const { error } = saveVenueSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    return res.json({
-      status: "400",
-      message: "Validation Error",
-      error: error.details.map((d) => d.message),
-    });
+    return res.json(__requestResponse("400", "Validation Error", error));
+    // return res.json(
+    //   __requestResponse("400", "Validation Error", {
+    //     error: error.details.map((d) => d.message),
+    //   })
+    // );
   }
   next();
 };
