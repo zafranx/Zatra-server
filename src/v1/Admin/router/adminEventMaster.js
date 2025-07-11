@@ -318,6 +318,39 @@ router.post("/SaveSubVenues", async (req, res) => {
     if (!Array.isArray(data) || data.length === 0)
       return res.json(__requestResponse("400", "Invalid or empty data"));
 
+    // Check duplicates within the request itself
+    const seen = new Set();
+    for (let item of data) {
+      const key = `${item.Event_Id}_${item.Venue_Id}_${item.SubVenueNo}`;
+      if (seen.has(key)) {
+        return res.json(
+          __requestResponse(
+            "400",
+            `Duplicate SubVenueNo '${item.SubVenueNo}' in input`
+          )
+        );
+      }
+      seen.add(key);
+    }
+
+    // Check if any SubVenueNo already exists in DB for the same Event+Venue
+    for (let item of data) {
+      const exists = await SubVenue.findOne({
+        Event_Id: item.Event_Id,
+        Venue_Id: item.Venue_Id,
+        SubVenueNo: item.SubVenueNo,
+      });
+
+      if (exists) {
+        return res.json(
+          __requestResponse(
+            "400",
+            `SubVenueNo '${item.SubVenueNo}' already exists for this event and venue`
+          )
+        );
+      }
+    }
+
     const savedRecords = await SubVenue.insertMany(data);
 
     await __CreateAuditLog(
