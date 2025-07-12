@@ -4,8 +4,7 @@ const LegalEntity = require("../../../models/LegalEntity");
 
 // Legal Entity Middleware
 const saveLegalEntitySchema = Joi.object({
-  _id: Joi.string().optional(), // for edit
-
+  _id: Joi.string().allow("", null).optional(), // for edit
   LegalEntityTypeId: Joi.string().required().messages({
     "any.required": "Legal Entity Type is required",
     "string.empty": "Legal Entity Type cannot be empty",

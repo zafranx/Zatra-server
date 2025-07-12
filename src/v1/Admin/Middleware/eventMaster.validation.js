@@ -2,8 +2,8 @@ const Joi = require("joi");
 const { __requestResponse } = require("../../../utils/constent");
 
 const saveEventSchema = Joi.object({
-  event_id: Joi.string().optional(),
-
+  // event_id: Joi.string().optional(),
+  event_id: Joi.string().allow("", null).optional(),
   EventTypeId: Joi.string().required().messages({
     "any.required": "Event Type is required",
     "string.empty": "Event Type cannot be empty",
@@ -60,7 +60,7 @@ const validateSaveEvent = (req, res, next) => {
 
 // Venue middleware
 const saveVenueSchema = Joi.object({
-  Venue_Id: Joi.string().optional(),
+  Venue_Id: Joi.string().allow("", null).optional(),
 
   VenueTypeId: Joi.string().required().messages({
     "any.required": "Venue Type is required",

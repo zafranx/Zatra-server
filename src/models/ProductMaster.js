@@ -22,7 +22,7 @@ const _SchemaDesign = new mongoose.Schema(
     // OfferPrice: { type: Number },
     ProductImages: [{ type: String }],
     ProductVideos: [{ type: String }],
-    IsActive: { type: Boolean },
+    IsActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
