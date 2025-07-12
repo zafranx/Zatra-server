@@ -5,6 +5,8 @@ const V1 = {
     require("./v1/Admin/router/admin.address"),
     require("./v1/Admin/router/admin.EventMaster"),
     require("./v1/Admin/router/admin.LegalEntity"),
+    require("./v1/Admin/router/admin.brandMaster"),
+    require("./v1/Admin/router/admin.productMaster"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),

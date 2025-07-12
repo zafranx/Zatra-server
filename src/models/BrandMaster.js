@@ -6,12 +6,16 @@ const _SchemaDesign = new mongoose.Schema(
   {
     LegalEntityTypeId: {
       type: mongoose.SchemaTypes.ObjectId,
+      ref: "legal_entity",
+    },
+    BrandTypeId: {
+      type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
-    Name: String,
-    Registration_Number: String,
-    GST: String,
-   
+    BrandName: String,
+    Description: String,
+    Images: String,
+    BrandBroucher: String, //(PDF)
   },
   {
     timestamps: true,

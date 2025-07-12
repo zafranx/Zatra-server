@@ -13,7 +13,7 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "admin_lookups",
     },
-    BrandId: { type: mongoose.Schema.Types.ObjectId, ref: "brands_master" },
+    BrandId: { type: mongoose.Schema.Types.ObjectId, ref: "brand_master" },
     ProductName: String,
     ShortDesc: String,
     LongDesc: String,
