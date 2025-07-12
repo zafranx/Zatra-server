@@ -1,9 +1,10 @@
 const V1 = {
   APP_ROUTE: [],
   ADMIN_ROUTE: [
-    require("./v1/Admin/router/adminlookup"),
-    require("./v1/Admin/router/adminEventMaster"),
-    require("./v1/Admin/router/adminaddress"),
+    require("./v1/Admin/router/admin.lookup"),
+    require("./v1/Admin/router/admin.address"),
+    require("./v1/Admin/router/admin.EventMaster"),
+    require("./v1/Admin/router/admin.LegalEntity"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),
