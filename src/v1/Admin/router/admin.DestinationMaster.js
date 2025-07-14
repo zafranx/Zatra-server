@@ -51,7 +51,11 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       if (!oldRec)
         return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
 
-      await DestinationMaster.updateOne({ _id }, { $set: saveData });
+      //   await DestinationMaster.updateOne({ _id }, { $set: saveData });
+      const updated = await DestinationMaster.updateOne(
+        { _id },
+        { $set: saveData }
+      );
 
       await __CreateAuditLog(
         "destination_master",
@@ -61,7 +65,7 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
         saveData,
         _id
       );
-      return res.json(__requestResponse("200", __SUCCESS, saveData));
+      return res.json(__requestResponse("200", __SUCCESS, updated));
     }
   } catch (error) {
     console.error(error);
