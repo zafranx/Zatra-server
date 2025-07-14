@@ -4,7 +4,19 @@ const ProductInventoryMaster = require("../../../models/ProductInventoryMaster")
 const { default: mongoose } = require("mongoose");
 //  products
 const saveProductSchema = Joi.object({
-  _id: Joi.string().allow("", null).optional(),
+  // _id: Joi.string().allow("", null).optional(),
+  _id: Joi.string()
+    .allow("", null)
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .messages({
+      "any.invalid": "Invalid _id format",
+    }),
 
   LegalEntityId: Joi.string().required().messages({
     "any.required": "Legal Entity is required",
@@ -56,7 +68,19 @@ const validateSaveProduct = (req, res, next) => {
 
 // products variants
 const saveProductVariantSchema = Joi.object({
-  _id: Joi.string().allow("", null).optional(),
+  // _id: Joi.string().allow("", null).optional(),
+  _id: Joi.string()
+    .allow("", null)
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .messages({
+      "any.invalid": "Invalid _id format",
+    }),
 
   ProductId: Joi.string().required().messages({
     "any.required": "Product ID is required",

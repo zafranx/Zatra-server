@@ -12,6 +12,7 @@ const {
   __RECORD_NOT_FOUND,
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
+const { default: mongoose } = require("mongoose");
 
 // Save AssetMaster (Add / Edit) - Asset Master
 router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
@@ -44,6 +45,10 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       VerificationReport,
       IsActive,
     } = req.body;
+    let _id = null;
+    if (rawId && mongoose.Types.ObjectId.isValid(rawId)) {
+      _id = mongoose.Types.ObjectId(rawId);
+    }
 
     const saveData = {
       AssetType,
@@ -72,7 +77,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       IsActive,
     };
 
-    if (!_id) {
+    if (!_id || _id === "" || _id === null) {
       const newRec = await AssetMaster.create(saveData);
       await __CreateAuditLog(
         "asset_master",
