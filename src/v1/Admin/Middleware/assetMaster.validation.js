@@ -1,9 +1,22 @@
 const Joi = require("joi");
 const { __requestResponse } = require("../../../utils/constent");
 const AssetMaster = require("../../../models/AssetMaster");
+const { default: mongoose } = require("mongoose");
 
 const SaveAssetMasterSchema = Joi.object({
-  _id: Joi.string().allow("", null).optional(),
+  //   _id: Joi.string().allow("", null).optional(),
+  _id: Joi.string()
+    .allow("", null)
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .messages({
+      "any.invalid": "Invalid _id format",
+    }),
   CityId: Joi.string().required().messages({
     "any.required": "City is required",
     "string.empty": "City cannot be empty",
@@ -16,11 +29,11 @@ const SaveAssetMasterSchema = Joi.object({
     "any.required": "Asset Type is required",
     "string.empty": "Asset Type cannot be empty",
   }),
-  LegalEntityTypeId: Joi.string().required().messages({
-    "any.required": "Legal Entity Type is required",
-    "string.empty": "Legal Entity Type cannot be empty",
-  }),
-
+  //   LegalEntityTypeId: Joi.string().required().messages({
+  //     "any.required": "Legal Entity Type is required",
+  //     "string.empty": "Legal Entity Type cannot be empty",
+  //   }),
+  LegalEntityTypeId: Joi.string().optional().allow(""),
   Name: Joi.string().required().messages({
     "any.required": "Legal Entity Name is required",
     "string.empty": "Legal Entity Name cannot be empty",

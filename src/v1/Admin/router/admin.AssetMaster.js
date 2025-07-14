@@ -17,7 +17,8 @@ const { __CreateAuditLog } = require("../../../utils/auditlog");
 router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
   try {
     const {
-      _id,
+      //   _id,
+      _id: rawId,
       AssetType,
       CityId,
       DestinationId,
