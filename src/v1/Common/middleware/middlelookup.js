@@ -9,24 +9,24 @@ const LookupParser = (req, res, next) => {
     //to get all those lookup lists
     let dd = req.body.lookupcodes;
     let newCodes = [];
-    if (dd.length === 0) {
-        return res.json(__requestResponse("501", __MISSING_LOOKUPCODES));
+    if (dd?.length === 0) {
+      return res.json(__requestResponse("501", __MISSING_LOOKUPCODES));
     } else {
-        let _codes = dd.split(",");
-        let _emptyFound = false;
-        _codes.forEach((element) => {
-            if (element.trim() === "") {
-                _emptyFound = true;
-            } else {
-                newCodes.push(element);
-            }
-        });
-        if (!_emptyFound) {
-            req.body.CodeList = _codes;
+      let _codes = dd?.split(",");
+      let _emptyFound = false;
+      _codes?.forEach((element) => {
+        if (element.trim() === "") {
+          _emptyFound = true;
         } else {
-            req.body.CodeList = newCodes;
+          newCodes.push(element);
         }
-        next();
+      });
+      if (!_emptyFound) {
+        req.body.CodeList = _codes;
+      } else {
+        req.body.CodeList = newCodes;
+      }
+      next();
     }
 };
 

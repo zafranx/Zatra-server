@@ -23,50 +23,49 @@ const AdminEnvSetting = require("../../../models/AdminEnvSetting");
 router.post("/lookuplist", LookupParser, async (req, res) => {
     const { parent_lookup_id } = req.body;
     var _filters = [];
-    if (req.body.CodeList.length > 0) {
-        req.body.CodeList.forEach(async (element) => {
-            _filters.push(element);
+    if (req.body.CodeList?.length > 0) {
+      req.body.CodeList.forEach(async (element) => {
+        _filters.push(element);
+      });
+      const __parentId = mongoose.Types.ObjectId.isValid(parent_lookup_id)
+        ? mongoose?.Types?.ObjectId(parent_lookup_id)
+        : null;
+      const list = await _lookup
+        .find({
+          lookup_type: { $in: _filters },
+          is_active: true,
+          ...(__parentId && {
+            parent_lookup_id: __parentId,
+          }),
+        })
+        .sort({ sort_order: 1 });
+
+      if (list.length > 0) {
+        const __ImagePathDetails = await AdminEnvSetting.findOne({
+          EnvSettingCode: "IMAGE_PATH",
         });
-        const __parentId = mongoose.Types.ObjectId.isValid(parent_lookup_id)
-            ? mongoose?.Types?.ObjectId(parent_lookup_id)
-            : null;
-        const list = await _lookup
-            .find({
-                lookup_type: { $in: _filters },
-                is_active: true,
-                ...(__parentId && {
-                    parent_lookup_id: __parentId,
-                }),
-            })
-            .sort({ sort_order: 1 });
+        return res.json(
+          __requestResponse(
+            "200",
+            __SUCCESS,
+            __deepClone(list).map((item) => ({
+              ...item,
+              ...(item?.icon && {
+                full_URL:
+                  (process.env.NODE_ENV == "development"
+                    ? process.env.LOCAL_IMAGE_URL
+                    : __ImagePathDetails?.EnvSettingTextValue) + item?.icon,
 
-        if (list.length > 0) {
-            const __ImagePathDetails = await AdminEnvSetting.findOne({
-                EnvSettingCode: "IMAGE_PATH",
-            });
-            return res.json(
-                __requestResponse(
-                    "200",
-                    __SUCCESS,
-                    __deepClone(list).map((item) => ({
-                        ...item,
-                        ...(item?.icon && {
-                            full_URL:
-                                (process.env.NODE_ENV == "development"
-                                    ? process.env.LOCAL_IMAGE_URL
-                                    : __ImagePathDetails?.EnvSettingTextValue) +
-                                item?.icon,
-
-                            base_URL: __ImagePathDetails?.EnvSettingTextValue,
-                        }),
-                    }))
-                )
-            );
-        } else {
-            return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
-        }
-    } else {
+                base_URL: __ImagePathDetails?.EnvSettingTextValue,
+              }),
+            }))
+          )
+        );
+      } else {
         return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
+      }
+    } else {
+      return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
     }
 });
 
