@@ -19,6 +19,8 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
       _id,
       ZatraType,
       ZatraName,
+      Logo,
+      Website,
       StartDate,
       EndDate,
       ZatraOrganisers,
@@ -28,6 +30,8 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
     const saveData = {
       ZatraType,
       ZatraName,
+      Logo,
+      Website,
       StartDate,
       EndDate,
       ZatraOrganisers,

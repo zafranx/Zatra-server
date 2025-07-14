@@ -33,7 +33,8 @@ const saveZatraSchema = Joi.object({
     "any.required": "Zatra Name is required",
     "string.empty": "Zatra Name cannot be empty",
   }),
-
+  Logo: Joi.string().optional().allow(""),
+  Website: Joi.string().optional().allow(""),
   StartDate: Joi.date().required().messages({
     "any.required": "Start Date is required",
     "date.base": "Start Date must be a valid date",

@@ -20,6 +20,8 @@ const _SchemaDesign = new mongoose.Schema(
     ZatraName: String,
     StartDate: Date,
     EndDate: Date,
+    Logo: String,
+    Website: String,
     ZatraOrganisers: String,
     // ⁠Enroute Cities (array)
     CityId: [
