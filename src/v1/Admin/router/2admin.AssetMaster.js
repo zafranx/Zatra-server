@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const LegalEntity = require("../../../models/LegalEntity");
+const LegalEntity = require("../../../models/AssetMaster");
 const {
   validateSaveLegalEntity,
-} = require("../Middleware/legalEntity.validation");
+} = require("../Middleware/2assetMaster.validation");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const {
   __SUCCESS,

@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const { __requestResponse } = require("../../../utils/constent");
-const LegalEntity = require("../../../models/LegalEntity");
+const LegalEntity = require("../../../models/AssetMaster");
+const AssetMaster = require("../../../models/AssetMaster");
 
 // Legal Entity Middleware
 const saveLegalEntitySchema = Joi.object({

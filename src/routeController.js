@@ -4,7 +4,7 @@ const V1 = {
     require("./v1/Admin/router/admin.lookup"),
     require("./v1/Admin/router/admin.address"),
     require("./v1/Admin/router/admin.EventMaster"),
-    require("./v1/Admin/router/admin.LegalEntity"),
+    require("./v1/Admin/router/admin.AssetMaster"),
     require("./v1/Admin/router/admin.brandMaster"),
     require("./v1/Admin/router/admin.productMaster"),
     require("./v1/Admin/router/admin.ZatraMaster"),

@@ -1,0 +1,162 @@
+const express = require("express");
+const router = express.Router();
+
+const AssetMaster = require("../../../models/AssetMaster");
+const {
+  validateSaveAssetMaster,
+} = require("../Middleware/assetMaster.validation");
+const { __requestResponse, __deepClone } = require("../../../utils/constent");
+const {
+  __SUCCESS,
+  __SOME_ERROR,
+  __RECORD_NOT_FOUND,
+} = require("../../../utils/variable");
+const { __CreateAuditLog } = require("../../../utils/auditlog");
+
+// Save AssetMaster (Add / Edit) - Asset Master
+router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
+  try {
+    const {
+      _id,
+      AssetType,
+      CityId,
+      DestinationId,
+      LegalEntityTypeId,
+      Name,
+      Registration_Number,
+      GST,
+      PAN,
+      Registration_Address,
+      Authorised_Representative,
+      Phone,
+      EmailAddress,
+      Website,
+      LinkedIn,
+      Instagram,
+      Facebook,
+      Industry_Sector,
+      Industry_Sub_Sector,
+      Logo,
+      IsVerified,
+      VerifiedBy,
+      VerificationDate,
+      VerificationReport,
+      IsActive,
+    } = req.body;
+
+    const saveData = {
+      AssetType,
+      CityId,
+      DestinationId,
+      LegalEntityTypeId,
+      Name,
+      Registration_Number,
+      GST,
+      PAN,
+      Registration_Address,
+      Authorised_Representative,
+      Phone,
+      EmailAddress,
+      Website,
+      LinkedIn,
+      Instagram,
+      Facebook,
+      Industry_Sector,
+      Industry_Sub_Sector,
+      Logo,
+      IsVerified,
+      VerifiedBy,
+      VerificationDate,
+      VerificationReport,
+      IsActive,
+    };
+
+    if (!_id) {
+      const newRec = await AssetMaster.create(saveData);
+      await __CreateAuditLog(
+        "asset_master",
+        "AssetMaster.Add",
+        null,
+        null,
+        saveData,
+        newRec._id
+      );
+      return res.json(__requestResponse("200", __SUCCESS, newRec));
+    } else {
+      const oldRec = await AssetMaster.findById(_id);
+      if (!oldRec)
+        return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+
+      const updated = await AssetMaster.updateOne({ _id }, { $set: saveData });
+      await __CreateAuditLog(
+        "asset_master",
+        "AssetMaster.Edit",
+        null,
+        oldRec,
+        saveData,
+        _id
+      );
+      return res.json(__requestResponse("200", __SUCCESS, updated));
+    }
+  } catch (error) {
+    console.log(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// AssetList with Pagination + Filter -- Asset Master
+router.post("/AssetList", async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      LegalEntityTypeId,
+      Industry_Sector,
+      Industry_Sub_Sector,
+      CityId,
+      DestinationId,
+      AssetType,
+    } = req.body;
+
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+
+    const filter = {};
+    if (search) {
+      filter.Name = { $regex: search, $options: "i" };
+    }
+    if (LegalEntityTypeId) filter.LegalEntityTypeId = LegalEntityTypeId;
+    if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
+    if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
+    if (CityId) filter.CityId = CityId;
+    if (DestinationId) filter.DestinationId = DestinationId;
+    if (AssetType) filter.AssetType = AssetType;
+
+    const total = await AssetMaster.countDocuments(filter);
+
+    const list = await AssetMaster.find(filter)
+      .populate("CityId", "lookup_value")
+      .populate("DestinationId", "lookup_value")
+      .populate("LegalEntityTypeId", "lookup_value")
+      .populate("Industry_Sector", "lookup_value")
+      .populate("Industry_Sub_Sector", "lookup_value")
+      .sort({ createdAt: -1 })
+      .skip((pageInt - 1) * limitInt)
+      .limit(limitInt)
+      .lean();
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(list),
+        total,
+        page: pageInt,
+        limit: limitInt,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+module.exports = router;
