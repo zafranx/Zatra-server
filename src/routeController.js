@@ -7,6 +7,7 @@ const V1 = {
     require("./v1/Admin/router/admin.LegalEntity"),
     require("./v1/Admin/router/admin.brandMaster"),
     require("./v1/Admin/router/admin.productMaster"),
+    require("./v1/Admin/router/admin.ZatraMaster"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),

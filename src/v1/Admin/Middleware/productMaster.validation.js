@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const { __requestResponse } = require("../../../utils/constent");
 const ProductInventoryMaster = require("../../../models/ProductInventoryMaster");
+const { default: mongoose } = require("mongoose");
 //  products
 const saveProductSchema = Joi.object({
   _id: Joi.string().allow("", null).optional(),
@@ -105,31 +106,35 @@ const validateSaveProductVariant = (req, res, next) => {
   next();
 };
 
+// product inventory validation
 const saveProductInventorySchema = Joi.object({
   // _id: Joi.string().allow("", null).optional(),
   _id: Joi.string()
+    .allow("", null)
+    .optional()
     .custom((value, helpers) => {
       if (value && !mongoose.Types.ObjectId.isValid(value)) {
         return helpers.error("any.invalid");
       }
       return value;
     })
-    .allow("", null)
-    .optional(),
-  // 2nd logic
-  _id: Joi.string()
-    .custom((value, helpers) => {
-      if (!mongoose.Types.ObjectId.isValid(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
-    .required()
     .messages({
-      "any.required": "Product Variant _id is required",
-      "string.empty": "Product Variant _id cannot be empty",
-      "any.invalid": "Invalid Product Variant ID format",
+      "any.invalid": "Invalid ID format",
     }),
+  // 2nd logic
+  // _id: Joi.string()
+  //   .custom((value, helpers) => {
+  //     if (!mongoose.Types.ObjectId.isValid(value)) {
+  //       return helpers.error("any.invalid");
+  //     }
+  //     return value;
+  //   })
+  //   .required()
+  //   .messages({
+  //     "any.required": "Product Variant _id is required",
+  //     "string.empty": "Product Variant _id cannot be empty",
+  //     "any.invalid": "Invalid Product Variant ID format",
+  //   }),
   ProductVariantId: Joi.string().required().messages({
     "any.required": "Product _id is required",
     "string.empty": "Product Variant cannot be empty",
@@ -179,8 +184,69 @@ const validateSaveProductInventory = async (req, res, next) => {
   next();
 };
 
+// product inward validation
+const saveProductInwardSchema = Joi.object({
+  _id: Joi.string()
+    .allow("", null)
+    .optional()
+    .custom((value, helpers) => {
+      if (value && !mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .messages({
+      "any.invalid": "Invalid _id format",
+    }),
+
+  ProductVariantId: Joi.string()
+    .required()
+    .custom((value, helpers) => {
+      if (!mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .messages({
+      "any.required": "Product Variant ID is required",
+      "string.empty": "Product Variant ID cannot be empty",
+      "any.invalid": "Invalid Product Variant ID format",
+    }),
+
+  LotNo: Joi.string().required().messages({
+    "any.required": "Lot Number is required",
+    "string.empty": "Lot Number cannot be empty",
+  }),
+
+  InputQuantity: Joi.number().required().messages({
+    "any.required": "Input Quantity is required",
+    "number.base": "Input Quantity must be a number",
+  }),
+
+  DateTime: Joi.date().optional().messages({
+    "date.base": "DateTime must be a valid date",
+  }),
+});
+
+const validateSaveProductInward = (req, res, next) => {
+  const { error } = saveProductInwardSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.json(
+      __requestResponse("400", "Validation Error", {
+        error: error.details.map((d) => d.message),
+      })
+    );
+  }
+
+  next();
+};
+
 module.exports = {
   validateSaveProduct,
   validateSaveProductVariant,
   validateSaveProductInventory,
+  validateSaveProductInward,
 };

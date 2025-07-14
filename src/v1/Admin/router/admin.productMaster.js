@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { default: mongoose } = require("mongoose");
 
 const ProductMaster = require("../../../models/ProductMaster");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
@@ -13,10 +14,12 @@ const {
   validateSaveProduct,
   validateSaveProductVariant,
   validateSaveProductInventory,
+  validateSaveProductInward,
 } = require("../Middleware/productMaster.validation");
 const ProductVariantMaster = require("../../../models/ProductVariantMaster");
 const ProductInventoryMaster = require("../../../models/ProductInventoryMaster");
-const { default: mongoose } = require("mongoose");
+const ProductInwardMovement = require("../../../models/ProductInwardMovement");
+const ProductOutwardMovement = require("../../../models/ProductOutwardMovement");
 
 // Save (Add/Edit) Product
 router.post("/SaveProduct", validateSaveProduct, async (req, res) => {
@@ -232,11 +235,11 @@ router.post(
   validateSaveProductInventory,
   async (req, res) => {
     try {
-      const _id = mongoose.Types.ObjectId(req.body);
-      const { ProductVariantId, LotNo, Quantity } = req.body;
+      // const _id = mongoose.Types.ObjectId(req.body._id);
+      const { _id, ProductVariantId, LotNo, Quantity } = req.body;
       const saveData = { ProductVariantId, LotNo, Quantity };
 
-      if (!_id) {
+      if (!_id || _id === "" || _id === null) {
         const newRec = await ProductInventoryMaster.create(saveData);
         await __CreateAuditLog(
           "product_inventory_master",
@@ -307,6 +310,98 @@ router.post("/ProductInventoryList", async (req, res) => {
     return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
 });
+
+// SaveProductInward API
+router.post(
+  "/SaveProductInward",
+  validateSaveProductInward,
+  async (req, res) => {
+    try {
+      const {
+        _id: rawId,
+        ProductVariantId,
+        LotNo,
+        InputQuantity,
+        DateTime,
+      } = req.body;
+      const saveData = { ProductVariantId, LotNo, InputQuantity, DateTime };
+
+      let _id = null;
+      if (rawId && mongoose.Types.ObjectId.isValid(rawId)) {
+        _id = mongoose.Types.ObjectId(rawId);
+      }
+
+      if (!_id) {
+        const newRec = await ProductInwardMovement.create(saveData);
+        await __CreateAuditLog(
+          "product_inward_movement",
+          "ProductInward.Add",
+          null,
+          null,
+          saveData,
+          newRec._id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, newRec));
+      } else {
+        const oldRec = await ProductInwardMovement.findById(_id);
+        if (!oldRec)
+          return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+
+        const updated = await ProductInwardMovement.updateOne(
+          { _id },
+          { $set: saveData }
+        );
+        await __CreateAuditLog(
+          "product_inward_movement",
+          "ProductInward.Edit",
+          null,
+          oldRec,
+          saveData,
+          _id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, updated));
+      }
+    } catch (error) {
+      console.error(error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error));
+    }
+  }
+);
+// ProductInwardList
+router.post("/ProductInwardList", async (req, res) => {
+  try {
+    const { ProductVariantId, LotNo, page = 1, limit = 10 } = req.body;
+
+    const filter = {};
+    if (ProductVariantId) filter.ProductVariantId = ProductVariantId;
+    if (LotNo) filter.LotNo = { $regex: LotNo, $options: "i" };
+
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      ProductInwardMovement.find(filter)
+        .populate("ProductVariantId", "ProductVariantName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      ProductInwardMovement.countDocuments(filter),
+    ]);
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        data: __deepClone(data),
+        total,
+        page,
+        limit,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
 
 module.exports = router;
 
