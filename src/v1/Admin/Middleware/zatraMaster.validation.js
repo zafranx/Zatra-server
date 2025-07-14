@@ -12,19 +12,23 @@ const saveZatraSchema = Joi.object({
       return value;
     }),
 
-  ZatraTypeId: Joi.string()
-    .required()
-    .custom((value, helpers) => {
-      if (!mongoose.Types.ObjectId.isValid(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
-    .messages({
-      "any.required": "Zatra Type is required",
-      "any.invalid": "Invalid Zatra Type ID",
-    }),
+  // ZatraTypeId: Joi.string()
+  //   .required()
+  //   .custom((value, helpers) => {
+  //     if (!mongoose.Types.ObjectId.isValid(value)) {
+  //       return helpers.error("any.invalid");
+  //     }
+  //     return value;
+  //   })
+  //   .messages({
+  //     "any.required": "Zatra Type is required",
+  //     "any.invalid": "Invalid Zatra Type ID",
+  //   }),
 
+  ZatraType: Joi.string().required().messages({
+    "any.required": "Zatra Type is required",
+    "string.empty": "Zatra Type cannot be empty",
+  }),
   ZatraName: Joi.string().required().messages({
     "any.required": "Zatra Name is required",
     "string.empty": "Zatra Name cannot be empty",

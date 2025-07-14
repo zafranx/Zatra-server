@@ -17,7 +17,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
   try {
     const {
       _id,
-      ZatraTypeId,
+      ZatraType,
       ZatraName,
       StartDate,
       EndDate,
@@ -26,7 +26,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
     } = req.body;
 
     const saveData = {
-      ZatraTypeId,
+      ZatraType,
       ZatraName,
       StartDate,
       EndDate,
@@ -78,7 +78,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
 router.post("/ZatraList", async (req, res) => {
   try {
     const {
-      ZatraTypeId,
+      ZatraType,
       ZatraName,
       CityId,
       StartDate,
@@ -89,7 +89,7 @@ router.post("/ZatraList", async (req, res) => {
 
     const filter = {};
 
-    if (ZatraTypeId) filter.ZatraTypeId = ZatraTypeId;
+    if (ZatraType) filter.ZatraType = ZatraType;
     if (ZatraName) filter.ZatraName = { $regex: ZatraName, $options: "i" };
     if (StartDate) filter.StartDate = { $gte: new Date(StartDate) };
     if (EndDate) filter.EndDate = { $lte: new Date(EndDate) };
@@ -99,7 +99,6 @@ router.post("/ZatraList", async (req, res) => {
 
     const [data, total] = await Promise.all([
       ZatraMaster.find(filter)
-        .populate("ZatraTypeId", "lookup_value")
         .populate("CityId", "lookup_value")
         .sort({ createdAt: -1 })
         .skip(skip)

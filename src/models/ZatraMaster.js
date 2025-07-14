@@ -12,10 +12,11 @@ const mongoose = require("mongoose");
 // ZatraMaster
 const _SchemaDesign = new mongoose.Schema(
   {
-    ZatraTypeId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "admin_lookups",
-    },
+    // ZatraTypeId: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   ref: "admin_lookups",
+    // },
+    ZatraType: String,
     ZatraName: String,
     StartDate: Date,
     EndDate: Date,
