@@ -110,7 +110,7 @@ router.post("/ZatraList", async (req, res) => {
 
     return res.json(
       __requestResponse("200", __SUCCESS, {
-        data: __deepClone(data),
+        list: __deepClone(data),
         total,
         page,
         limit,
