@@ -29,7 +29,8 @@ const saveDestinationSchema = Joi.object({
   }),
 
   ShortDescription: Joi.string().allow("", null).optional(),
-  WikiPageLink: Joi.string().uri().allow("", null).optional(),
+  WikiPageLink: Joi.string().allow("", null).optional(),
+  //   WikiPageLink: Joi.string().uri().allow("", null).optional(),
 
   Geolocation: Joi.object({
     type: Joi.string().valid("Point").required(),
