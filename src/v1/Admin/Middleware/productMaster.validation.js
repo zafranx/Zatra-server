@@ -18,9 +18,9 @@ const saveProductSchema = Joi.object({
       "any.invalid": "Invalid _id format",
     }),
 
-  LegalEntityId: Joi.string().required().messages({
-    "any.required": "Legal Entity is required",
-    "string.empty": "Legal Entity cannot be empty",
+  AssetId: Joi.string().required().messages({
+    "any.required": "Asset is required",
+    "string.empty": "Asset cannot be empty",
   }),
 
   CategoryId: Joi.string().required().messages({

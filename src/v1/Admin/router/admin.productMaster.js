@@ -26,7 +26,7 @@ router.post("/SaveProduct", validateSaveProduct, async (req, res) => {
   try {
     const {
       _id,
-      LegalEntityId,
+      AssetId,
       CategoryId,
       SubCategoryId,
       BrandId,
@@ -39,7 +39,7 @@ router.post("/SaveProduct", validateSaveProduct, async (req, res) => {
     } = req.body;
 
     const saveData = {
-      LegalEntityId,
+      AssetId,
       CategoryId,
       SubCategoryId,
       BrandId,
@@ -94,7 +94,7 @@ router.post("/ProductList", async (req, res) => {
       BrandId,
       CategoryId,
       SubCategoryId,
-      LegalEntityId,
+      AssetId,
       IsActive,
       search,
       page = 1,
@@ -106,7 +106,7 @@ router.post("/ProductList", async (req, res) => {
     if (BrandId) filter.BrandId = BrandId;
     if (CategoryId) filter.CategoryId = CategoryId;
     if (SubCategoryId) filter.SubCategoryId = SubCategoryId;
-    if (LegalEntityId) filter.LegalEntityId = LegalEntityId;
+    if (AssetId) filter.AssetId = AssetId;
     if (typeof IsActive === "boolean") filter.IsActive = IsActive;
 
     if (search) {
@@ -117,7 +117,7 @@ router.post("/ProductList", async (req, res) => {
 
     const [data, total] = await Promise.all([
       ProductMaster.find(filter)
-        .populate("LegalEntityId", "Name")
+        .populate("AssetId", "Name")
         .populate("CategoryId", "lookup_value")
         .populate("SubCategoryId", "lookup_value")
         .populate("BrandId", "BrandName")

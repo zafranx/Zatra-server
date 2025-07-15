@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 // product master
 const _SchemaDesign = new mongoose.Schema(
   {
-    LegalEntityId: {
+    AssetId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "legal_entity",
+      ref: "asset_master",
     }, // LegalEntityID means AssetID
     CategoryId: { type: mongoose.Schema.Types.ObjectId, ref: "admin_lookups" },
     SubCategoryId: {
