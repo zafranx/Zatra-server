@@ -50,9 +50,10 @@ const saveProductSchema = Joi.object({
   ProductImages: Joi.array().items(Joi.string()).optional(),
   ProductVideos: Joi.array().items(Joi.string()).optional(),
 
-  IsActive: Joi.boolean().required().messages({
-    "any.required": "IsActive flag is required",
-  }),
+  // IsActive: Joi.boolean().required().messages({
+  //   "any.required": "IsActive flag is required",
+  // }),
+  IsActive: Joi.boolean().optional(),
 });
 
 const validateSaveProduct = (req, res, next) => {

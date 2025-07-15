@@ -51,7 +51,7 @@ router.post("/SaveProduct", validateSaveProduct, async (req, res) => {
       IsActive,
     };
 
-    if (!_id) {
+    if (!_id || _id === "" || _id === null) {
       const newRec = await ProductMaster.create(saveData);
       await __CreateAuditLog(
         "product_master",
@@ -173,7 +173,7 @@ router.post(
         OnlyForB2B,
       };
 
-      if (!_id) {
+      if (!_id || _id === "" || _id === null) {
         const newRec = await ProductVariantMaster.create(saveData);
         await __CreateAuditLog(
           "product_variant_master",
