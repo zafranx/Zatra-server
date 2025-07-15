@@ -83,7 +83,10 @@ const saveProductVariantSchema = Joi.object({
     .messages({
       "any.invalid": "Invalid _id format",
     }),
-
+  AssetId: Joi.string().required().messages({
+    "any.required": "Asset ID is required",
+    "string.empty": "Asset ID cannot be empty",
+  }),
   ProductId: Joi.string().required().messages({
     "any.required": "Product ID is required",
     "string.empty": "Product ID cannot be empty",
@@ -161,6 +164,10 @@ const saveProductInventorySchema = Joi.object({
   //     "string.empty": "Product Variant _id cannot be empty",
   //     "any.invalid": "Invalid Product Variant ID format",
   //   }),
+  AssetId: Joi.string().required().messages({
+    "any.required": "Asset ID is required",
+    "string.empty": "Asset ID cannot be empty",
+  }),
   ProductVariantId: Joi.string().required().messages({
     "any.required": "Product _id is required",
     "string.empty": "Product Variant cannot be empty",

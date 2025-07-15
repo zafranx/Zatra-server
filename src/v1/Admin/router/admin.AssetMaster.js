@@ -25,7 +25,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       CityId,
       DestinationId,
       LegalEntityTypeId,
-      Name,
+      Name, // Asset Name
       Registration_Number,
       GST,
       PAN,
@@ -191,7 +191,7 @@ router.post("/AssetList", async (req, res) => {
 });
 
 // AssetList with Pagination + Filter -- Asset Master - old api
-router.post("/_old", async (req, res) => {
+router.post("/AssetList_old", async (req, res) => {
   try {
     const {
       page = 1,

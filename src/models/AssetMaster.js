@@ -19,7 +19,7 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
-    Name: String,
+    Name: String, // Asset Name
     Registration_Number: { type: String, unique: true, sparse: true },
     GST: { type: String, unique: true, sparse: true },
     PAN: { type: String, unique: true, sparse: true },

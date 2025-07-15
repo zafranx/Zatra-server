@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 // product variant master
 const _SchemaDesign = new mongoose.Schema(
   {
+    AssetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "asset_master",
+    },
     ProductId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "product_master",

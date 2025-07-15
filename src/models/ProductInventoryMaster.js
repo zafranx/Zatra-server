@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 // product inventory master
 const _SchemaDesign = new mongoose.Schema(
   {
+    AssetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "asset_master",
+    },
     ProductVariantId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "product_variant_master",

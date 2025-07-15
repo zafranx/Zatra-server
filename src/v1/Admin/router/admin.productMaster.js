@@ -150,6 +150,7 @@ router.post(
     try {
       const {
         _id,
+        AssetId,
         ProductId,
         VariantName,
         VariantCode,
@@ -162,6 +163,7 @@ router.post(
       } = req.body;
 
       const saveData = {
+        AssetId,
         ProductId,
         VariantName,
         VariantCode,
@@ -218,6 +220,7 @@ router.post("/ProductVariantList", async (req, res) => {
     const filter = ProductId ? { ProductId } : {};
 
     const variants = await ProductVariantMaster.find(filter)
+      .populate("AssetId", "Name") // Asset Name
       .populate("ProductId", "ProductName")
       .sort({ createdAt: -1 })
       .lean();
@@ -236,8 +239,8 @@ router.post(
   async (req, res) => {
     try {
       // const _id = mongoose.Types.ObjectId(req.body._id);
-      const { _id, ProductVariantId, LotNo, Quantity } = req.body;
-      const saveData = { ProductVariantId, LotNo, Quantity };
+      const { _id, AssetId, ProductVariantId, LotNo, Quantity } = req.body;
+      const saveData = { AssetId, ProductVariantId, LotNo, Quantity };
 
       if (!_id || _id === "" || _id === null) {
         const newRec = await ProductInventoryMaster.create(saveData);
@@ -289,7 +292,8 @@ router.post("/ProductInventoryList", async (req, res) => {
 
     const [data, total] = await Promise.all([
       ProductInventoryMaster.find(filter)
-        .populate("ProductVariantId", "ProductVariantName")
+        .populate("AssetId", "Name") // Asset Name
+        .populate("ProductVariantId", "Product_Variant_Name")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -402,7 +406,4 @@ router.post("/ProductInwardList", async (req, res) => {
   }
 });
 
-
 module.exports = router;
-
-  
