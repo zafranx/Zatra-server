@@ -152,7 +152,7 @@ router.post(
         _id,
         AssetId,
         ProductId,
-        VariantName,
+        ProductVariantName,
         VariantCode,
         ShortDesc,
         LongDesc,
@@ -165,7 +165,7 @@ router.post(
       const saveData = {
         AssetId,
         ProductId,
-        VariantName,
+        ProductVariantName,
         VariantCode,
         ShortDesc,
         LongDesc,
@@ -293,7 +293,7 @@ router.post("/ProductInventoryList", async (req, res) => {
     const [data, total] = await Promise.all([
       ProductInventoryMaster.find(filter)
         .populate("AssetId", "Name") // Asset Name
-        .populate("ProductVariantId", "Product_Variant_Name")
+        .populate("ProductVariantId", "ProductVariantName")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

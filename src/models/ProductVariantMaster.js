@@ -10,7 +10,7 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "product_master",
     }, // LegalEntityID means AssetID
-    Product_Variant_Name: String,
+    ProductVariantName: String,
     ModelNumber: String, // Product Variant Code/ Model Number
     ShortDesc: String,
     LongDesc: String,
