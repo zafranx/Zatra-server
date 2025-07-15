@@ -33,10 +33,11 @@ const saveProductSchema = Joi.object({
     "string.empty": "SubCategory cannot be empty",
   }),
 
-  BrandId: Joi.string().required().messages({
-    "any.required": "Brand is required",
-    "string.empty": "Brand cannot be empty",
-  }),
+  BrandId: Joi.string().optional().allow(""),
+  // BrandId: Joi.string().required().messages({
+  //   "any.required": "Brand is required",
+  //   "string.empty": "Brand cannot be empty",
+  // }),
 
   ProductName: Joi.string().required().messages({
     "any.required": "Product Name is required",
