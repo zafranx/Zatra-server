@@ -8,10 +8,6 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
-    PolicyId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "admin_lookups",
-    },
     PolicyTitle: String,
     ShortDesc: String,
     LongDesc: String,

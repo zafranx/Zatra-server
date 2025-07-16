@@ -19,7 +19,6 @@ router.post("/SaveGovtPolicy", validateSaveGovtPolicy, async (req, res) => {
     const {
       _id,
       CityId,
-      PolicyId,
       PolicyTitle,
       ShortDesc,
       LongDesc,
@@ -30,7 +29,6 @@ router.post("/SaveGovtPolicy", validateSaveGovtPolicy, async (req, res) => {
 
     const saveData = {
       CityId,
-      PolicyId,
       PolicyTitle,
       ShortDesc,
       LongDesc,
@@ -75,17 +73,15 @@ router.post("/SaveGovtPolicy", validateSaveGovtPolicy, async (req, res) => {
 // List API
 router.post("/GovtPolicyList", async (req, res) => {
   try {
-    const { page = 1, limit = 10, search = "", CityId, PolicyId } = req.body;
+    const { page = 1, limit = 10, search = "", CityId } = req.body;
     const filter = {};
 
     if (search) filter.PolicyTitle = { $regex: search, $options: "i" };
     if (CityId) filter.CityId = CityId;
-    if (PolicyId) filter.PolicyId = PolicyId;
 
     const total = await GovtPolicyMaster.countDocuments(filter);
     const list = await GovtPolicyMaster.find(filter)
       .populate("CityId", "lookup_value")
-      .populate("PolicyId", "lookup_value")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)

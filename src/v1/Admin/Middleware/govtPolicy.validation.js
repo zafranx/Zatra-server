@@ -18,11 +18,6 @@ const govtPolicySchema = Joi.object({
     "string.empty": "City cannot be empty",
   }),
 
-  PolicyId: Joi.string().required().messages({
-    "any.required": "Policy Type is required",
-    "string.empty": "Policy Type cannot be empty",
-  }),
-
   PolicyTitle: Joi.string().required().messages({
     "any.required": "Policy Title is required",
     "string.empty": "Policy Title cannot be empty",
