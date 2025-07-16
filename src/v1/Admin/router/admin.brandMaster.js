@@ -11,18 +11,6 @@ const {
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const { validateSaveBrand } = require("../Middleware/brandMaster.validation");
 
-// {
-//   "BrandAssociatedWith": "664f11c2c2f8e23dcf8b6b12",  // ID from either asset_user_master or asset_master
-//   "CreatedRef": "asset_user_master",                 // or "asset_master"
-//   "AssetId": "664f11c2c2f8e23dcf8b6b45",
-//   "ProductId": "664f11c2c2f8e23dcf8b6e99",
-//   "BrandTypeId": "664f11c2c2f8e23dcf8b6123",
-//   "BrandImage": "https://cdn.example.com/brand-image.jpg",
-//   "BrandText": "Luxury Perfume Brand",
-//   "BrandAdvertisements": "https://cdn.example.com/ad.jpg",
-//   "BrandVideos": "https://cdn.example.com/ad.mp4",
-//   "Comments": "Top rated brand for summer collection"
-// }
 
 // Add/Edit Brand
 router.post("/SaveBrand", validateSaveBrand, async (req, res) => {
@@ -30,7 +18,6 @@ router.post("/SaveBrand", validateSaveBrand, async (req, res) => {
     const {
       _id,
       BrandAssociatedWith,
-      CreatedRef,
       AssetId,
       ProductId,
       BrandTypeId,
@@ -43,7 +30,6 @@ router.post("/SaveBrand", validateSaveBrand, async (req, res) => {
 
     const brandData = {
       BrandAssociatedWith,
-      CreatedRef,
       AssetId,
       ProductId,
       BrandTypeId,
@@ -87,8 +73,8 @@ router.post("/SaveBrand", validateSaveBrand, async (req, res) => {
   }
 });
 
-// Brand List with optional filter & pagination old
-router.post("/BrandList_old", async (req, res) => {
+// Brand List with optional filter & pagination
+router.post("/BrandList", async (req, res) => {
   try {
     const { search = "", page = 1, limit = 10 } = req.body;
     const query = {};
@@ -101,11 +87,6 @@ router.post("/BrandList_old", async (req, res) => {
 
     const total = await BrandMaster.countDocuments(query);
     const list = await BrandMaster.find(query)
-      .populate({
-        path: "BrandAssociatedWith",
-        select: "Name",
-        strictPopulate: false,
-      })
       .populate("AssetId", "Name")
       .populate("ProductId", "ProductName")
       .populate("BrandTypeId", "lookup_value")
@@ -128,9 +109,9 @@ router.post("/BrandList_old", async (req, res) => {
   }
 });
 
-// New api
+// No use
 // Brand List with optional filter & pagination (dynamic population)
-router.post("/BrandList", async (req, res) => {
+router.post("/BrandList-no-use", async (req, res) => {
   try {
     const { search = "", page = 1, limit = 10 } = req.body;
     const query = {};
@@ -157,13 +138,13 @@ router.post("/BrandList", async (req, res) => {
         let associatedData = null;
 
         if (brand.CreatedRef === "asset_master") {
-          associatedData = await require("../../../models/AssetMaster").findById(
-            brand.BrandAssociatedWith
-          ).select("Name");
+          associatedData = await require("../../../models/AssetMaster")
+            .findById(brand.BrandAssociatedWith)
+            .select("Name");
         } else if (brand.CreatedRef === "product_master") {
-          associatedData = await require("../../../models/ProductMaster").findById(
-            brand.BrandAssociatedWith
-          ).select("ProductName");
+          associatedData = await require("../../../models/ProductMaster")
+            .findById(brand.BrandAssociatedWith)
+            .select("ProductName");
         }
 
         return {

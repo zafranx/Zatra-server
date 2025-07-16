@@ -16,18 +16,22 @@ const saveBrandSchema = Joi.object({
     .optional(),
 
   BrandAssociatedWith: Joi.string().required().messages({
-    "any.required": "BrandAssociatedWith is required",
-    "string.empty": "BrandAssociatedWith cannot be empty",
+    "any.required": "Brand Type is required",
+    "string.empty": "Brand Type cannot be empty",
   }),
-  CreatedRef: Joi.string()
-    .required()
-    .valid("product_master", "asset_master")
-    .messages({
-      "any.required": "CreatedRef is required",
-      "any.only":
-        "CreatedRef must be either 'product_master' or 'asset_master'",
-      "string.empty": "CreatedRef cannot be empty",
-    }),
+  // BrandAssociatedWith: Joi.string().required().messages({
+  //   "any.required": "BrandAssociatedWith is required",
+  //   "string.empty": "BrandAssociatedWith cannot be empty",
+  // }),
+  // CreatedRef: Joi.string()
+  //   .required()
+  //   .valid("product_master", "asset_master")
+  //   .messages({
+  //     "any.required": "CreatedRef is required",
+  //     "any.only":
+  //       "CreatedRef must be either 'product_master' or 'asset_master'",
+  //     "string.empty": "CreatedRef cannot be empty",
+  //   }),
 
   AssetId: Joi.string().optional().allow(null, ""),
   ProductId: Joi.array()

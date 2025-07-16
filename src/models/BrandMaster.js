@@ -9,16 +9,17 @@ const mongoose = require("mongoose");
 // Brand master
 const _SchemaDesign = new mongoose.Schema(
   {
-    BrandAssociatedWith: {
-      type: mongoose.SchemaTypes.ObjectId,
-      refPath: "CreatedRef", // Use refPath for dynamic reference
-      require: true,
-    },
-    CreatedRef: {
-      type: String, // This should contain the collection name, e.g., "product_master", "asset_master", etc.
-      require: true,
-    },
-    // BrandAssociatedWith: { type: String },
+    // this logic has been removed
+    // BrandAssociatedWith: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   refPath: "CreatedRef", // Use refPath for dynamic reference
+    //   require: true,
+    // },
+    // CreatedRef: {
+    //   type: String, // This should contain the collection name, e.g., "product_master", "asset_master", etc.
+    //   require: true,
+    // },
+    BrandAssociatedWith: { type: String },
     AssetId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "asset_master",
