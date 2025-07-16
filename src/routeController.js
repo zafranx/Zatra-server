@@ -10,6 +10,7 @@ const V1 = {
     require("./v1/Admin/router/admin.ZatraMaster"),
     require("./v1/Admin/router/admin.DestinationMaster"),
     require("./v1/Admin/router/admin.AssetUser"),
+    require("./v1/Admin/router/admin.CityContacts"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),

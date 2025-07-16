@@ -84,7 +84,14 @@ const SaveAssetMasterSchema = Joi.object({
 
 const validateSaveAssetMaster = async (req, res, next) => {
   const { _id } = req.body;
-
+  // Check if _id is provided and is a valid MongoDB ObjectId (if it exists)
+  if (_id && !mongoose.Types.ObjectId.isValid(_id)) {
+    return res.json(
+      __requestResponse("400", "Validation Error", {
+        error: ["Invalid _id format."],
+      })
+    );
+  }
   const { error } = SaveAssetMasterSchema.validate(req.body, {
     abortEarly: false,
   });
