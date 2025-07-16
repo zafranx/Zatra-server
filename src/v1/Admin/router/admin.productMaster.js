@@ -130,7 +130,7 @@ router.post("/ProductList", async (req, res) => {
 
     return res.json(
       __requestResponse("200", __SUCCESS, {
-        data: __deepClone(data),
+        list: __deepClone(data),
         total,
         page,
         limit,
@@ -303,7 +303,7 @@ router.post("/ProductInventoryList", async (req, res) => {
 
     return res.json(
       __requestResponse("200", __SUCCESS, {
-        data: __deepClone(data),
+        list: __deepClone(data),
         total,
         page,
         limit,
@@ -394,7 +394,7 @@ router.post("/ProductInwardList", async (req, res) => {
 
     return res.json(
       __requestResponse("200", __SUCCESS, {
-        data: __deepClone(data),
+        list: __deepClone(data),
         total,
         page,
         limit,

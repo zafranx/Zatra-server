@@ -11,22 +11,24 @@ const _SchemaDesign = new mongoose.Schema(
   {
     BrandAssociatedWith: {
       type: mongoose.SchemaTypes.ObjectId,
-      // ref: "asset_user_master",
       refPath: "CreatedRef", // Use refPath for dynamic reference
       require: true,
     },
     CreatedRef: {
-      type: String, // This should contain the collection name, e.g., "asset_user_master", "", etc.Asset_master,
+      type: String, // This should contain the collection name, e.g., "product_master", "asset_master", etc.
       require: true,
     },
+    // BrandAssociatedWith: { type: String },
     AssetId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "asset_master",
     },
-    ProductId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "product_master",
-    },
+    ProductId: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "product_master",
+      },
+    ],
     BrandTypeId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",

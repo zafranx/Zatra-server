@@ -1,30 +1,52 @@
 const Joi = require("joi");
 const { __requestResponse } = require("../../../utils/constent");
+const { default: mongoose } = require("mongoose");
 
 // Joi Schema
 const saveBrandSchema = Joi.object({
-  _id: Joi.string().optional(),
+  // _id: Joi.string().optional(),
+  _id: Joi.string()
+    .custom((value, helpers) => {
+      if (value && !mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    })
+    .allow(null, "")
+    .optional(),
 
-  LegalEntityTypeId: Joi.string().required().messages({
-    "any.required": "Legal Entity is required",
-    "string.empty": "Legal Entity cannot be empty",
+  BrandAssociatedWith: Joi.string().required().messages({
+    "any.required": "BrandAssociatedWith is required",
+    "string.empty": "BrandAssociatedWith cannot be empty",
   }),
+  CreatedRef: Joi.string()
+    .required()
+    .valid("product_master", "asset_master")
+    .messages({
+      "any.required": "CreatedRef is required",
+      "any.only":
+        "CreatedRef must be either 'product_master' or 'asset_master'",
+      "string.empty": "CreatedRef cannot be empty",
+    }),
+
+  AssetId: Joi.string().optional().allow(null, ""),
+  ProductId: Joi.array()
+    .items(Joi.string().allow("", null))
+    .optional()
+    .messages({
+      "array.base": "ProductId must be an array of IDs",
+    }),
 
   BrandTypeId: Joi.string().required().messages({
     "any.required": "Brand Type is required",
     "string.empty": "Brand Type cannot be empty",
   }),
 
-  BrandName: Joi.string().required().messages({
-    "any.required": "Brand Name is required",
-    "string.empty": "Brand Name cannot be empty",
-  }),
-
-  Description: Joi.string().optional().allow(""),
-
-  Images: Joi.string().optional().allow(""),
-
-  BrandBroucher: Joi.string().optional().allow(""),
+  BrandImage: Joi.string().optional().allow(""),
+  BrandText: Joi.string().optional().allow(""),
+  BrandAdvertisements: Joi.string().optional().allow(""),
+  BrandVideos: Joi.string().optional().allow(""),
+  Comments: Joi.string().optional().allow(""),
 });
 
 // Middleware
