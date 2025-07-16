@@ -12,6 +12,7 @@ const V1 = {
     require("./v1/Admin/router/admin.AssetUser"),
     require("./v1/Admin/router/admin.CityContacts"),
     require("./v1/Admin/router/admin.Helpline"),
+    require("./v1/Admin/router/admin.GovtPolicy"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),

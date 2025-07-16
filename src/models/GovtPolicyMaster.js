@@ -23,4 +23,4 @@ const _SchemaDesign = new mongoose.Schema(
     timestamps: true,
   }
 );
-module.exports = mongoose.model("helpline_master", _SchemaDesign);
+module.exports = mongoose.model("govt_policy_master", _SchemaDesign);
