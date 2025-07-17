@@ -25,6 +25,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
       EndDate,
       ZatraOrganisers,
       CityId = [],
+      ZatraCategoryId,
     } = req.body;
 
     const saveData = {
@@ -36,6 +37,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
       EndDate,
       ZatraOrganisers,
       CityId,
+      ZatraCategoryId,
     };
 
     let mongoId = null;
@@ -89,6 +91,7 @@ router.post("/ZatraList", async (req, res) => {
       EndDate,
       page = 1,
       limit = 10,
+      ZatraCategoryId,
     } = req.body;
 
     const filter = {};
@@ -98,12 +101,14 @@ router.post("/ZatraList", async (req, res) => {
     if (StartDate) filter.StartDate = { $gte: new Date(StartDate) };
     if (EndDate) filter.EndDate = { $lte: new Date(EndDate) };
     if (CityId) filter.CityId = { $in: CityId };
+    if (ZatraCategoryId) filter.ZatraCategoryId = { $in: ZatraCategoryId };
 
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
       ZatraMaster.find(filter)
         .populate("CityId", "lookup_value")
+        .populate("ZatraCategoryId", "lookup_value")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

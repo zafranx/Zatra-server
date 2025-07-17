@@ -6,7 +6,7 @@
 // 4. ⁠Start Date
 // 5. ⁠End Date
 // 6. ⁠ZATRA Organiser
-// 7. ⁠Enroute Cities (array)
+// 7. ⁠Enroute Cities (array) // ZatraCategory new field
 
 const mongoose = require("mongoose");
 // ZatraMaster
@@ -30,6 +30,11 @@ const _SchemaDesign = new mongoose.Schema(
         ref: "admin_lookups",
       },
     ],
+    // ZatraCategoryId new field
+    ZatraCategoryId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
   },
   {
     timestamps: true,
