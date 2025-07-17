@@ -14,6 +14,7 @@ const V1 = {
     require("./v1/Admin/router/admin.Helpline"),
     require("./v1/Admin/router/admin.GovtPolicy"),
     require("./v1/Admin/router/admin.ProjectMaster"),
+    require("./v1/Admin/router/admin.AncillaryServices"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),

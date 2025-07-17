@@ -15,35 +15,6 @@ const {
   __SOME_ERROR,
 } = require("../../../utils/variable");
 
-// 🔹 Add / Edit Project
-router.post(
-  "/addOrEditProjectx-no-use",
-  validateSaveProduct,
-  async (req, res) => {
-    try {
-      let payload = { ...req.body };
-
-      let data;
-      if (payload._id) {
-        data = await ProjectMaster.findByIdAndUpdate(payload._id, payload, {
-          new: true,
-        });
-        await __CreateAuditLog("Edit", "project_master", payload._id, req);
-      } else {
-        data = await new ProjectMaster(payload).save();
-        await __CreateAuditLog("Save", "project_master", data._id, req);
-      }
-
-      res
-        .status(200)
-        .json(__requestResponse("200", "Project saved successfully", data));
-    } catch (err) {
-      console.error("Error in addOrEditProject:", err);
-      res.status(500).json(__requestResponse("500", "Server Error", err));
-    }
-  }
-);
-
 // Add / Edit Project
 router.post("/SaveProject", validateSaveProduct, async (req, res) => {
   try {
@@ -191,56 +162,33 @@ router.post("/listProjects", async (req, res) => {
   }
 });
 
-// 🔹 List Projects with filter & pagination (secure & optimized)
-router.post("/listProjectsx", async (req, res) => {
-  try {
-    const {
-      page = 1,
-      limit = 10,
-      CityId,
-      ProjectType,
-      ApprovalStatus,
-      Amenities,
-    } = req.body;
+// 🔹 Add / Edit Project
+router.post(
+  "/addOrEditProjectx-no-use",
+  validateSaveProduct,
+  async (req, res) => {
+    try {
+      let payload = { ...req.body };
 
-    const parsedPage = Math.max(parseInt(page) || 1, 1);
-    const parsedLimit = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
-    const skip = (parsedPage - 1) * parsedLimit;
+      let data;
+      if (payload._id) {
+        data = await ProjectMaster.findByIdAndUpdate(payload._id, payload, {
+          new: true,
+        });
+        await __CreateAuditLog("Edit", "project_master", payload._id, req);
+      } else {
+        data = await new ProjectMaster(payload).save();
+        await __CreateAuditLog("Save", "project_master", data._id, req);
+      }
 
-    const filter = {};
-
-    if (CityId) filter.CityId = CityId;
-    if (ProjectType) filter.ProjectType = ProjectType;
-    if (ApprovalStatus) filter.ApprovalStatus = ApprovalStatus;
-    if (Amenities && Array.isArray(Amenities) && Amenities.length > 0) {
-      filter.Amenities = { $in: Amenities };
+      res
+        .status(200)
+        .json(__requestResponse("200", "Project saved successfully", data));
+    } catch (err) {
+      console.error("Error in addOrEditProject:", err);
+      res.status(500).json(__requestResponse("500", "Server Error", err));
     }
-
-    const totalRecords = await ProjectMaster.countDocuments(filter);
-
-    let list = await ProjectMaster.find(filter)
-      .populate("CityId", "lookup_value")
-      .populate("ProjectType", "lookup_value")
-      .populate("AvailableSizes.Unit", "lookup_value")
-      .populate("ApprovalStatus", "lookup_value")
-      .populate("Amenities", "lookup_value")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(parsedLimit)
-      .lean();
-
-    return res.status(200).json(
-      __requestResponse("200", "List fetched successfully", {
-        page: parsedPage,
-        totalPages: Math.ceil(totalRecords / parsedLimit),
-        totalRecords,
-        list: __deepClone(list),
-      })
-    );
-  } catch (err) {
-    console.error("❌ Error in listProjects:", err);
-    return res.status(500).json(__requestResponse("500", "Server Error", err));
   }
-});
+);
 
 module.exports = router;
