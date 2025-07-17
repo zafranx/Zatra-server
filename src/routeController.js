@@ -1,5 +1,5 @@
 const V1 = {
-  APP_ROUTE: [],
+  APP_ROUTE: [require("./v1/app/router/app.zatraList")],
   ADMIN_ROUTE: [
     require("./v1/Admin/router/admin.lookup"),
     require("./v1/Admin/router/admin.address"),

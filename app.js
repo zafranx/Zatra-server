@@ -23,7 +23,7 @@ cloudinary.config({
 
 const { V1 } = require("./src/routeController");
 
-// app.use("/api/v1/app", V1.APP_ROUTE);
+app.use("/api/v1/app", V1.APP_ROUTE);
 app.use("/api/v1/admin", V1.ADMIN_ROUTE);
 app.use("/api/v1/common", V1.COMMON_ROUTE);
 // app.use("/api/v1/web", V1.WEBSITE_ROUTE);

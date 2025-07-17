@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-// app.use("/api/v1/app", V1.APP_ROUTE);
+app.use("/api/v1/app", V1.APP_ROUTE);
 app.use("/api/v1/admin", V1.ADMIN_ROUTE);
 app.use("/api/v1/common", V1.COMMON_ROUTE);
 // app.use("/api/v1/web", V1.WEBSITE_ROUTE);
