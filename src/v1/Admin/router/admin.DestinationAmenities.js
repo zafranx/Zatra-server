@@ -37,7 +37,7 @@ router.post(
         IsActive,
       };
 
-      if (!_id) {
+      if (!_id || _id === "" || _id === null) {
         const newRec = await DestinationAmenitiesMaster.create(saveData);
         await __CreateAuditLog(
           "destination_amenities_master",
