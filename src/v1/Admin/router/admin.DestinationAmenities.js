@@ -29,10 +29,10 @@ router.post(
       } = req.body;
 
       const saveData = {
-        _id,
-        CityId,
-        DestinationId,
-        AmenityTypeId,
+        _id: mongoose.Types.ObjectId(_id),
+        CityId: mongoose.Types.ObjectId(CityId),
+        DestinationId: mongoose.Types.ObjectId(DestinationId),
+        AmenityTypeId: mongoose.Types.ObjectId(AmenityTypeId),
         Geolocation,
         IsActive,
       };

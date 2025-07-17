@@ -22,7 +22,7 @@ const { __CreateAuditLog } = require("../../../utils/auditlog");
 router.get("/LookupTypeListx", (req, res) => {
   res.send("Hello World");
 });
-
+// LookupTypeList -for lookup type like city , event_type , amenity_type
 router.get("/LookupTypeList", async (req, res) => {
     try {
         const list = await _lookup.distinct("lookup_type");
@@ -35,6 +35,7 @@ router.get("/LookupTypeList", async (req, res) => {
         return res.json(__requestResponse("500", __SOME_ERROR));
     }
 });
+// ParentLookupTypeList -for parent lookup type like state , country , region
 router.get("/ParentLookupTypeList", async (req, res) => {
     try {
         const list = await _lookup.distinct("parent_lookup_type");
@@ -47,6 +48,7 @@ router.get("/ParentLookupTypeList", async (req, res) => {
         return res.json(__requestResponse("500", __SOME_ERROR));
     }
 });
+// LookupList -for lookup list  like city , event_type , amenity_type [ -- values, and type ]
 router.post("/LookupList", LookupParser, async (req, res) => {
     var _list = [];
     var _filters = [];

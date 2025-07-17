@@ -35,13 +35,11 @@ const saveZatraSchema = Joi.object({
   }),
   Logo: Joi.string().optional().allow(""),
   Website: Joi.string().optional().allow(""),
-  StartDate: Joi.date().required().messages({
-    "any.required": "Start Date is required",
+  StartDate: Joi.date().messages({
     "date.base": "Start Date must be a valid date",
   }),
 
-  EndDate: Joi.date().required().messages({
-    "any.required": "End Date is required",
+  EndDate: Joi.date().messages({
     "date.base": "End Date must be a valid date",
   }),
 

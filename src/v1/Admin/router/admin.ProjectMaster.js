@@ -46,7 +46,7 @@ router.post("/SaveProject", validateSaveProduct, async (req, res) => {
     } = req.body;
 
     const saveData = {
-      CityId,
+      CityId: mongoose.Types.ObjectId(CityId),
       ProjectType,
       ProjectName,
       ProjectLocation,
