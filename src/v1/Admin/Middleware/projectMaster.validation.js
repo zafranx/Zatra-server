@@ -60,4 +60,4 @@ const validateSaveProduct = (req, res, next) => {
 };
 
 
-module.exports = { validateProject, validateSaveProduct };
+module.exports = { validateSaveProduct };
