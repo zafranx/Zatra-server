@@ -5,6 +5,14 @@ const mongoose = require("mongoose");
 
 const _SchemaDesign = new mongoose.Schema(
   {
+    CityId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
+    DestinationId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
     ServiceType: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",

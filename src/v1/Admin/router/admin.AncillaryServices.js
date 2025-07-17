@@ -21,6 +21,8 @@ router.post(
     try {
       const {
         _id,
+        CityId,
+        DestinationId,
         ServiceType,
         ServiceProvider,
         PhoneNumber,
@@ -34,6 +36,8 @@ router.post(
       } = req.body;
 
       const saveData = {
+        CityId,
+        DestinationId,
         ServiceType,
         ServiceProvider,
         PhoneNumber,
@@ -94,6 +98,8 @@ router.post("/AncillaryServiceList", async (req, res) => {
     const total = await AncillaryServiceMaster.countDocuments(filter);
     const list = await AncillaryServiceMaster.find(filter)
       .populate("ServiceType", "lookup_value")
+      .populate("CityId", "lookup_value")
+      .populate("DestinationId", "lookup_value")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
