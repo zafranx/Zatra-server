@@ -55,6 +55,64 @@ router.post("/AddImage", __uploadImage, async (req, res) => {
   }
 });
 
+// for image and pdf both
+
+router.post("/AddImage_Or_Doc", __uploadImage, async (req, res) => {
+  console.log("BODY:", req.body);
+  console.log("FILES:", req.files);
+
+  try {
+    // Check if files are uploaded
+    if (!req.files || !req.files.file || req.files.file.length === 0) {
+      return res.json(__requestResponse("400", "No files uploaded"));
+    }
+
+    const __ImagePathDetails = await AdminEnvSetting.findOne({
+      EnvSettingCode: "IMAGE_PATH",
+    });
+
+    const uploadedImages = [];
+
+    for (const file of req.files.file) {
+      const filePath = path.resolve("./uploads/" + file.filename);
+
+      // Determine resource_type based on MIME type
+      let resourceType = "image"; // default to image
+
+      if (file.mimetype === "application/pdf") {
+        resourceType = "raw"; // use raw for PDFs
+      }
+
+      const result = await cloudinary.uploader.upload(filePath, {
+        folder: "event_images",
+        resource_type: resourceType,
+      });
+
+      // Delete local uploaded file
+      __deleteFile(filePath);
+
+      uploadedImages.push({
+        filename: file.filename,
+        public_id: result.public_id,
+        full_URL: result.secure_url,
+        base_URL:
+          process.env.NODE_ENV === "development"
+            ? process.env.LOCAL_IMAGE_URL
+            : __ImagePathDetails?.EnvSettingTextValue,
+      });
+    }
+
+    return res.json(
+      __requestResponse("200", "Upload successful", uploadedImages)
+    );
+  } catch (error) {
+    console.error("Cloudinary Upload Error:", error.message);
+    return res.json(
+      __requestResponse("500", "Internal server error during upload")
+    );
+  }
+});
+
 router.post("/AddImage_with_limit", __uploadImage, async (req, res) => {
   console.log(req.files, "files");
 
