@@ -28,6 +28,7 @@ const govtPolicySchema = Joi.object({
   Eligibility: Joi.string().optional().allow("", null),
   GovernmentAuthority: Joi.string().optional().allow("", null),
   PolicyDocument: Joi.string().optional().allow("", null),
+  PolicyImage: Joi.string().optional().allow("", null),
 });
 
 const validateSaveGovtPolicy = (req, res, next) => {

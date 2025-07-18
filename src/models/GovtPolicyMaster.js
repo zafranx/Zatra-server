@@ -14,6 +14,7 @@ const _SchemaDesign = new mongoose.Schema(
     Eligibility: String,
     GovernmentAuthority: String,
     PolicyDocument: String, //document
+    PolicyImage: String, //image
   },
   {
     timestamps: true,

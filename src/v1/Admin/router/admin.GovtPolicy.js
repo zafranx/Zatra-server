@@ -25,6 +25,7 @@ router.post("/SaveGovtPolicy", validateSaveGovtPolicy, async (req, res) => {
       Eligibility,
       GovernmentAuthority,
       PolicyDocument,
+      PolicyImage,
     } = req.body;
 
     const saveData = {
@@ -35,6 +36,7 @@ router.post("/SaveGovtPolicy", validateSaveGovtPolicy, async (req, res) => {
       Eligibility,
       GovernmentAuthority,
       PolicyDocument,
+      PolicyImage,
     };
 
     if (!_id) {
