@@ -6,6 +6,7 @@ const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const { __SUCCESS, __SOME_ERROR } = require("../../../utils/variable");
 const HelplineMaster = require("../../../models/HelplineMaster");
 const GovtPolicyMaster = require("../../../models/GovtPolicyMaster");
+const ProjectMaster = require("../../../models/ProjectMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -113,6 +114,64 @@ router.post("/GovtPolicyList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// 🔹 List Projects (with pagination and optional filters) or Investment Opportunties
+router.post("/listProjectsOrInvestmentOpportunities", async (req, res) => {
+  try {
+    const {
+      CityId,
+      ProjectType,
+      ApprovalStatus,
+      Amenities,
+      search,
+      page = 1,
+      limit = 10,
+    } = req.body;
+
+    const parsedPage = Math.max(parseInt(page) || 1, 1);
+    const parsedLimit = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const filter = {};
+
+    if (CityId) filter.CityId = CityId;
+    if (ProjectType) filter.ProjectType = ProjectType;
+    if (ApprovalStatus) filter.ApprovalStatus = ApprovalStatus;
+    if (Amenities && Array.isArray(Amenities) && Amenities.length > 0) {
+      filter.Amenities = { $in: Amenities };
+    }
+
+    if (search) {
+      filter.ProjectName = { $regex: search, $options: "i" };
+    }
+
+    const [data, total] = await Promise.all([
+      ProjectMaster.find(filter)
+        .populate("CityId", "lookup_value")
+        .populate("ProjectType", "lookup_value")
+        .populate("AvailableSizes.Unit", "lookup_value")
+        .populate("ApprovalStatus", "lookup_value")
+        .populate("Amenities", "lookup_value")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parsedLimit)
+        .lean(),
+      ProjectMaster.countDocuments(filter),
+    ]);
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        total,
+        page: parsedPage,
+        limit: parsedLimit,
+        list: __deepClone(data),
+      })
+    );
+  } catch (error) {
+    console.error("❌ Error in listProjects:", error);
     return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
 });

@@ -15,7 +15,7 @@ const {
   __SOME_ERROR,
 } = require("../../../utils/variable");
 
-// Add / Edit Project
+// Add / Edit Project  Investment Opportunties
 router.post("/SaveProject", validateSaveProduct, async (req, res) => {
   try {
     const {
@@ -104,8 +104,8 @@ router.post("/SaveProject", validateSaveProduct, async (req, res) => {
   }
 });
 
-// 🔹 List Projects (with pagination and optional filters)
-router.post("/listProjects", async (req, res) => {
+// 🔹 List Projects (with pagination and optional filters) 
+router.post("/listProjectsOrInvestmentOpportunities", async (req, res) => {
   try {
     const {
       CityId,

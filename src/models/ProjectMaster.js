@@ -4,7 +4,7 @@
 // Phone Number, Email Address, Project Developer (s), Banking Partner (s),
 //  Distance from City, Distance from Airport, Distance from Railway Station, Amenities (multiple), Comments
 const mongoose = require("mongoose");
-// Project Master
+// Project Master or  Investment Opportunties
 const _SchemaDesign = new mongoose.Schema(
   {
     CityId: {
