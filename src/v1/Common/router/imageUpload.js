@@ -390,7 +390,7 @@ router.get("/RenderDocx/:filename", async (req, res) => {
 });
 
 // for pdf rendering from /uploads folder
-router.get("/RenderImage/uploads/:filename", async (req, res) => {
+router.get("/RenderDoc/uploads/:filename", async (req, res) => {
   try {
     const filename = req.params.filename;
     const filePath = path.resolve("./uploads", filename);
