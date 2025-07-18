@@ -3,11 +3,9 @@ const express = require("express");
 const router = express.Router();
 const CityContactMaster = require("../../../models/CityContactMaster");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
-const {
-  __SUCCESS,
-  __SOME_ERROR,
-} = require("../../../utils/variable");
+const { __SUCCESS, __SOME_ERROR } = require("../../../utils/variable");
 const HelplineMaster = require("../../../models/HelplineMaster");
+const GovtPolicyMaster = require("../../../models/GovtPolicyMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -53,40 +51,70 @@ router.post("/CityContactList", async (req, res) => {
   }
 });
 
-// List HelpLine
 // List Helplines with pagination and search
 router.post("/HelplineList", async (req, res) => {
-    try {
-      const { page = 1, limit = 10, search = "", CityId } = req.body;
-  
-      const filter = {};
-      if (search) {
-        filter.ContactPersonName = { $regex: search, $options: "i" };
-      }
-      if (CityId) {
-        filter.CityId = CityId;
-      }
-  
-      const total = await HelplineMaster.countDocuments(filter);
-      const list = await HelplineMaster.find(filter)
-        .populate("CityId", "lookup_value")
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean();
-  
-      return res.json(
-        __requestResponse("200", __SUCCESS, {
-          total,
-          page,
-          limit,
-          list: __deepClone(list),
-        })
-      );
-    } catch (error) {
-      console.error(error);
-      return res.json(__requestResponse("500", __SOME_ERROR, error));
+  try {
+    const { page = 1, limit = 10, search = "", CityId } = req.body;
+
+    const filter = {};
+    if (search) {
+      filter.ContactPersonName = { $regex: search, $options: "i" };
     }
-  });
+    if (CityId) {
+      filter.CityId = CityId;
+    }
+
+    const total = await HelplineMaster.countDocuments(filter);
+    const list = await HelplineMaster.find(filter)
+      .populate("CityId", "lookup_value")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        total,
+        page,
+        limit,
+        list: __deepClone(list),
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// List GovtPolicy with pagination and search
+router.post("/GovtPolicyList", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "", CityId } = req.body;
+    const filter = {};
+
+    if (search) filter.PolicyTitle = { $regex: search, $options: "i" };
+    if (CityId) filter.CityId = CityId;
+
+    const total = await GovtPolicyMaster.countDocuments(filter);
+    const list = await GovtPolicyMaster.find(filter)
+      .populate("CityId", "lookup_value")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        total,
+        page,
+        limit,
+        list: __deepClone(list),
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
 
 module.exports = router;
