@@ -19,6 +19,8 @@ const _SchemaDesign = new Schema({
     type: { type: String, enum: ["Point"], default: "Point" },
     coordinates: { type: [Number], required: true }, // [longitude, latitude]
   },
+  PictureGallery: [String],
+  VideoGallery: [String],
 });
 
 module.exports = mongoose.model("destination_master", _SchemaDesign);

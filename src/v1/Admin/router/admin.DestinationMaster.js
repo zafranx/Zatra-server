@@ -24,6 +24,8 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       WikiPageLink,
       CityId,
       Geolocation,
+      PictureGallery,
+      VideoGallery,
     } = req.body;
 
     const saveData = {
@@ -33,6 +35,8 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       WikiPageLink,
       CityId,
       Geolocation,
+      PictureGallery,
+      VideoGallery,
     };
 
     if (!_id) {

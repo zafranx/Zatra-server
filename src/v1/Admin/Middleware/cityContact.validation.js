@@ -50,7 +50,23 @@ const saveCityContactSchema = Joi.object({
 
   Designation: Joi.string().optional().allow(""),
   Image: Joi.string().optional().allow(""),
-  Phone: Joi.number().optional(),
+  // Phone: Joi.string()
+  //   .pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/)
+  //   .required()
+  //   .messages({
+  //     "any.required": "Phone Number is required",
+  //     "string.pattern.base":
+  //       "Please enter a valid phone number (10 digits, optional country code)",
+  //     "string.empty": "Phone Number cannot be empty",
+  //   }),
+  Phone: Joi.string()
+    .pattern(/^\d{10}$/)
+    .required()
+    .messages({
+      "any.required": "Phone Number is required",
+      "string.pattern.base": "Phone Number must be exactly 10 digits",
+      "string.empty": "Phone Number cannot be empty",
+    }),
   Email: Joi.string().email().optional().allow(""),
   // Website: Joi.string().uri().optional().allow(""),
   Website: Joi.string().optional().allow(""),

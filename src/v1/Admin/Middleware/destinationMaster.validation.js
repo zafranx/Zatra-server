@@ -42,6 +42,9 @@ const saveDestinationSchema = Joi.object({
     .messages({
       "any.required": "Geolocation is required",
     }),
+
+  PictureGallery: Joi.array().items(Joi.string()).allow("", null).optional(),
+  VideoGallery: Joi.array().items(Joi.string()).allow("", null).optional(),
 });
 
 const validateSaveDestination = async (req, res, next) => {

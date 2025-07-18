@@ -23,11 +23,15 @@ const helplineValidationSchema = Joi.object({
     "string.empty": "Contact Person Name cannot be empty",
   }),
 
-  HelplineNumber: Joi.number().required().messages({
-    "any.required": "Helpline Number is required",
-    "number.base": "Helpline Number must be a number",
-  }),
-// optional
+  HelplineNumber: Joi.string()
+    .pattern(/^\d{10}$/)
+    .required()
+    .messages({
+      "any.required": "Helpline Number is required",
+      "string.pattern.base": "Helpline Number must be exactly 10 digits",
+      "string.empty": "Helpline Number cannot be empty",
+    }),
+  // optional
   Email: Joi.string().email().optional().allow("", null),
   AddressLine1: Joi.string().optional().allow("", null),
   AddressLine2: Joi.string().optional().allow("", null),
