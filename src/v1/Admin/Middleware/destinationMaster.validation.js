@@ -23,6 +23,11 @@ const saveDestinationSchema = Joi.object({
     "string.empty": "Destination Type cannot be empty",
   }),
 
+  DestinationSubTypeId: Joi.string().required().messages({
+    "any.required": "Destination Sub Type is required",
+    "string.empty": "Destination Sub Type cannot be empty",
+  }),
+
   Destination: Joi.string().required().messages({
     "any.required": "Destination is required",
     "string.empty": "Destination cannot be empty",

@@ -12,6 +12,10 @@ const _SchemaDesign = new Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },
+  DestinationSubTypeId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "admin_lookups",
+  },
   Destination: String,
   ShortDescription: String,
   WikiPageLink: String,

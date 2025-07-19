@@ -19,6 +19,7 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
     const {
       _id,
       DestinationTypeId,
+      DestinationSubTypeId,
       Destination,
       ShortDescription,
       WikiPageLink,
@@ -30,6 +31,7 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
 
     const saveData = {
       DestinationTypeId,
+      DestinationSubTypeId,
       Destination,
       ShortDescription,
       WikiPageLink,
@@ -84,6 +86,7 @@ router.post("/DestinationList", async (req, res) => {
     const {
       CityId,
       DestinationTypeId,
+      DestinationSubTypeId,
       search,
       page = 1,
       limit = 10,
@@ -92,6 +95,8 @@ router.post("/DestinationList", async (req, res) => {
     const filter = {};
     if (CityId) filter.CityId = CityId;
     if (DestinationTypeId) filter.DestinationTypeId = DestinationTypeId;
+    if (DestinationSubTypeId)
+      filter.DestinationSubTypeId = DestinationSubTypeId;
     if (search) filter.Destination = { $regex: search, $options: "i" };
 
     const skip = (page - 1) * limit;
@@ -100,6 +105,7 @@ router.post("/DestinationList", async (req, res) => {
       DestinationMaster.find(filter)
         .populate("CityId", "lookup_value")
         .populate("DestinationTypeId", "lookup_value")
+        .populate("DestinationSubTypeId", "lookup_value")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
