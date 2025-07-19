@@ -7,6 +7,7 @@ const { __SUCCESS, __SOME_ERROR } = require("../../../utils/variable");
 const HelplineMaster = require("../../../models/HelplineMaster");
 const GovtPolicyMaster = require("../../../models/GovtPolicyMaster");
 const ProjectMaster = require("../../../models/ProjectMaster");
+const DestinationMaster = require("../../../models/DestinationMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -172,6 +173,50 @@ router.post("/listProjectsOrInvestmentOpportunities", async (req, res) => {
     );
   } catch (error) {
     console.error("❌ Error in listProjects:", error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// Destination List
+// (City ID, Destination Type ID, Search, Page, Limit)
+router.post("/DestinationList", async (req, res) => {
+  try {
+    const {
+      CityId,
+      DestinationTypeId,
+      search,
+      page = 1,
+      limit = 10,
+    } = req.body;
+
+    const filter = {};
+    if (CityId) filter.CityId = CityId;
+    if (DestinationTypeId) filter.DestinationTypeId = DestinationTypeId;
+    if (search) filter.Destination = { $regex: search, $options: "i" };
+
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      DestinationMaster.find(filter)
+        .populate("CityId", "lookup_value")
+        .populate("DestinationTypeId", "lookup_value")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      DestinationMaster.countDocuments(filter),
+    ]);
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(data),
+        total,
+        page,
+        limit,
+      })
+    );
+  } catch (error) {
+    console.error(error);
     return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
 });

@@ -43,6 +43,7 @@ router.post("/SaveProject", validateSaveProduct, async (req, res) => {
       DistancefromRailwayStation,
       Amenities,
       Comments,
+      Geolocation,
     } = req.body;
 
     const saveData = {
@@ -69,6 +70,7 @@ router.post("/SaveProject", validateSaveProduct, async (req, res) => {
       DistancefromRailwayStation,
       Amenities,
       Comments,
+      Geolocation,
     };
 
     if (!_id) {

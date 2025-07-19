@@ -45,6 +45,16 @@ const validateProject = Joi.object({
 
   Amenities: Joi.array().items(Joi.string()).optional(),
   Comments: Joi.string().allow("").optional(),
+  Geolocation: Joi.object({
+    type: Joi.string().valid("Point").required(),
+    coordinates: Joi.array().items(Joi.number()).length(2).required().messages({
+      "array.length": "Geolocation must contain [longitude, latitude]",
+    }),
+  })
+    .required()
+    .messages({
+      "any.required": "Geolocation is required",
+    }),
 });
 
 const validateSaveProduct = (req, res, next) => {

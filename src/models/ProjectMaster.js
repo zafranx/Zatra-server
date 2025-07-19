@@ -54,6 +54,10 @@ const _SchemaDesign = new mongoose.Schema(
       },
     ],
     Comments: String,
+    Geolocation: {
+      type: { type: String, enum: ["Point"], default: "Point" },
+      coordinates: { type: [Number], required: true }, // [longitude, latitude]
+    },
   },
   {
     timestamps: true,
