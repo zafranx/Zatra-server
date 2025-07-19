@@ -1,3 +1,4 @@
+// Note: fields given by gourav sir
 // Legal Entity (Legal Entity Type, Name, Registration Number, GST Number, PAN Number,
 //  Registration Address, Authorised Representative, Phone Number,
 //  Email Address, Website, LinkedIn, Instagram Page, Facebook Page, Industry/ Sector, Sub Sector)
