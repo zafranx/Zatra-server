@@ -85,9 +85,10 @@ router.post("/AddImage", __uploadImage, async (req, res) => {
               : __ImagePathDetails?.EnvSettingTextValue,
         });
       } else {
-        // ✅ Upload image/video to Cloudinary
+        // Upload image/video to Cloudinary
         const result = await cloudinary.uploader.upload(filePath, {
           folder: "event_assets", // You can change to "event_images" or "event_videos" based on `file.mimetype`
+          resource_type: "auto",
         });
 
         __deleteFile(filePath); // cleanup local copy
