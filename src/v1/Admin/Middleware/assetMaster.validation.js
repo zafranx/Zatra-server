@@ -61,11 +61,9 @@ const SaveAssetMasterSchema = Joi.object({
     "number.base": "Phone must be a number",
   }),
 
-  EmailAddress: Joi.string().email().required().messages({
-    "any.required": "Email Address is required",
+  EmailAddress: Joi.string().email().optional().allow("").messages({
     "string.email": "Invalid Email Address",
   }),
-
   Website: Joi.string().optional().allow(""),
   LinkedIn: Joi.string().optional().allow(""),
   Instagram: Joi.string().optional().allow(""),
