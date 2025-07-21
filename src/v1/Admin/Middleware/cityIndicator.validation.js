@@ -19,10 +19,10 @@ exports.validateCityIndicator = async (req, res, next) => {
       "any.required": "City is required",
       "string.empty": "City cannot be empty",
     }),
-    CityIndicatorName: Joi.string().optional(),
-    CityIndicatorValueUnit: Joi.string().optional(),
-    CityIndicatorValue: Joi.string().optional(),
-    CityIndicatorImage: Joi.string().optional(),
+    CityIndicatorName: Joi.string().optional().allow(""),
+    CityIndicatorValueUnit: Joi.string().optional().allow(""),
+    CityIndicatorValue: Joi.string().optional().allow(""),
+    CityIndicatorImage: Joi.string().optional().allow(""),
   });
 
   const { error } = schema.validate(req.body, { abortEarly: false });
