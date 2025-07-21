@@ -58,6 +58,12 @@ const _SchemaDesign = new mongoose.Schema(
     VerifiedBy: { type: String, default: "" },
     VerificationDate: { type: Date },
     VerificationReport: { type: String },
+    AllocationNumber: { type: String },
+    FloorLaneNumber: { type: String },
+    Geolocation: {
+      type: { type: String, enum: ["Point"], default: "Point" },
+      coordinates: { type: [Number], required: true }, // [longitude, latitude]
+    },
     IsActive: { type: Boolean, default: true },
   },
   {

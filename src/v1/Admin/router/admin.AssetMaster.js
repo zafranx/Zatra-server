@@ -46,6 +46,9 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       VerificationReport,
       CityIndicatorId,
       EstablishmentId,
+      AllocationNumber,
+      FloorLaneNumber,
+      Geolocation,
       IsActive,
     } = req.body;
     let _id = null;
@@ -79,6 +82,9 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       VerificationReport,
       CityIndicatorId,
       EstablishmentId,
+      AllocationNumber,
+      FloorLaneNumber,
+      Geolocation,
       IsActive,
     };
 
