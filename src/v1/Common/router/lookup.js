@@ -72,7 +72,9 @@ const CityIndicator = require("../../../models/CityIndicator");
 //   }
 // });
 
-// new api by saurabh developer
+
+
+// new api by saurabh developer : for calling city indicator
 router.post("/LookupList", async (req, res) => {
   console.log(req.body);
   console.log("api");

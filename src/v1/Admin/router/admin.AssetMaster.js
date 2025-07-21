@@ -45,6 +45,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       VerificationDate,
       VerificationReport,
       CityIndicatorId,
+      EstablishmentId,
       IsActive,
     } = req.body;
     let _id = null;
@@ -77,6 +78,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       VerificationDate,
       VerificationReport,
       CityIndicatorId,
+      EstablishmentId,
       IsActive,
     };
 
@@ -150,6 +152,8 @@ router.post("/AssetList", async (req, res) => {
       .populate("LegalEntityTypeId", "lookup_value")
       .populate("Industry_Sector", "lookup_value")
       .populate("Industry_Sub_Sector", "lookup_value")
+      .populate("CityIndicatorId", "lookup_value")
+      .populate("EstablishmentId", "lookup_value")
       .sort({ createdAt: -1 })
       .skip((pageInt - 1) * limitInt)
       .limit(limitInt)
@@ -192,59 +196,4 @@ router.post("/AssetList", async (req, res) => {
   }
 });
 
-// AssetList with Pagination + Filter -- Asset Master - old api
-router.post("/AssetList_old", async (req, res) => {
-  try {
-    const {
-      page = 1,
-      limit = 10,
-      search = "",
-      LegalEntityTypeId,
-      Industry_Sector,
-      Industry_Sub_Sector,
-      CityId,
-      DestinationId,
-      AssetType,
-    } = req.body;
-
-    const pageInt = parseInt(page);
-    const limitInt = parseInt(limit);
-
-    const filter = {};
-    if (search) {
-      filter.Name = { $regex: search, $options: "i" };
-    }
-    if (LegalEntityTypeId) filter.LegalEntityTypeId = LegalEntityTypeId;
-    if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
-    if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
-    if (CityId) filter.CityId = CityId;
-    if (DestinationId) filter.DestinationId = DestinationId;
-    if (AssetType) filter.AssetType = AssetType;
-
-    const total = await AssetMaster.countDocuments(filter);
-
-    const list = await AssetMaster.find(filter)
-      .populate("CityId", "lookup_value")
-      .populate("DestinationId", "lookup_value")
-      .populate("LegalEntityTypeId", "lookup_value")
-      .populate("Industry_Sector", "lookup_value")
-      .populate("Industry_Sub_Sector", "lookup_value")
-      .sort({ createdAt: -1 })
-      .skip((pageInt - 1) * limitInt)
-      .limit(limitInt)
-      .lean();
-
-    return res.json(
-      __requestResponse("200", __SUCCESS, {
-        list: __deepClone(list),
-        total,
-        page: pageInt,
-        limit: limitInt,
-      })
-    );
-  } catch (error) {
-    console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
-  }
-});
 module.exports = router;

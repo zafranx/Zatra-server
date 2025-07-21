@@ -79,10 +79,14 @@ const SaveAssetMasterSchema = Joi.object({
   VerifiedBy: Joi.string().optional().allow(""),
   VerificationDate: Joi.date().optional().allow(null),
   VerificationReport: Joi.string().optional().allow(""),
-  CityIndicatorId: Joi.string().required().messages({
-    "any.required": "City Indicator is required",
-    "string.empty": "City Indicator be empty",
-  }),
+  // CityIndicatorId: Joi.array().items(Joi.string()).required().messages({
+  //   "any.required": "City Indicator is required",
+  //   "string.empty": "City Indicator cannot be empty",
+  //   "array.base": "City Indicator must be an array",
+  // }),
+  CityIndicatorId: Joi.array().items(Joi.string()).optional().allow([]),
+  EstablishmentId: Joi.string().optional().allow(""),
+
   IsActive: Joi.boolean().optional(),
 });
 

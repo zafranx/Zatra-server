@@ -7,11 +7,21 @@ const mongoose = require("mongoose");
 // Legal Entity -Asset Master
 const _SchemaDesign = new mongoose.Schema(
   {
+    CityIndicatorId: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "city_indicator",
+      },
+    ],
     CityId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
     DestinationId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
+    EstablishmentId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
@@ -45,12 +55,6 @@ const _SchemaDesign = new mongoose.Schema(
     VerifiedBy: { type: String, default: "" },
     VerificationDate: { type: Date },
     VerificationReport: { type: String },
-    CityIndicatorId: [
-      {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "city_indicator",
-      },
-    ],
     IsActive: { type: Boolean, default: true },
   },
   {
