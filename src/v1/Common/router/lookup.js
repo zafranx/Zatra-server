@@ -17,57 +17,60 @@ const {
 const { LookupParser } = require("../middleware/middlelookup");
 
 // models
-const _lookup = require("../../../models/lookupmodel");
+// const _lookup = require("../../../models/lookupmodel");
+const LookupMaster = require("../../../models/lookupmodel");
+
 const AdminEnvSetting = require("../../../models/AdminEnvSetting");
+const CityIndicator = require("../../../models/CityIndicator");
 
-router.post("/lookuplist", LookupParser, async (req, res) => {
-    const { parent_lookup_id } = req.body;
-    var _filters = [];
-    if (req.body.CodeList?.length > 0) {
-      req.body.CodeList.forEach(async (element) => {
-        _filters.push(element);
-      });
-      const __parentId = mongoose.Types.ObjectId.isValid(parent_lookup_id)
-        ? mongoose?.Types?.ObjectId(parent_lookup_id)
-        : null;
-      const list = await _lookup
-        .find({
-          lookup_type: { $in: _filters },
-          is_active: true,
-          ...(__parentId && {
-            parent_lookup_id: __parentId,
-          }),
-        })
-        .sort({ sort_order: 1 });
+// router.post("/lookuplist", LookupParser, async (req, res) => {
+//     const { parent_lookup_id } = req.body;
+//     var _filters = [];
+//     if (req.body.CodeList?.length > 0) {
+//       req.body.CodeList.forEach(async (element) => {
+//         _filters.push(element);
+//       });
+//       const __parentId = mongoose.Types.ObjectId.isValid(parent_lookup_id)
+//         ? mongoose?.Types?.ObjectId(parent_lookup_id)
+//         : null;
+//       const list = await _lookup
+//         .find({
+//           lookup_type: { $in: _filters },
+//           is_active: true,
+//           ...(__parentId && {
+//             parent_lookup_id: __parentId,
+//           }),
+//         })
+//         .sort({ sort_order: 1 });
 
-      if (list.length > 0) {
-        const __ImagePathDetails = await AdminEnvSetting.findOne({
-          EnvSettingCode: "IMAGE_PATH",
-        });
-        return res.json(
-          __requestResponse(
-            "200",
-            __SUCCESS,
-            __deepClone(list).map((item) => ({
-              ...item,
-              ...(item?.icon && {
-                full_URL:
-                  (process.env.NODE_ENV == "development"
-                    ? process.env.LOCAL_IMAGE_URL
-                    : __ImagePathDetails?.EnvSettingTextValue) + item?.icon,
+//       if (list.length > 0) {
+//         const __ImagePathDetails = await AdminEnvSetting.findOne({
+//           EnvSettingCode: "IMAGE_PATH",
+//         });
+//         return res.json(
+//           __requestResponse(
+//             "200",
+//             __SUCCESS,
+//             __deepClone(list).map((item) => ({
+//               ...item,
+//               ...(item?.icon && {
+//                 full_URL:
+//                   (process.env.NODE_ENV == "development"
+//                     ? process.env.LOCAL_IMAGE_URL
+//                     : __ImagePathDetails?.EnvSettingTextValue) + item?.icon,
 
-                base_URL: __ImagePathDetails?.EnvSettingTextValue,
-              }),
-            }))
-          )
-        );
-      } else {
-        return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
-      }
-    } else {
-      return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
-    }
-});
+//                 base_URL: __ImagePathDetails?.EnvSettingTextValue,
+//               }),
+//             }))
+//           )
+//         );
+//       } else {
+//         return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
+//       }
+//     } else {
+//       return res.json(__requestResponse("501", __NO_LOOKUP_LIST));
+//     }
+// });
 
 const lookuplistByParent = Joi.object({
     parentId: Joi.string().required(),
@@ -102,4 +105,48 @@ router.post("/lookuplistByParent", async (req, res) => {
     }
 });
 
+// new api by saurabh developer
+router.post("/LookupList", async (req, res) => {
+  try {
+    if (!req?.body?.lookup_type || req?.body?.lookup_type.length === 0) {
+      return res.json(__requestResponse("400", "Lookup type is required"));
+    }
+
+    if (req?.body?.lookup_type[0] == "city_indicator") {
+      const users = await CityIndicator.find();
+
+      if (users.length == 0) {
+        return res.json(__requestResponse("404", "No Data found"));
+      }
+      return res.json(
+        __requestResponse(
+          "200",
+          __SUCCESS,
+          users.map((item) => ({
+            LookupValue: item?.Name,
+            _id: item._id,
+          }))
+        )
+      );
+    }
+
+    const list = await LookupMaster.find({
+      LookupType: { $in: req?.body?.lookup_type || [] },
+      ...(mongoose.Types.ObjectId.isValid(req.body?.parent_lookup_id) && {
+        ParentLookupId: mongoose.Types.ObjectId(req.body?.parent_lookup_id),
+      }),
+      IsActive: true,
+    });
+
+    if (list.length == 0) {
+      return res.json(__requestResponse("404", "No Date found"));
+    }
+    return res.json(__requestResponse("200", __SUCCESS, list));
+  } catch (error) {
+    return res.json(__requestResponse("500", error.message));
+  }
+});
+
 module.exports = router;
+
+
