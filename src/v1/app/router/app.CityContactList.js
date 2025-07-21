@@ -9,6 +9,8 @@ const GovtPolicyMaster = require("../../../models/GovtPolicyMaster");
 const ProjectMaster = require("../../../models/ProjectMaster");
 const DestinationMaster = require("../../../models/DestinationMaster");
 const DestinationAmenitiesMaster = require("../../../models/DestinationAmenitiesMaster");
+const ProductMaster = require("../../../models/ProductMaster");
+const AssetMaster = require("../../../models/AssetMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -269,6 +271,87 @@ router.post("/DestinationAmenitiesList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// AssetList with Product Count New api
+router.post("/AssetList", async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      LegalEntityTypeId,
+      Industry_Sector,
+      Industry_Sub_Sector,
+      CityId,
+      DestinationId,
+      AssetType,
+    } = req.body;
+
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+
+    const filter = {};
+    if (search) {
+      filter.Name = { $regex: search, $options: "i" };
+    }
+    if (LegalEntityTypeId) filter.LegalEntityTypeId = LegalEntityTypeId;
+    if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
+    if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
+    if (CityId) filter.CityId = CityId;
+    if (DestinationId) filter.DestinationId = DestinationId;
+    if (AssetType) filter.AssetType = AssetType;
+
+    const total = await AssetMaster.countDocuments(filter);
+
+    let list = await AssetMaster.find(filter)
+      .populate("CityId", "lookup_value")
+      .populate("DestinationId", "lookup_value")
+      .populate("LegalEntityTypeId", "lookup_value")
+      .populate("Industry_Sector", "lookup_value")
+      .populate("Industry_Sub_Sector", "lookup_value")
+      .populate("CityIndicatorId", "lookup_value")
+      .populate("EstablishmentId", "lookup_value")
+      .sort({ createdAt: -1 })
+      .skip((pageInt - 1) * limitInt)
+      .limit(limitInt)
+      .lean();
+
+    // Add Product Count per Asset
+    const assetIds = list.map((asset) => asset._id);
+
+    const productCounts = await ProductMaster.aggregate([
+      { $match: { AssetId: { $in: assetIds } } },
+      {
+        $group: {
+          _id: "$AssetId",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const countMap = {};
+    productCounts.forEach((item) => {
+      countMap[item._id.toString()] = item.count;
+    });
+
+    list = list.map((asset) => ({
+      ...asset,
+      ProductCount: countMap[asset._id.toString()] || 0,
+    }));
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(list),
+        total,
+        page: pageInt,
+        limit: limitInt,
+      })
+    );
+  } catch (error) {
+    console.log(error);
     return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
 });

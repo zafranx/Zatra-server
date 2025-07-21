@@ -111,23 +111,26 @@ const validateSaveAssetMaster = async (req, res, next) => {
   }
 
   try {
-    const duplicate = await AssetMaster.findOne({
-      _id: { $ne: _id },
-      $or: [
-        { GST: req.body.GST },
-        { PAN: req.body.PAN },
-        { Registration_Number: req.body.Registration_Number },
-      ].filter((q) => !!Object.values(q)[0]),
-    });
+    console.warn(
+      "duplicate check is commented in asset validation for development purpose"
+    );
+    // const duplicate = await AssetMaster.findOne({
+    //   _id: { $ne: _id },
+    //   $or: [
+    //     { GST: req.body.GST },
+    //     { PAN: req.body.PAN },
+    //     { Registration_Number: req.body.Registration_Number },
+    //   ].filter((q) => !!Object.values(q)[0]),
+    // });
 
-    if (duplicate) {
-      return res.json(
-        __requestResponse(
-          "400",
-          "GST/PAN/Registration Number already used by another record"
-        )
-      );
-    }
+    // if (duplicate) {
+    //   return res.json(
+    //     __requestResponse(
+    //       "400",
+    //       "GST/PAN/Registration Number already used by another record"
+    //     )
+    //   );
+    // }
 
     next();
   } catch (err) {
