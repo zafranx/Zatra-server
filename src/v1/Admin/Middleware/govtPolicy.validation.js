@@ -35,8 +35,9 @@ const validateSaveGovtPolicy = (req, res, next) => {
   const { error } = govtPolicySchema.validate(req.body, { abortEarly: false });
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }

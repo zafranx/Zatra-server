@@ -52,7 +52,7 @@ router.post("/CityContactList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -87,7 +87,7 @@ router.post("/HelplineList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -118,7 +118,7 @@ router.post("/GovtPolicyList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -176,7 +176,7 @@ router.post("/listProjectsOrInvestmentOpportunities", async (req, res) => {
     );
   } catch (error) {
     console.error("❌ Error in listProjects:", error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -224,7 +224,7 @@ router.post("/DestinationList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -271,7 +271,7 @@ router.post("/DestinationAmenitiesList", async (req, res) => {
     );
   } catch (error) {
     console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -352,7 +352,7 @@ router.post("/AssetList", async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 

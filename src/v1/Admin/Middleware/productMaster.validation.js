@@ -60,8 +60,9 @@ const validateSaveProduct = (req, res, next) => {
   const { error } = saveProductSchema.validate(req.body, { abortEarly: false });
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }
@@ -126,8 +127,9 @@ const validateSaveProductVariant = (req, res, next) => {
 
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }
@@ -192,8 +194,9 @@ const validateSaveProductInventory = async (req, res, next) => {
 
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }

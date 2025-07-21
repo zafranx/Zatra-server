@@ -99,7 +99,14 @@ const checkAddress = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    return res.json(__requestResponse("400", __SOME_ERROR)).status(400);
+    return res
+      .json(
+        __requestResponse("400", {
+          errorType: "Validation Error",
+          error: error.details.map((d) => d.message).join(". "),
+        })
+      )
+      .status(400);
   }
 };
 

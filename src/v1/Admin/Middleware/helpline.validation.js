@@ -45,8 +45,9 @@ const validateSaveHelpline = (req, res, next) => {
 
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }

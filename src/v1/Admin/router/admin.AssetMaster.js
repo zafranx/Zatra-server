@@ -117,7 +117,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
@@ -198,7 +198,7 @@ router.post("/AssetList", async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
+    return res.json(__requestResponse("500", error, __SOME_ERROR));
   }
 });
 
