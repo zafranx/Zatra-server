@@ -45,6 +45,12 @@ const _SchemaDesign = new mongoose.Schema(
     VerifiedBy: { type: String, default: "" },
     VerificationDate: { type: Date },
     VerificationReport: { type: String },
+    CityIndicatorId: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "city_indicator",
+      },
+    ],
     IsActive: { type: Boolean, default: true },
   },
   {

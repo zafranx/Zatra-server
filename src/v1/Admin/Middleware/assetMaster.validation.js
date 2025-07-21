@@ -79,6 +79,10 @@ const SaveAssetMasterSchema = Joi.object({
   VerifiedBy: Joi.string().optional().allow(""),
   VerificationDate: Joi.date().optional().allow(null),
   VerificationReport: Joi.string().optional().allow(""),
+  CityIndicatorId: Joi.string().required().messages({
+    "any.required": "City Indicator is required",
+    "string.empty": "City Indicator be empty",
+  }),
   IsActive: Joi.boolean().optional(),
 });
 
