@@ -84,7 +84,7 @@ const SaveAssetMasterSchema = Joi.object({
   //   "string.empty": "City Indicator cannot be empty",
   //   "array.base": "City Indicator must be an array",
   // }),
-  CityIndicatorId: Joi.array().items(Joi.string()).optional().allow([]),
+  CityIndicatorId: Joi.array().items(Joi.string()).optional(),
   EstablishmentId: Joi.string().optional().allow(""),
 
   IsActive: Joi.boolean().optional(),
