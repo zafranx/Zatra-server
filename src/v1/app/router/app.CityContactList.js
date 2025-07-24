@@ -11,6 +11,7 @@ const DestinationMaster = require("../../../models/DestinationMaster");
 const DestinationAmenitiesMaster = require("../../../models/DestinationAmenitiesMaster");
 const ProductMaster = require("../../../models/ProductMaster");
 const AssetMaster = require("../../../models/AssetMaster");
+const ProductVariantMaster = require("../../../models/ProductVariantMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -362,9 +363,8 @@ router.post("/AssetList", async (req, res) => {
   }
 });
 
-
 // Product List (with pagination and optional filters)
-router.post("/ProductList", async (req, res) => {
+router.post("/ProductList_old", async (req, res) => {
   try {
     const {
       BrandId,
@@ -407,6 +407,91 @@ router.post("/ProductList", async (req, res) => {
     return res.json(
       __requestResponse("200", __SUCCESS, {
         list: __deepClone(data),
+        total,
+        page,
+        limit,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// Run these in MongoDB for faster filtering/search:
+// db.productmasters.createIndex({ ProductName: "text" });
+// db.productmasters.createIndex({ BrandId: 1 });
+// db.productmasters.createIndex({ CategoryId: 1 });
+// db.productmasters.createIndex({ SubCategoryId: 1 });
+// db.productmasters.createIndex({ AssetId: 1 });
+
+// Product List (with variants included)
+router.post("/ProductList", async (req, res) => {
+  try {
+    const {
+      BrandId,
+      CategoryId,
+      SubCategoryId,
+      AssetId,
+      IsActive,
+      search,
+      page = 1,
+      limit = 10,
+    } = req.body;
+
+    const filter = {};
+
+    if (BrandId) filter.BrandId = BrandId;
+    if (CategoryId) filter.CategoryId = CategoryId;
+    if (SubCategoryId) filter.SubCategoryId = SubCategoryId;
+    if (AssetId) filter.AssetId = AssetId;
+    if (typeof IsActive === "boolean") filter.IsActive = IsActive;
+
+    if (search) {
+      filter.ProductName = { $regex: search, $options: "i" };
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [products, total] = await Promise.all([
+      ProductMaster.find(filter)
+        .populate("AssetId", "Name")
+        .populate("CategoryId", "lookup_value")
+        .populate("SubCategoryId", "lookup_value")
+        .populate("BrandId", "BrandName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      ProductMaster.countDocuments(filter),
+    ]);
+
+    const productIds = products.map((p) => p._id);
+
+    // Fetch variants for these products
+    const productVariants = await ProductVariantMaster.find({
+      ProductId: { $in: productIds },
+    })
+      .select("-__v")
+      .lean();
+
+    // Group variants by ProductId
+    const variantMap = {};
+    productVariants.forEach((variant) => {
+      const pid = variant.ProductId.toString();
+      if (!variantMap[pid]) variantMap[pid] = [];
+      variantMap[pid].push(variant);
+    });
+
+    // Attach variants to each product
+    const enrichedProducts = products.map((product) => ({
+      ...product,
+      Variants: variantMap[product._id.toString()] || [],
+    }));
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(enrichedProducts),
         total,
         page,
         limit,
