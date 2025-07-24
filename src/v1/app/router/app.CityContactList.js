@@ -288,6 +288,8 @@ router.post("/AssetList", async (req, res) => {
       CityId,
       DestinationId,
       AssetType,
+      EstablishmentId,
+      CityIndicatorId,
     } = req.body;
 
     const pageInt = parseInt(page);
@@ -303,6 +305,8 @@ router.post("/AssetList", async (req, res) => {
     if (CityId) filter.CityId = CityId;
     if (DestinationId) filter.DestinationId = DestinationId;
     if (AssetType) filter.AssetType = AssetType;
+    if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
+    if (CityIndicatorId) filter.CityIndicatorId = CityIndicatorId;
 
     const total = await AssetMaster.countDocuments(filter);
 
@@ -312,7 +316,7 @@ router.post("/AssetList", async (req, res) => {
       .populate("LegalEntityTypeId", "lookup_value")
       .populate("Industry_Sector", "lookup_value")
       .populate("Industry_Sub_Sector", "lookup_value")
-      .populate("CityIndicatorId", "lookup_value")
+      .populate("CityIndicatorId", "CityIndicatorName")
       .populate("EstablishmentId", "lookup_value")
       .sort({ createdAt: -1 })
       .skip((pageInt - 1) * limitInt)
