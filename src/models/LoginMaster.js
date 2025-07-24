@@ -33,24 +33,10 @@ const _LoginMaster = new mongoose.Schema(
     Pwd: {
       type: String,
     },
-    // ParentAssetId: {
-    //   type: mongoose.SchemaTypes.ObjectId,
-    //   ref: "asset_masters",
-    // },
     IsFirstLogin: {
       type: Boolean,
       default: true,
     },
-    // SecQues1: {
-    //   type: mongoose.SchemaTypes.ObjectId,
-    //   ref: "admin_lookups",
-    // },
-    // SecQues2: {
-    //   type: mongoose.SchemaTypes.ObjectId,
-    //   ref: "admin_lookups",
-    // },
-    // Ans1: { type: String },
-    // Ans2: { type: String },
     IsLocked: {
       type: Boolean,
     },
@@ -64,6 +50,20 @@ const _LoginMaster = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // ParentAssetId: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   ref: "asset_masters",
+    // },
+    // SecQues1: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   ref: "admin_lookups",
+    // },
+    // SecQues2: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   ref: "admin_lookups",
+    // },
+    // Ans1: { type: String },
+    // Ans2: { type: String },
   },
   {
     timestamps: true,

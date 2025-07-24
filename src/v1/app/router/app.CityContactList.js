@@ -363,4 +363,60 @@ router.post("/AssetList", async (req, res) => {
 });
 
 
+// Product List (with pagination and optional filters)
+router.post("/ProductList", async (req, res) => {
+  try {
+    const {
+      BrandId,
+      CategoryId,
+      SubCategoryId,
+      AssetId,
+      IsActive,
+      search,
+      page = 1,
+      limit = 10,
+    } = req.body;
+
+    const filter = {};
+
+    if (BrandId) filter.BrandId = BrandId;
+    if (CategoryId) filter.CategoryId = CategoryId;
+    if (SubCategoryId) filter.SubCategoryId = SubCategoryId;
+    if (AssetId) filter.AssetId = AssetId;
+    if (typeof IsActive === "boolean") filter.IsActive = IsActive;
+
+    if (search) {
+      filter.ProductName = { $regex: search, $options: "i" };
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      ProductMaster.find(filter)
+        .populate("AssetId", "Name")
+        .populate("CategoryId", "lookup_value")
+        .populate("SubCategoryId", "lookup_value")
+        .populate("BrandId", "BrandName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      ProductMaster.countDocuments(filter),
+    ]);
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(data),
+        total,
+        page,
+        limit,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+
 module.exports = router;
