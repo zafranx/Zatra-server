@@ -39,17 +39,19 @@ const SaveAssetMasterSchema = Joi.object({
     "string.empty": "Legal Entity Name cannot be empty",
   }),
 
-  Registration_Number: Joi.string().required().messages({
-    "any.required": "Registration Number is required",
-    "string.empty": "Registration Number cannot be empty",
-  }),
+  // Registration_Number: Joi.string().required().messages({
+  //   "any.required": "Registration Number is required",
+  //   "string.empty": "Registration Number cannot be empty",
+  // }),
+  Registration_Number: Joi.string().optional().allow(""),
 
   GST: Joi.string().optional().allow(""),
   PAN: Joi.string().optional().allow(""),
-  Registration_Address: Joi.string().required().messages({
-    "any.required": "Registration Address is required",
-    "string.empty": "Registration Address cannot be empty",
-  }),
+  // Registration_Address: Joi.string().required().messages({
+  //   "any.required": "Registration Address is required",
+  //   "string.empty": "Registration Address cannot be empty",
+  // }),
+  Registration_Address: Joi.string().optional().allow(""),
 
   Authorised_Representative: Joi.string().required().messages({
     "any.required": "Authorised Representative is required",
@@ -75,7 +77,8 @@ const SaveAssetMasterSchema = Joi.object({
   Logo: Joi.string().optional().allow(""),
   IsVerified: Joi.boolean().optional(),
   VerifiedBy: Joi.string().optional().allow(""),
-  VerificationDate: Joi.date().optional().allow(null),
+  // VerificationDate: Joi.date().optional().allow(null),
+  VerificationDate: Joi.string().optional().allow(""),
   VerificationReport: Joi.string().optional().allow(""),
   // CityIndicatorId: Joi.array().items(Joi.string()).required().messages({
   //   "any.required": "City Indicator is required",
