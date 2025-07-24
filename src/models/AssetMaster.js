@@ -19,7 +19,7 @@ const _SchemaDesign = new mongoose.Schema(
     },
     DestinationId: {
       type: mongoose.SchemaTypes.ObjectId,
-      ref: "admin_lookups",
+      ref: "destination_master",
     },
     EstablishmentId: {
       type: mongoose.SchemaTypes.ObjectId,
