@@ -41,7 +41,7 @@ const errorMessages = {
 };
 
 const successMessages = {
-  __SUCCESS: "Success: Data Saved Successfully",
+  __SUCCESS: "Success",
   __CODE_SEND: "Verification Code Sent, please check your email.",
   __DELETE_SUCCESS: " Deleted successfully",
 };

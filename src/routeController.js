@@ -2,6 +2,7 @@ const V1 = {
   APP_ROUTE: [
     require("./v1/app/router/app.ZatraList"),
     require("./v1/app/router/app.CityContactList"),
+    require("./v1/app/router/app.auth"),
   ],
   ADMIN_ROUTE: [
     require("./v1/Admin/router/admin.lookup"),
