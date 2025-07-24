@@ -282,6 +282,7 @@ router.post("/AssetList", async (req, res) => {
       page = 1,
       limit = 10,
       search = "",
+      AssetId,
       LegalEntityTypeId,
       Industry_Sector,
       Industry_Sub_Sector,
@@ -299,6 +300,7 @@ router.post("/AssetList", async (req, res) => {
     if (search) {
       filter.Name = { $regex: search, $options: "i" };
     }
+    if (AssetId) filter._id = AssetId;
     if (LegalEntityTypeId) filter.LegalEntityTypeId = LegalEntityTypeId;
     if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
     if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
