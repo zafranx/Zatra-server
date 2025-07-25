@@ -14,6 +14,7 @@ const {
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const { default: mongoose } = require("mongoose");
 const ProductMaster = require("../../../models/ProductMaster");
+const { createAssetLogin } = require("../../../utils/authHelper");
 
 // Save AssetMaster (Add / Edit) - Asset Master
 router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
@@ -53,6 +54,8 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       Floor,
       Address,
       Geolocation,
+      IsAccountLogin,
+      Password, // for asset user login
       IsActive,
     } = req.body;
     let _id = null;
@@ -93,6 +96,7 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
       Floor,
       Address,
       Geolocation,
+      IsAccountLogin,
       IsActive,
     };
 
@@ -106,6 +110,33 @@ router.post("/SaveAsset", validateSaveAssetMaster, async (req, res) => {
         saveData,
         newRec._id
       );
+
+      // create login of asset in asset user
+      if (IsAccountLogin) {
+        try {
+          const loginResult = await createAssetLogin({
+            assetId: newRec._id,
+            Name: Name,
+            Phone: Phone,
+            Password: Password,
+          });
+          console.log("Login Created with password:", loginResult.Password);
+
+          // Send Email
+          //     await sendLoginEmail(
+          //       data.Email,
+          //       "Your Credentials",
+          //       `<h3>Hello ${data.AssetName},</h3>
+          //   <p>Your login ID is: <strong>${data.MobileNo}</strong></p>
+          //   <p>Your password is: <strong>${loginResult.plainPassword}</strong></p>
+          //   <p>Please change your password after login.</p>`
+          //     );
+        } catch (err) {
+          console.error("Login creation failed:", err.message);
+          // console.error("Login credentials sending failed:", err.message);
+        }
+      }
+
       return res.json(__requestResponse("200", __SUCCESS, newRec));
     } else {
       const oldRec = await AssetMaster.findById(_id);

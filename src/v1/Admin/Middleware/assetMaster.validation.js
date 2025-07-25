@@ -103,6 +103,8 @@ const SaveAssetMasterSchema = Joi.object({
     .messages({
       "any.required": "Geolocation is required",
     }),
+  IsAccountLogin: Joi.boolean().optional(),
+  Password: Joi.string().optional().allow(""),
   IsActive: Joi.boolean().optional(),
 });
 

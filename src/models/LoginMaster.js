@@ -6,10 +6,10 @@ const _LoginMaster = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "asset_masters",
     },
-    UserId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "user_masters",
-    },
+    // UserId: {
+    //   type: mongoose.SchemaTypes.ObjectId,
+    //   ref: "user_masters",
+    // },
     RoleTypeId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
@@ -21,18 +21,18 @@ const _LoginMaster = new mongoose.Schema(
     UserName: {
       type: String,
     },
-    Age: String,
-    Sex: String,
     PhoneNumber: String,
-    EmailAddress: String,
-    Address: String,
-    ReferredBy: String,
     LoginId: {
       type: String,
     },
     Pwd: {
       type: String,
     },
+    Age: String,
+    Sex: String,
+    EmailAddress: String,
+    Address: String,
+    ReferredBy: String,
     IsFirstLogin: {
       type: Boolean,
       default: true,

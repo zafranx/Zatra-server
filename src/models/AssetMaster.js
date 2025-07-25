@@ -68,6 +68,7 @@ const _SchemaDesign = new mongoose.Schema(
       type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number], required: true }, // [longitude, latitude]
     },
+    IsAccountLogin: { type: Boolean, default: false },
     IsActive: { type: Boolean, default: true },
   },
   {
