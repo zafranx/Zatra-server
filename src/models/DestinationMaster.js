@@ -8,15 +8,41 @@ const _SchemaDesign = new Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },
-  DestinationTypeId: {
+  PanchtatvaCategoryId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },
-  DestinationSubTypeId: {
+  PanchtatvaSubcategoryId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },
+  // DestinationTypeId: {
+  //   type: mongoose.SchemaTypes.ObjectId,
+  //   ref: "admin_lookups",
+  // }, // removed by gourav sir
+  // DestinationSubTypeId: {
+  //   type: mongoose.SchemaTypes.ObjectId,
+  //   ref: "admin_lookups",
+  // },// removed by gourav sir
   Destination: String,
+  Lane: [
+    {
+      LaneNumber: String,
+      LaneName: String,
+    },
+  ],
+  Hall: [
+    {
+      HallNumber: String,
+      HallName: String,
+    },
+  ],
+  Floor: [
+    {
+      FloorNumber: String,
+      FloorName: String,
+    },
+  ],
   ShortDescription: String,
   WikiPageLink: String,
   Geolocation: {

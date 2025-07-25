@@ -18,14 +18,14 @@ const saveDestinationSchema = Joi.object({
     "string.empty": "City cannot be empty",
   }),
 
-  DestinationTypeId: Joi.string().required().messages({
-    "any.required": "Destination Type is required",
-    "string.empty": "Destination Type cannot be empty",
+  PanchtatvaCategoryId: Joi.string().required().messages({
+    "any.required": "Panchtatva Category is required",
+    "string.empty": "Panchtatva Category cannot be empty",
   }),
 
-  DestinationSubTypeId: Joi.string().required().messages({
-    "any.required": "Destination Sub Type is required",
-    "string.empty": "Destination Sub Type cannot be empty",
+  PanchtatvaSubcategoryId: Joi.string().required().messages({
+    "any.required": "Panchtatva Subcategory is required",
+    "string.empty": "Panchtatva Subcategory cannot be empty",
   }),
 
   Destination: Joi.string().required().messages({
@@ -34,6 +34,33 @@ const saveDestinationSchema = Joi.object({
   }),
 
   ShortDescription: Joi.string().allow("", null).optional(),
+  Lane: Joi.array()
+    .items(
+      Joi.object({
+        LaneNumber: Joi.string().optional().allow("", null),
+        LaneName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  Hall: Joi.array()
+    .items(
+      Joi.object({
+        HallNumber: Joi.string().optional().allow("", null),
+        HallName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  Floor: Joi.array()
+    .items(
+      Joi.object({
+        FloorNumber: Joi.string().optional().allow("", null),
+        FloorName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
   WikiPageLink: Joi.string().allow("", null).optional(),
   //   WikiPageLink: Joi.string().uri().allow("", null).optional(),
 

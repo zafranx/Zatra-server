@@ -18,8 +18,8 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
   try {
     const {
       _id,
-      DestinationTypeId,
-      DestinationSubTypeId,
+      PanchtatvaCategoryId,
+      PanchtatvaSubcategoryId,
       Destination,
       ShortDescription,
       WikiPageLink,
@@ -27,11 +27,14 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       Geolocation,
       PictureGallery,
       VideoGallery,
+      Lane,
+      Hall,
+      Floor,
     } = req.body;
 
     const saveData = {
-      DestinationTypeId,
-      DestinationSubTypeId,
+      PanchtatvaSubcategoryId,
+      PanchtatvaCategoryId,
       Destination,
       ShortDescription,
       WikiPageLink,
@@ -39,6 +42,9 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       Geolocation,
       PictureGallery,
       VideoGallery,
+      Lane,
+      Hall,
+      Floor,
     };
 
     if (!_id) {
@@ -85,8 +91,8 @@ router.post("/DestinationList", async (req, res) => {
   try {
     const {
       CityId,
-      DestinationTypeId,
-      DestinationSubTypeId,
+      PanchtatvaCategoryId,
+      PanchtatvaSubcategoryId,
       search,
       page = 1,
       limit = 10,
@@ -94,9 +100,10 @@ router.post("/DestinationList", async (req, res) => {
 
     const filter = {};
     if (CityId) filter.CityId = CityId;
-    if (DestinationTypeId) filter.DestinationTypeId = DestinationTypeId;
-    if (DestinationSubTypeId)
-      filter.DestinationSubTypeId = DestinationSubTypeId;
+    if (PanchtatvaCategoryId)
+      filter.PanchtatvaCategoryId = PanchtatvaCategoryId;
+    if (PanchtatvaSubcategoryId)
+      filter.PanchtatvaSubcategoryId = PanchtatvaSubcategoryId;
     if (search) filter.Destination = { $regex: search, $options: "i" };
 
     const skip = (page - 1) * limit;
@@ -104,8 +111,8 @@ router.post("/DestinationList", async (req, res) => {
     const [data, total] = await Promise.all([
       DestinationMaster.find(filter)
         .populate("CityId", "lookup_value")
-        .populate("DestinationTypeId", "lookup_value")
-        .populate("DestinationSubTypeId", "lookup_value")
+        .populate("PanchtatvaCategoryId", "lookup_value")
+        .populate("PanchtatvaSubcategoryId", "lookup_value")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
