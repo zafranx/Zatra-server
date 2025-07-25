@@ -86,28 +86,5 @@ router.post("/AssetUserList", async (req, res) => {
   }
 });
 
-// Delete Asset User
-router.post("/DeleteAssetUser", async (req, res) => {
-  try {
-    const { _id } = req.body;
-    if (!_id) return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
-
-    const oldRec = await AssetUser.findById(_id);
-    if (!oldRec) return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
-    await __CreateAuditLog(
-      "asset_user_master",
-      "AssetUser.Delete",
-      oldRec,
-      null,
-      null,
-      _id
-    );
-    const deleted = await AssetUser.deleteOne({ _id });
-    return res.json(__requestResponse("200", __SUCCESS, deleted));
-  } catch (error) {
-    console.log(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
-  }
-});
 
 module.exports = router;

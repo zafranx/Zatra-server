@@ -59,7 +59,26 @@ const _SchemaDesign = new mongoose.Schema(
     VerificationDate: { type: Date },
     VerificationReport: { type: String },
     AllocationNumber: { type: String },
-    FloorLaneNumber: { type: String },
+    // FloorLaneNumber: { type: String },
+    Lane: [
+      {
+        LaneNumber: String,
+        LaneName: String,
+      },
+    ],
+    Hall: [
+      {
+        HallNumber: String,
+        HallName: String,
+      },
+    ],
+    Floor: [
+      {
+        FloorNumber: String,
+        FloorName: String,
+      },
+    ],
+    Address: String,
     Geolocation: {
       type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number], required: true }, // [longitude, latitude]

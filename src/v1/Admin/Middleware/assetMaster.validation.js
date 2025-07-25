@@ -88,7 +88,35 @@ const SaveAssetMasterSchema = Joi.object({
   CityIndicatorId: Joi.array().items(Joi.string()).optional(),
   EstablishmentId: Joi.string().optional().allow(""),
   AllocationNumber: Joi.string().optional().allow(""),
-  FloorLaneNumber: Joi.string().optional().allow(""),
+  // FloorLaneNumber: Joi.string().optional().allow(""),
+  Lane: Joi.array()
+    .items(
+      Joi.object({
+        LaneNumber: Joi.string().optional().allow("", null),
+        LaneName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  Hall: Joi.array()
+    .items(
+      Joi.object({
+        HallNumber: Joi.string().optional().allow("", null),
+        HallName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  Floor: Joi.array()
+    .items(
+      Joi.object({
+        FloorNumber: Joi.string().optional().allow("", null),
+        FloorName: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  Address: Joi.string().optional().allow(""),
   Geolocation: Joi.object({
     type: Joi.string().valid("Point").required(),
     coordinates: Joi.array().items(Joi.number()).length(2).required().messages({
