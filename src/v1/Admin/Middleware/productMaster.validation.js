@@ -47,8 +47,8 @@ const saveProductSchema = Joi.object({
   ShortDesc: Joi.string().optional().allow(""),
   LongDesc: Joi.string().optional().allow(""),
 
-  ProductImages: Joi.array().items(Joi.string()).optional(),
-  ProductVideos: Joi.array().items(Joi.string()).optional(),
+  ProductImages: Joi.array().items(Joi.string()).allow("", null).optional(),
+  ProductVideos: Joi.array().items(Joi.string()).allow("", null).optional(),
 
   // IsActive: Joi.boolean().required().messages({
   //   "any.required": "IsActive flag is required",

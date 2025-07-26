@@ -22,70 +22,74 @@ const ProductInwardMovement = require("../../../models/ProductInwardMovement");
 const ProductOutwardMovement = require("../../../models/ProductOutwardMovement");
 
 // Save (Add/Edit) Product
-router.post("/SaveProduct", validateSaveProduct, async (req, res) => {
-  try {
-    const {
-      _id,
-      AssetId,
-      CategoryId,
-      SubCategoryId,
-      BrandId,
-      ProductName,
-      ShortDesc,
-      LongDesc,
-      ProductImages,
-      ProductVideos,
-      IsActive,
-    } = req.body;
+router.post(
+  "/SaveProduct",
+  //  validateSaveProduct,
+  async (req, res) => {
+    try {
+      const {
+        _id,
+        AssetId,
+        CategoryId,
+        SubCategoryId,
+        BrandId,
+        ProductName,
+        ShortDesc,
+        LongDesc,
+        ProductImages,
+        ProductVideos,
+        IsActive,
+      } = req.body;
 
-    const saveData = {
-      AssetId,
-      CategoryId,
-      SubCategoryId,
-      BrandId,
-      ProductName,
-      ShortDesc,
-      LongDesc,
-      ProductImages,
-      ProductVideos,
-      IsActive,
-    };
+      const saveData = {
+        AssetId,
+        CategoryId,
+        SubCategoryId,
+        BrandId,
+        ProductName,
+        ShortDesc,
+        LongDesc,
+        ProductImages,
+        ProductVideos,
+        IsActive,
+      };
 
-    if (!_id || _id === "" || _id === null) {
-      const newRec = await ProductMaster.create(saveData);
-      await __CreateAuditLog(
-        "product_master",
-        "Product.Add",
-        null,
-        null,
-        saveData,
-        newRec._id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, newRec));
-    } else {
-      const oldRec = await ProductMaster.findById(_id);
-      if (!oldRec)
-        return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+      if (!_id || _id === "" || _id === null) {
+        const newRec = await ProductMaster.create(saveData);
+        await __CreateAuditLog(
+          "product_master",
+          "Product.Add",
+          null,
+          null,
+          saveData,
+          newRec._id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, newRec));
+      } else {
+        const oldRec = await ProductMaster.findById(_id);
+        if (!oldRec)
+          return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
 
-      const updated = await ProductMaster.updateOne(
-        { _id },
-        { $set: saveData }
-      );
-      await __CreateAuditLog(
-        "product_master",
-        "Product.Edit",
-        null,
-        oldRec,
-        saveData,
-        _id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, updated));
+        const updated = await ProductMaster.updateOne(
+          { _id },
+          { $set: saveData }
+        );
+        await __CreateAuditLog(
+          "product_master",
+          "Product.Edit",
+          null,
+          oldRec,
+          saveData,
+          _id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, updated));
+      }
+    } catch (error) {
+      console.error(error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
-});
+);
 
 // Product List (with pagination and optional filters)
 router.post("/ProductList", async (req, res) => {
@@ -145,7 +149,7 @@ router.post("/ProductList", async (req, res) => {
 // Save Product Variant (Add/Edit)
 router.post(
   "/SaveProductVariant",
-  validateSaveProductVariant,
+  // validateSaveProductVariant,
   async (req, res) => {
     try {
       const {
@@ -235,7 +239,7 @@ router.post("/ProductVariantList", async (req, res) => {
 // Add / Edit SaveProductInventory
 router.post(
   "/SaveProductInventory",
-  validateSaveProductInventory,
+  // validateSaveProductInventory,
   async (req, res) => {
     try {
       // const _id = mongoose.Types.ObjectId(req.body._id);
@@ -318,7 +322,7 @@ router.post("/ProductInventoryList", async (req, res) => {
 // SaveProductInward API
 router.post(
   "/SaveProductInward",
-  validateSaveProductInward,
+  // validateSaveProductInward,
   async (req, res) => {
     try {
       const {

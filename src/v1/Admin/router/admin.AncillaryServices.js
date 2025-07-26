@@ -16,7 +16,7 @@ const { __CreateAuditLog } = require("../../../utils/auditlog");
 // 🔹 Add / Edit Ancillary Service
 router.post(
   "/SaveAncillaryService",
-  validateSaveAncillaryService,
+  // validateSaveAncillaryService, // commennted for development purpose
   async (req, res) => {
     try {
       const {
@@ -25,6 +25,8 @@ router.post(
         DestinationId,
         ServiceType,
         ServiceProvider,
+        AncillaryServiceName,
+        Fee,
         PhoneNumber,
         IdNumber,
         IdCardPicture,
@@ -40,6 +42,8 @@ router.post(
         DestinationId,
         ServiceType,
         ServiceProvider,
+        AncillaryServiceName,
+        Fee,
         PhoneNumber,
         IdNumber,
         IdCardPicture,

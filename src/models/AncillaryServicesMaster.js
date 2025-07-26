@@ -17,17 +17,25 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
+    AncillaryServiceName: {
+      type: String,
+      // required: true,
+    },
     ServiceProvider: {
       type: String,
-      required: true,
+      // required: true,
+    },
+    Fee: {
+      type: String,
+      // required: true,
     },
     PhoneNumber: {
       type: String,
-      required: true,
+      // required: true,
     },
     IdNumber: {
       type: String,
-      required: true,
+      // required: true,
     },
     IdCardPicture: {
       type: String, // URL/path to the uploaded ID card image

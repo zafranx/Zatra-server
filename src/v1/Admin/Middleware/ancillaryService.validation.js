@@ -43,6 +43,8 @@ exports.validateSaveAncillaryService = async (req, res, next) => {
         "any.invalid": "ServiceTypeId must be a valid ObjectId",
       }),
     ServiceProvider: Joi.string().required(),
+    AncillaryServiceName: Joi.string().allow("", null),
+    Fee: Joi.string().allow("", null),
     PhoneNumber: Joi.string().required(),
     IdNumber: Joi.string().required(),
     IdCardPicture: Joi.string().allow("", null),

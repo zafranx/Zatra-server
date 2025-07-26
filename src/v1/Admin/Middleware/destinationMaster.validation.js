@@ -39,6 +39,7 @@ const saveDestinationSchema = Joi.object({
       Joi.object({
         LaneNumber: Joi.string().optional().allow("", null),
         LaneName: Joi.string().optional().allow("", null),
+        _id: Joi.string().optional().allow("", null),
       })
     )
     .allow("", null)
@@ -48,6 +49,7 @@ const saveDestinationSchema = Joi.object({
       Joi.object({
         HallNumber: Joi.string().optional().allow("", null),
         HallName: Joi.string().optional().allow("", null),
+        _id: Joi.string().optional().allow("", null),
       })
     )
     .allow("", null)
@@ -57,6 +59,7 @@ const saveDestinationSchema = Joi.object({
       Joi.object({
         FloorNumber: Joi.string().optional().allow("", null),
         FloorName: Joi.string().optional().allow("", null),
+        _id: Joi.string().optional().allow("", null),
       })
     )
     .allow("", null)
