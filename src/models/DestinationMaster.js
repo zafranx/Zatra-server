@@ -75,8 +75,8 @@ const _SchemaDesign = new Schema({
   //   },
   // ],
   OpeningHours: {
-    OpeningTime: Date,
-    ClosingTime: Date,
+    OpeningTime: String,
+    ClosingTime: String,
     LunchHours: String,
   },
   TicketInventoryPerDay: String,
