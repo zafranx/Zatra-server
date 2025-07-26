@@ -12,6 +12,7 @@ const DestinationAmenitiesMaster = require("../../../models/DestinationAmenities
 const ProductMaster = require("../../../models/ProductMaster");
 const AssetMaster = require("../../../models/AssetMaster");
 const ProductVariantMaster = require("../../../models/ProductVariantMaster");
+const AncillaryServicesMaster = require("../../../models/AncillaryServicesMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -496,6 +497,50 @@ router.post("/ProductList", async (req, res) => {
         total,
         page,
         limit,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// 🔹 List Ancillary Services
+router.post("/AncillaryServiceList", async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      CityId,
+      DestinationId,
+      ServiceType,
+    } = req.body;
+
+    const filter = {};
+    if (search) {
+      filter.ServiceProvider = { $regex: search, $options: "i" };
+    }
+    if (ServiceType) filter.ServiceType = ServiceType;
+    if (CityId) filter.CityId = CityId;
+    if (DestinationId) filter.DestinationId = DestinationId;
+
+    const total = await AncillaryServicesMaster.countDocuments(filter);
+    const list = await AncillaryServicesMaster.find(filter)
+      .populate("ServiceType", "lookup_value")
+      .populate("CityId", "lookup_value")
+      .populate("DestinationId", "lookup_value")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        total,
+        page,
+        limit,
+        list: __deepClone(list),
       })
     );
   } catch (error) {
