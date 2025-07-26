@@ -14,88 +14,92 @@ const {
 } = require("../Middleware/destinationMaster.validation");
 
 //  Save Destination (Add / Edit)
-router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
-  try {
-    const {
-      _id,
-      PanchtatvaCategoryId,
-      PanchtatvaSubcategoryId,
-      Destination,
-      WikiPageLink,
-      CityId,
-      Geolocation,
-      PictureGallery,
-      VideoGallery,
-      Lane,
-      Hall,
-      Floor,
-      EntryFee,
-      WorkingDays,
-      OpeningHours,
-      TicketInventoryPerDay,
-      InstructionsForVisitors,
-      ShortDescription,
-      LongDescription,
-    } = req.body;
+router.post(
+  "/SaveDestination",
+  //  validateSaveDestination, // commennted for development purpose
+  async (req, res) => {
+    try {
+      const {
+        _id,
+        PanchtatvaCategoryId,
+        PanchtatvaSubcategoryId,
+        Destination,
+        WikiPageLink,
+        CityId,
+        Geolocation,
+        PictureGallery,
+        VideoGallery,
+        Lane,
+        Hall,
+        Floor,
+        EntryFee,
+        WorkingDays,
+        OpeningHours,
+        TicketInventoryPerDay,
+        InstructionsForVisitors,
+        ShortDescription,
+        LongDescription,
+      } = req.body;
 
-    const saveData = {
-      PanchtatvaSubcategoryId,
-      PanchtatvaCategoryId,
-      Destination,
-      WikiPageLink,
-      CityId,
-      Geolocation,
-      PictureGallery,
-      VideoGallery,
-      Lane,
-      Hall,
-      Floor,
-      EntryFee,
-      WorkingDays,
-      OpeningHours,
-      TicketInventoryPerDay,
-      InstructionsForVisitors,
-      ShortDescription,
-      LongDescription,
-    };
+      const saveData = {
+        PanchtatvaSubcategoryId,
+        PanchtatvaCategoryId,
+        Destination,
+        WikiPageLink,
+        CityId,
+        Geolocation,
+        PictureGallery,
+        VideoGallery,
+        Lane,
+        Hall,
+        Floor,
+        EntryFee,
+        WorkingDays,
+        OpeningHours,
+        TicketInventoryPerDay,
+        InstructionsForVisitors,
+        ShortDescription,
+        LongDescription,
+      };
 
-    if (!_id) {
-      const newRec = await DestinationMaster.create(saveData);
-      await __CreateAuditLog(
-        "destination_master",
-        "Destination.Add",
-        null,
-        null,
-        saveData,
-        newRec._id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, newRec));
-    } else {
-      const oldRec = await DestinationMaster.findById(_id);
-      if (!oldRec)
-        return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+      if (!_id) {
+        const newRec = await DestinationMaster.create(saveData);
+        await __CreateAuditLog(
+          "destination_master",
+          "Destination.Add",
+          null,
+          null,
+          saveData,
+          newRec._id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, newRec));
+      } else {
+        const oldRec = await DestinationMaster.findById(_id);
+        if (!oldRec)
+          return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
 
-      //   await DestinationMaster.updateOne({ _id }, { $set: saveData });
-      const updated = await DestinationMaster.updateOne(
-        { _id },
-        { $set: saveData }
-      );
+        //   await DestinationMaster.updateOne({ _id }, { $set: saveData });
+        const updated = await DestinationMaster.updateOne(
+          { _id },
+          { $set: saveData }
+        );
 
-      await __CreateAuditLog(
-        "destination_master",
-        "Destination.Edit",
-        null,
-        oldRec,
-        saveData,
-        _id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, updated));
+        await __CreateAuditLog(
+          "destination_master",
+          "Destination.Edit",
+          null,
+          oldRec,
+          saveData,
+          _id
+        );
+        return res.json(__requestResponse("200", __SUCCESS, updated));
+      }
+    } catch (error) {
+      console.error(error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
   }
-});
+);
 
 // Destination List
 // (City ID, Destination Type ID, Search, Page, Limit)
