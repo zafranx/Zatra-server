@@ -80,8 +80,9 @@ const saveDestinationSchema = Joi.object({
     .allow("", null)
     .optional(),
   OpeningHours: Joi.object({
-    OpeningTime: Joi.string().isoDate().allow("", null).optional(),
-    ClosingTime: Joi.string().isoDate().allow("", null).optional(),
+    OpeningTime: Joi.string().allow("", null).optional(),
+    ClosingTime: Joi.string().allow("", null).optional(),
+    // ClosingTime: Joi.string().isoDate().allow("", null).optional(),
     LunchHours: Joi.string().allow("", null).optional(),
   })
     .allow("", null)
