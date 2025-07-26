@@ -43,7 +43,46 @@ const _SchemaDesign = new Schema({
       FloorName: String,
     },
   ],
+  EntryFee: [
+    {
+      FeeCategory: String,
+      FeeAmount: String,
+    },
+  ],
+  WorkingDays: [
+    {
+      type: String,
+    },
+  ],
+  // WorkingDays: [
+  //   {
+  //     Day: {
+  //       type: String,
+  //       enum: [
+  //         "Sunday",
+  //         "Monday",
+  //         "Tuesday",
+  //         "Wednesday",
+  //         "Thursday",
+  //         "Friday",
+  //         "Saturday",
+  //       ],
+  //     },
+  //     IsOpen: {
+  //       type: Boolean,
+  //       default: true,
+  //     },
+  //   },
+  // ],
+  OpeningHours: {
+    OpeningTime: Date,
+    ClosingTime: Date,
+    LunchHours: String,
+  },
+  TicketInventoryPerDay: String,
+  InstructionsForVisitors: String,
   ShortDescription: String,
+  LongDescription: String,
   WikiPageLink: String,
   Geolocation: {
     type: { type: String, enum: ["Point"], default: "Point" },

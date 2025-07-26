@@ -21,7 +21,6 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       PanchtatvaCategoryId,
       PanchtatvaSubcategoryId,
       Destination,
-      ShortDescription,
       WikiPageLink,
       CityId,
       Geolocation,
@@ -30,13 +29,19 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       Lane,
       Hall,
       Floor,
+      EntryFee,
+      WorkingDays,
+      OpeningHours,
+      TicketInventoryPerDay,
+      InstructionsForVisitors,
+      ShortDescription,
+      LongDescription,
     } = req.body;
 
     const saveData = {
       PanchtatvaSubcategoryId,
       PanchtatvaCategoryId,
       Destination,
-      ShortDescription,
       WikiPageLink,
       CityId,
       Geolocation,
@@ -45,6 +50,13 @@ router.post("/SaveDestination", validateSaveDestination, async (req, res) => {
       Lane,
       Hall,
       Floor,
+      EntryFee,
+      WorkingDays,
+      OpeningHours,
+      TicketInventoryPerDay,
+      InstructionsForVisitors,
+      ShortDescription,
+      LongDescription,
     };
 
     if (!_id) {

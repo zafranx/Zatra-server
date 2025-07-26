@@ -34,6 +34,7 @@ const saveDestinationSchema = Joi.object({
   }),
 
   ShortDescription: Joi.string().allow("", null).optional(),
+  LongDescription: Joi.string().allow("", null).optional(),
   Lane: Joi.array()
     .items(
       Joi.object({
@@ -64,6 +65,29 @@ const saveDestinationSchema = Joi.object({
     )
     .allow("", null)
     .optional(),
+  EntryFee: Joi.array()
+    .items(
+      Joi.object({
+        FeeCategory: Joi.string().optional().allow("", null),
+        FeeAmount: Joi.string().optional().allow("", null),
+        _id: Joi.string().optional().allow("", null),
+      })
+    )
+    .allow("", null)
+    .optional(),
+  WorkingDays: Joi.array()
+    .items(Joi.string().optional().allow("", null))
+    .allow("", null)
+    .optional(),
+  OpeningHours: Joi.object({
+    OpeningTime: Joi.string().isoDate().allow("", null).optional(),
+    ClosingTime: Joi.string().isoDate().allow("", null).optional(),
+    LunchHours: Joi.string().allow("", null).optional(),
+  })
+    .allow("", null)
+    .optional(),
+  TicketInventoryPerDay: Joi.number().optional().allow("", null),
+  InstructionsForVisitors: Joi.string().allow("", null).optional(),
   WikiPageLink: Joi.string().allow("", null).optional(),
   //   WikiPageLink: Joi.string().uri().allow("", null).optional(),
 
