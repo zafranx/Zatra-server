@@ -22,6 +22,7 @@ const V1 = {
     require("./v1/Admin/router/admin.DestinationAmenities"),
     require("./v1/Admin/router/admin.CityIndicator"),
     require("./v1/Admin/router/admin.ODOPMaster"),
+    require("./v1/Admin/router/admin.UserVerification"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),
