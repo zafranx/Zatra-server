@@ -18,7 +18,8 @@ const Joi = require("joi");
 const validateSaveUser = (req, res, next) => {
   const schema = Joi.object({
     _id: Joi.string().optional().allow(null, ""), // For edit
-    FirstName: Joi.string().allow("", null),
+    // FirstName: Joi.string().allow("", null),
+    FirstName: Joi.string().required(),
     LastName: Joi.string().allow("", null),
     DOB: Joi.date().allow(null, ""),
     Gender: Joi.string().valid("Male", "Female", "Other").allow("", null),
@@ -41,8 +42,9 @@ const validateSaveUser = (req, res, next) => {
 
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        errors: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }
@@ -53,12 +55,13 @@ const validateSaveUser = (req, res, next) => {
 // *************  UserVerification Validation *************
 const validateUserVerification = (req, res, next) => {
   const schema = Joi.object({
-    _id: Joi.string().optional(),
-    UserId: Joi.string().allow("", null).optional(),
-    // Verification_ChecklistId: Joi.string().allow("", null).optional(),
-    Verification_ChecklistId: Joi.array()
-      .items(Joi.string().allow("", null))
-      .optional(),
+    _id: Joi.string().optional().allow(null, ""), // For edit
+    // UserId: Joi.string().allow("", null).optional(),
+    UserId: Joi.string().required(),
+    Verification_ChecklistId: Joi.string().allow("", null).optional(),
+    // Verification_ChecklistId: Joi.array()
+    //   .items(Joi.string().allow("", null))
+    //   .optional(),
     VerifierId: Joi.string().allow("", null).optional(),
     VerifierName: Joi.string().allow("", null).optional(),
     Verification_Status: Joi.string()
@@ -79,8 +82,9 @@ const validateUserVerification = (req, res, next) => {
 
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((d) => d.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }
