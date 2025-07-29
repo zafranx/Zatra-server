@@ -17,7 +17,10 @@ const validateUserVerification = (req, res, next) => {
   const schema = Joi.object({
     _id: Joi.string().optional(),
     UserId: Joi.string().allow("", null).optional(),
-    Verification_ChecklistId: Joi.string().allow("", null).optional(),
+    // Verification_ChecklistId: Joi.string().allow("", null).optional(),
+    Verification_ChecklistId: Joi.array()
+      .items(Joi.string().allow("", null))
+      .optional(),
     VerifierId: Joi.string().allow("", null).optional(),
     VerifierName: Joi.string().allow("", null).optional(),
     Verification_Status: Joi.string()

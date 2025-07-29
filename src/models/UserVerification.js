@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 const _SchemaDesign = new mongoose.Schema(
   {
     UserId: { type: mongoose.SchemaTypes.ObjectId, ref: "user_master" },
-    Verification_ChecklistId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "admin_lookups",
-    },
+    Verification_ChecklistId: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "admin_lookups",
+      },
+    ],
     // VerifierId: { type: mongoose.SchemaTypes.ObjectId, ref: "verifier_master" },// Ask how it manage
     VerifierId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" }, // managed by drop down admin_lookups
-
     VerifierName: String,
     Verification_Status: String, //(Drop Down – Verification Successful, Verification Failed, Pending, Verification Denied)
     // Verification_Status: {
