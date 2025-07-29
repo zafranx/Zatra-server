@@ -12,7 +12,7 @@ const { __CreateAuditLog } = require("../../../utils/auditlog");
 
 // Joi middleware for UserVerification
 const Joi = require("joi");
-
+const UserMaster = require("../../../models/UserMaster");
 const validateUserVerification = (req, res, next) => {
   const schema = Joi.object({
     _id: Joi.string().optional(),
@@ -53,7 +53,107 @@ const validateUserVerification = (req, res, next) => {
   next();
 };
 
-// Add or Edit UserVerification
+//******* ================= SAVE (Add / Edit User) =================
+router.post("/SaveUser", async (req, res) => {
+  try {
+    const payload = req.body;
+
+    if (payload._id) {
+      // Check existing
+      const existing = await UserMaster.findById(payload._id);
+      if (!existing) {
+        return res.json(__requestResponse("404", "User not found", {}));
+      }
+
+      // Update
+      const updated = await UserMaster.findByIdAndUpdate(
+        payload._id,
+        { ...payload, updatedAt: new Date() },
+        { new: true }
+      );
+
+      // Audit Log
+      await __CreateAuditLog(
+        "user_master", // CollectionName
+        "User.Edit", // AuditType
+        null, // AuditSubType
+        existing, // OldValue
+        updated, // NewValue
+        updated._id, // RefId
+        updated._id, // ClientId (User itself)
+        null // LoginLogId
+      );
+
+      return res.json(
+        __requestResponse("200", "User updated successfully", updated)
+      );
+    } else {
+      // Create
+      const created = await UserMaster.create(payload);
+
+      // Audit Log
+      await __CreateAuditLog(
+        "user_master", // CollectionName
+        "User.Save", // AuditType
+        null, // AuditSubType
+        null, // OldValue
+        created, // NewValue
+        created._id, // RefId
+        created._id, // ClientId
+        null // LoginLogId
+      );
+
+      return res.json(
+        __requestResponse("200", "User created successfully", created)
+      );
+    }
+  } catch (error) {
+    console.error("❌ Error in SaveUser:", error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+//**** */ ================= LIST USERS =================
+router.post("/ListUser", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.body;
+
+    const query = {};
+
+    if (search) {
+      query.$or = [
+        { FirstName: { $regex: search, $options: "i" } },
+        { LastName: { $regex: search, $options: "i" } },
+        { EmailAddress: { $regex: search, $options: "i" } },
+        { PhoneNumber: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const total = await UserMaster.countDocuments(query);
+    const list = await UserMaster.find(query)
+      .populate("KYC_Id", "lookup_value")
+      .populate("Blood_Group", "lookup_value")
+      .populate("Pre_Existing_Diseases", "lookup_value")
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.json(
+      __requestResponse("200", __SUCCESS, {
+        list: __deepClone(list),
+        total,
+        page,
+        limit,
+      })
+    );
+  } catch (error) {
+    console.error("❌ Error in ListUser:", error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error));
+  }
+});
+
+// *************  Add or Edit UserVerification *************
 router.post(
   "/SaveUserVerification",
   validateUserVerification,
@@ -116,8 +216,7 @@ router.post(
     }
   }
 );
-
-// not in use
+//***  not in use
 router.post("/SaveUserVerification-not-in-use", async (req, res) => {
   try {
     const {
@@ -195,7 +294,7 @@ router.post("/SaveUserVerification-not-in-use", async (req, res) => {
   }
 });
 
-// List
+// ***  List UserVerification
 router.post("/ListUserVerification", async (req, res) => {
   try {
     const { page = 1, limit = 10, search = "" } = req.body;
