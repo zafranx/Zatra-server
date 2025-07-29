@@ -19,7 +19,7 @@ const _SchemaDesign = new Schema(
   }
 );
 
-module.exports = mongoose.model("ODOP_master", _SchemaDesign);
+module.exports = mongoose.model("login_log", _SchemaDesign);
 // Table ZATRA_LOGIN_LOG
 
 // 1.	USER_ID

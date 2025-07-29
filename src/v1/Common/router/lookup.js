@@ -19,6 +19,7 @@ const { LookupParser } = require("../middleware/middlelookup");
 // models
 const _lookup = require("../../../models/lookupmodel");
 const LookupMaster = require("../../../models/lookupmodel");
+const UserMaster = require("../../../models/UserMaster");
 
 const AdminEnvSetting = require("../../../models/AdminEnvSetting");
 const CityIndicator = require("../../../models/CityIndicator");
@@ -72,8 +73,6 @@ const CityIndicator = require("../../../models/CityIndicator");
 //   }
 // });
 
-
-
 // new api by saurabh developer : for calling city indicator
 router.post("/LookupList", async (req, res) => {
   console.log(req.body);
@@ -95,6 +94,24 @@ router.post("/LookupList", async (req, res) => {
           __SUCCESS,
           users.map((item) => ({
             lookup_value: item?.CityIndicatorName,
+            _id: item._id,
+          }))
+        )
+      );
+    }
+
+    if (req?.body?.lookup_type[0] == "user_master_list") {
+      const users = await UserMaster.find();
+
+      if (users.length == 0) {
+        return res.json(__requestResponse("404", "No Data found"));
+      }
+      return res.json(
+        __requestResponse(
+          "200",
+          __SUCCESS,
+          users.map((item) => ({
+            lookup_value: item?.FirstName + " " + item?.LastName,
             _id: item._id,
           }))
         )

@@ -12,7 +12,7 @@ const _SchemaDesign = new Schema(
     },
     RoleId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
     UserAuthorityLevel: String,
-    StationId: { type: mongoose.SchemaTypes.ObjectId, ref: "station_master" },
+    StationId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
     DestinationId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "destination_master",
@@ -28,7 +28,7 @@ const _SchemaDesign = new Schema(
   }
 );
 
-module.exports = mongoose.model("ODOP_master", _SchemaDesign);
+module.exports = mongoose.model("zatra_login_master", _SchemaDesign);
 // Table ZATRA_LOGIN
 
 // 1.	ZATRA_ID
