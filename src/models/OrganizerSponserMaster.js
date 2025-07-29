@@ -14,8 +14,11 @@ const mongoose = require("mongoose");
 const _SchemaDesign = new mongoose.Schema(
   {
     ZatraId: { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_master" },
-    OrganizerTypeId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
-    OrganizerId: { type: mongoose.SchemaTypes.ObjectId, ref: "user_master" },
+    OrganizerTypeId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
+    // OrganizerId: { type: mongoose.SchemaTypes.ObjectId, ref: "user_master" },
     OrganizerName: String,
     Website: String,
     ContactName: String,

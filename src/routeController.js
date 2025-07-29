@@ -24,6 +24,7 @@ const V1 = {
     require("./v1/Admin/router/admin.ODOPMaster"),
     require("./v1/Admin/router/admin.UserMaster"),
     require("./v1/Admin/router/admin.ZatraLogin"),
+    require("./v1/Admin/router/admin.OrganizerSponser"),
   ],
   COMMON_ROUTE: [
     require("./v1/Common/router/lookup"),
