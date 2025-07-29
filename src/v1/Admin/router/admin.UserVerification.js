@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const UserVerification = require("../../../models/UserVerification");
+const UserMaster = require("../../../models/UserMaster");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const {
   __SUCCESS,
@@ -12,7 +13,44 @@ const { __CreateAuditLog } = require("../../../utils/auditlog");
 
 // Joi middleware for UserVerification
 const Joi = require("joi");
-const UserMaster = require("../../../models/UserMaster");
+
+// *************  UserMaster Validation *************
+const validateSaveUser = (req, res, next) => {
+  const schema = Joi.object({
+    _id: Joi.string().optional().allow(null, ""), // For edit
+    FirstName: Joi.string().allow("", null),
+    LastName: Joi.string().allow("", null),
+    DOB: Joi.date().allow(null, ""),
+    Gender: Joi.string().valid("Male", "Female", "Other").allow("", null),
+    PhoneNumber: Joi.number().allow(null),
+    EmailAddress: Joi.string().email().allow("", null),
+    KYC_Id: Joi.string().allow("", null), // ObjectId reference
+    KYC_Number: Joi.string().allow("", null),
+    KYC_Upload: Joi.string().allow("", null),
+    Profile_Pic: Joi.string().allow("", null),
+    User_Bio: Joi.string().allow("", null),
+    Blood_Group: Joi.string().allow("", null), // ObjectId reference
+    Pre_Existing_Diseases: Joi.string().allow("", null), // ObjectId reference
+    Pregnancy: Joi.boolean().allow(null),
+    Present_Disability: Joi.boolean().allow(null),
+    Infectious_Diseases: Joi.boolean().allow(null),
+    IsActive: Joi.boolean().optional(),
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    return res.json(
+      __requestResponse("400", "Validation Error", {
+        errors: error.details.map((d) => d.message),
+      })
+    );
+  }
+
+  next();
+};
+
+// *************  UserVerification Validation *************
 const validateUserVerification = (req, res, next) => {
   const schema = Joi.object({
     _id: Joi.string().optional(),
@@ -40,13 +78,10 @@ const validateUserVerification = (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    return __requestResponse(
-      "400",
-      "Validation Error",
-      {
+    return res.json(
+      __requestResponse("400", "Validation Error", {
         error: error.details.map((d) => d.message),
-      },
-      res
+      })
     );
   }
 
@@ -54,7 +89,7 @@ const validateUserVerification = (req, res, next) => {
 };
 
 //******* ================= SAVE (Add / Edit User) =================
-router.post("/SaveUser", async (req, res) => {
+router.post("/SaveUser", validateSaveUser, async (req, res) => {
   try {
     const payload = req.body;
 
