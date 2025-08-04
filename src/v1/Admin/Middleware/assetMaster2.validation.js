@@ -239,7 +239,8 @@ const schema = Joi.object({
   // ------------------------
   // 18. Contact Details
   // ------------------------
-  Phone: Joi.number().optional(),
+  // Phone: Joi.number().optional(),
+  Phone: Joi.number().allow("", null),
   EmailAddress: Joi.string().email().allow("", null),
   // Website: Joi.string().uri().allow("", null),
   // LinkedIn: Joi.string().uri().allow("", null),
