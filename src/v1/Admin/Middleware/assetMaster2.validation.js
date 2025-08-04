@@ -3,13 +3,24 @@ const mongoose = require("mongoose");
 const { __requestResponse } = require("../../../utils/constent");
 
 //  helper to check valid ObjectId
+// const objectId = () =>
+//   Joi.string().custom((value, helpers) => {
+//     if (!mongoose.Types.ObjectId.isValid(value)) {
+//       return helpers.error("any.invalid");
+//     }
+//     return value;
+//   }, "ObjectId Validation");
+
 const objectId = () =>
-  Joi.string().custom((value, helpers) => {
-    if (!mongoose.Types.ObjectId.isValid(value)) {
-      return helpers.error("any.invalid");
-    }
-    return value;
-  }, "ObjectId Validation");
+  Joi.string()
+    .allow(null)
+    .custom((value, helpers) => {
+      if (value === null) return value;
+      if (!mongoose.Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    }, "ObjectId Validation");
 
 const schema = Joi.object({
   // ------------------------
@@ -77,8 +88,16 @@ const schema = Joi.object({
   // ------------------------
   // 8. Media
   // ------------------------
-  PictureGallery: Joi.array().items(Joi.string().uri()).optional(),
-  VideoGallery: Joi.array().items(Joi.string().uri()).optional(),
+  // PictureGallery: Joi.array().items(Joi.string().uri()).optional(),
+  // VideoGallery: Joi.array().items(Joi.string().uri()).optional(),
+  PictureGallery: Joi.array()
+    .items(Joi.string().allow("", null))
+    .allow(null)
+    .optional(),
+  VideoGallery: Joi.array()
+    .items(Joi.string().allow("", null))
+    .allow(null)
+    .optional(),
 
   // ------------------------
   // 9. Timings & Hours
@@ -111,8 +130,10 @@ const schema = Joi.object({
   // ------------------------
   SocialMedia: Joi.array().items(
     Joi.object({
-      SocialMediaAsset: objectId().required(),
-      URL: Joi.string().uri().allow("", null),
+      // SocialMediaAsset: objectId().required(),
+      SocialMediaAsset: Joi.string().allow("", null),
+      // URL: Joi.string().uri().allow("", null),
+      URL: Joi.string().allow("", null),
     })
   ),
 
@@ -171,7 +192,8 @@ const schema = Joi.object({
       TicketFee: Joi.number().min(0),
     })
   ),
-  OnlineBookingURL: Joi.string().uri().allow("", null),
+  // OnlineBookingURL: Joi.string().uri().allow("", null),
+  OnlineBookingURL: Joi.string().allow("", null),
 
   // ------------------------
   // 13. Authorized Representative
@@ -194,7 +216,8 @@ const schema = Joi.object({
   // 15. Status & System Fields
   // ------------------------
   IsOpen: Joi.boolean().default(true),
-  LiveFeedURL: Joi.string().uri().allow("", null),
+  // LiveFeedURL: Joi.string().uri().allow("", null),
+  LiveFeedURL: Joi.string().allow("", null),
   AllocatedQRCode: Joi.string().allow("", null),
   IsAccountLogin: Joi.boolean().default(false),
   Password: Joi.string().allow("", null), // used only if IsAccountLogin = true
@@ -222,7 +245,8 @@ const schema = Joi.object({
   // LinkedIn: Joi.string().uri().allow("", null),
   // Instagram: Joi.string().uri().allow("", null),
   // Facebook: Joi.string().uri().allow("", null),
-  Logo: Joi.string().uri().allow("", null),
+  // Logo: Joi.string().uri().allow("", null),
+  Logo: Joi.string().allow("", null),
 }).unknown(false); // 🚨 no extra fields allowed
 
 // Middleware
@@ -230,8 +254,9 @@ const validateSaveAssetMaster2 = (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
   if (error) {
     return res.json(
-      __requestResponse("400", "Validation Error", {
-        error: error.details.map((e) => e.message),
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
       })
     );
   }
