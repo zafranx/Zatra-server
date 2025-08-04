@@ -119,7 +119,7 @@ const schema = Joi.object({
   // ------------------------
   // 11. Layout Plan
   // ------------------------
- Lane: Joi.array()
+  Lane: Joi.array()
     .items(
       Joi.object({
         LaneNumber: Joi.string().optional().allow("", null),
@@ -218,10 +218,10 @@ const schema = Joi.object({
   // ------------------------
   Phone: Joi.number().optional(),
   EmailAddress: Joi.string().email().allow("", null),
-  Website: Joi.string().uri().allow("", null),
-  LinkedIn: Joi.string().uri().allow("", null),
-  Instagram: Joi.string().uri().allow("", null),
-  Facebook: Joi.string().uri().allow("", null),
+  // Website: Joi.string().uri().allow("", null),
+  // LinkedIn: Joi.string().uri().allow("", null),
+  // Instagram: Joi.string().uri().allow("", null),
+  // Facebook: Joi.string().uri().allow("", null),
   Logo: Joi.string().uri().allow("", null),
 }).unknown(false); // 🚨 no extra fields allowed
 

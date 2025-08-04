@@ -164,13 +164,13 @@ const _SchemaDesign = new mongoose.Schema(
       ref: "admin_lookups",
     },
 
-    // 18. Contact Details
+    // 18. Contact Details : Authorized Representative
     Phone: Number,
     EmailAddress: String,
-    Website: String,
-    LinkedIn: String,
-    Instagram: String,
-    Facebook: String,
+    // Website: String,
+    // LinkedIn: String,
+    // Instagram: String,
+    // Facebook: String,
     Logo: String,
 
     // 19. Destination Amenities
