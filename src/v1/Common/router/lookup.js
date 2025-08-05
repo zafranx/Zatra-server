@@ -180,7 +180,8 @@ router.post("/LookupList", async (req, res) => {
           "200",
           __SUCCESS,
           users.map((item) => ({
-            lookup_value: item?.FirstName + " " + item?.LastName,
+            // lookup_value: item?.FirstName + " " + item?.LastName,
+            lookup_value: item?.FullName,
             _id: item._id,
           }))
         )
