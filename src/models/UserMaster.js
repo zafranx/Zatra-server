@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const _SchemaDesign = new mongoose.Schema(
   {
-    FirstName: String,
-    LastName: String,
-    DOB:  Date ,
+    // FirstName: String,
+    // LastName: String,
+    FullName: String,
+    DOB: Date,
     Gender: String,
     PhoneNumber: Number,
     EmailAddress: String,

@@ -18,6 +18,8 @@ const _SchemaDesign = new Schema(
       ref: "destination_master",
     },
     ServiceId: { type: mongoose.SchemaTypes.ObjectId, ref: "service_master" },
+    FullName: String,
+    MobileNumber: String,
     Password: String,
     ValidFrom: Date,
     ValidUpto: Date,

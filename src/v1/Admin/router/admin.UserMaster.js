@@ -18,9 +18,9 @@ const Joi = require("joi");
 const validateSaveUser = (req, res, next) => {
   const schema = Joi.object({
     _id: Joi.string().optional().allow(null, ""), // For edit
-    // FirstName: Joi.string().allow("", null),
-    FirstName: Joi.string().required(),
-    LastName: Joi.string().allow("", null),
+    FullName: Joi.string().required(),
+    // FirstName: Joi.string().required(),
+    // LastName: Joi.string().allow("", null),
     DOB: Joi.date().allow(null, ""),
     Gender: Joi.string().valid("Male", "Female", "Other").allow("", null),
     PhoneNumber: Joi.number().allow(null),
