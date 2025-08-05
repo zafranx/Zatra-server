@@ -73,7 +73,7 @@ const CityIndicator = require("../../../models/CityIndicator");
 //   }
 // });
 
-// new api by Zafran & saurabh  developer : for calling city indicator
+// new api by Zafran & saurabh  developer : for calling city indicator and user master list
 
 router.post("/LookupList-old2", async (req, res) => {
   console.log(req.body);
