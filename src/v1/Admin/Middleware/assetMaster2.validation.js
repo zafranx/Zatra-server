@@ -4,12 +4,21 @@ const { __requestResponse } = require("../../../utils/constent");
 
 //  helper to check valid ObjectId
 // const objectId = () =>
-//   Joi.string().custom((value, helpers) => {
-//     if (!mongoose.Types.ObjectId.isValid(value)) {
-//       return helpers.error("any.invalid");
-//     }
-//     return value;
-//   }, "ObjectId Validation");
+//   Joi.alternatives().try(
+//     Joi.string()
+//       .allow(null)
+//       .custom((value, helpers) => {
+//         if (value === null) return value;
+//         if (!mongoose.Types.ObjectId.isValid(value)) {
+//           return helpers.error("any.invalid");
+//         }
+//         return value;
+//       }, "ObjectId Validation"),
+//     Joi.object().instance(mongoose.Types.ObjectId)
+//   );
+
+
+//  helper to check valid ObjectId
 
 const objectId = () =>
   Joi.string()

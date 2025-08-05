@@ -74,9 +74,9 @@ const CityIndicator = require("../../../models/CityIndicator");
 // });
 
 // new api by saurabh developer : for calling city indicator
-router.post("/LookupList", async (req, res) => {
+router.post("/LookupList2", async (req, res) => {
   console.log(req.body);
-  console.log("api");
+  console.log("api common lookup list");
   try {
     if (!req?.body?.lookup_type || req?.body?.lookup_type.length === 0) {
       return res.json(__requestResponse("400", "Lookup type is required"));
@@ -118,13 +118,22 @@ router.post("/LookupList", async (req, res) => {
       );
     }
 
+    // const list = await LookupMaster.find({
+    //   lookup_type: { $in: req?.body?.lookup_type || [] },
+    //   ...(mongoose.Types.ObjectId.isValid(req.body?.parent_lookup_id) && {
+    //     parent_lookup_id: mongoose.Types.ObjectId(req.body?.parent_lookup_id),
+    //   }),
+    //   is_active: true,
+    // });
     const list = await LookupMaster.find({
       lookup_type: { $in: req?.body?.lookup_type || [] },
       ...(mongoose.Types.ObjectId.isValid(req.body?.parent_lookup_id) && {
         parent_lookup_id: mongoose.Types.ObjectId(req.body?.parent_lookup_id),
       }),
       is_active: true,
-    });
+    })
+      .populate("parent_lookup_id", "lookup_value") // populate parent lookup name
+      .lean();
 
     if (list.length == 0) {
       return res.json(__requestResponse("404", "No Date found"));
@@ -134,6 +143,77 @@ router.post("/LookupList", async (req, res) => {
     return res.json(__requestResponse("500", error.message));
   }
 });
+
+router.post("/LookupList", async (req, res) => {
+  try {
+    if (!req?.body?.lookup_type || req?.body?.lookup_type.length === 0) {
+      return res.json(__requestResponse("400", "Lookup type is required"));
+    }
+
+    // For city_indicator lookup
+    if (req?.body?.lookup_type[0] === "city_indicator") {
+      const users = await CityIndicator.find();
+      if (users.length === 0) {
+        return res.json(__requestResponse("404", "No Data found"));
+      }
+      return res.json(
+        __requestResponse(
+          "200",
+          __SUCCESS,
+          users.map((item) => ({
+            lookup_value: item?.CityIndicatorName,
+            _id: item._id,
+          }))
+        )
+      );
+    }
+
+    // For user_master_list lookup
+    if (req?.body?.lookup_type[0] === "user_master_list") {
+      const users = await UserMaster.find();
+      if (users.length === 0) {
+        return res.json(__requestResponse("404", "No Data found"));
+      }
+      return res.json(
+        __requestResponse(
+          "200",
+          __SUCCESS,
+          users.map((item) => ({
+            lookup_value: item?.FirstName + " " + item?.LastName,
+            _id: item._id,
+          }))
+        )
+      );
+    }
+
+    // For other lookup types
+    const list = await LookupMaster.find({
+      lookup_type: { $in: req?.body?.lookup_type || [] },
+      ...(mongoose.Types.ObjectId.isValid(req.body?.parent_lookup_id) && {
+        parent_lookup_id: mongoose.Types.ObjectId(req.body?.parent_lookup_id),
+      }),
+      is_active: true,
+    })
+      .populate("parent_lookup_id", "lookup_value") // ✅ populate parent lookup name
+      .lean();
+
+    if (list.length === 0) {
+      return res.json(__requestResponse("404", "No Data found"));
+    }
+    // transform response to parent_lookup_id + parent_lookup_name
+    const transformedList = list.map((item) => ({
+      ...item,
+      parent_lookup_name: item?.parent_lookup_id?.lookup_value || "",
+      parent_lookup_id: item?.parent_lookup_id?._id || "",
+    }));
+
+    return res.json(__requestResponse("200", __SUCCESS, transformedList));
+  } catch (error) {
+    console.error("❌ LookupList Error:", error);
+    return res.json(__requestResponse("500", error.message));
+  }
+});
+
 
 // not in use
 const lookuplistByParent = Joi.object({
