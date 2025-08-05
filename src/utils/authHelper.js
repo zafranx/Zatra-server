@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const LoginMaster = require("../models/LoginMaster");
 const AssetUserMaster = require("../models/AssetUserMaster");
+const ZatraMaster = require("../models/ZatraMaster");
+const ZatraLogin = require("../models/ZatraLogin");
 
 /**
  * Generate a strong password.
@@ -132,8 +134,61 @@ const createAssetLogin = async ({ assetId, Name, Phone, Password }) => {
   };
 };
 
+const createZatraLogin = async ({
+  UserId,
+  RoleId,
+  FullName,
+  MobileNumber,
+  Password,
+  ValidFrom,
+  ValidUpto,
+}) => {
+  if (!RoleId || !UserId || !MobileNumber) {
+    throw new Error("Missing required fields to create login");
+  }
+  console.log("Creating Zatra login for UserId:", UserId, "RoleId:", RoleId);
+  // Use given password or fallback to mobile number
+  const plainPassword = Password || MobileNumber?.toString() || "123456";
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+  // 🔹 Check if login already exists for this user & Zatra
+  let existing = await ZatraLogin.findOne({ UserId });
+
+  if (existing) {
+    // update existing login
+    existing.RoleId = RoleId;
+    existing.FullName = FullName;
+    existing.MobileNumber = MobileNumber;
+    existing.Password = hashedPassword;
+    existing.Blocked = false;
+    existing.ValidFrom = existing.ValidFrom || new Date();
+    existing.ValidUpto = ValidUpto || null;
+
+    await existing.save();
+    return existing.toObject();
+  }
+
+  // 🔹 Create new login record
+  const loginData = {
+    UserId,
+    RoleId,
+    FullName,
+    MobileNumber,
+    Password: hashedPassword,
+    // UserAuthorityLevel: "Admin",
+    // ValidFrom: new Date(),
+    ValidFrom: ValidFrom || new Date(),
+    ValidUpto: ValidUpto || null,
+    Blocked: false,
+  };
+
+  const created = await ZatraLogin.create(loginData);
+  return created.toObject();
+};
+
 module.exports = {
   generateStrongPassword,
   createAssetLogin,
+  createZatraLogin,
   // updateAssetLogin,
 };
