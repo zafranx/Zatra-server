@@ -73,8 +73,9 @@ const CityIndicator = require("../../../models/CityIndicator");
 //   }
 // });
 
-// new api by saurabh developer : for calling city indicator
-router.post("/LookupList2", async (req, res) => {
+// new api by Zafran & saurabh  developer : for calling city indicator
+
+router.post("/LookupList-old2", async (req, res) => {
   console.log(req.body);
   console.log("api common lookup list");
   try {
@@ -194,7 +195,7 @@ router.post("/LookupList", async (req, res) => {
       }),
       is_active: true,
     })
-      .populate("parent_lookup_id", "lookup_value") // ✅ populate parent lookup name
+      .populate("parent_lookup_id", "lookup_value") //  populate parent lookup name
       .lean();
 
     if (list.length === 0) {
@@ -209,7 +210,7 @@ router.post("/LookupList", async (req, res) => {
 
     return res.json(__requestResponse("200", __SUCCESS, transformedList));
   } catch (error) {
-    console.error("❌ LookupList Error:", error);
+    console.error(" LookupList Error:", error);
     return res.json(__requestResponse("500", error.message));
   }
 });
