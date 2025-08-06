@@ -196,6 +196,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
   }
 });
 
+// 🔹 SaveZatra-EnrouteStations for a Zatra
 router.post(
   "/SaveZatra-EnrouteStations",
   validateSaveZatraEnrouteStations,
@@ -241,6 +242,56 @@ router.post(
     }
   }
 );
+
+// 🔹 List EnrouteStations for a Zatra
+router.post("/ListZatra-EnrouteStations", async (req, res) => {
+  try {
+    const { ZatraId } = req.body;
+
+    if (!ZatraId || !mongoose.Types.ObjectId.isValid(ZatraId)) {
+      return res.json(__requestResponse("400", "Invalid or missing ZatraId"));
+    }
+
+    // 🔹 Fetch Zatra with EnrouteStations populated
+    const zatra = await ZatraMaster.findById(ZatraId).populate([
+      {
+        path: "EnrouteStations.StateId",
+        select: "lookup_value",
+        model: "admin_lookups",
+      },
+      {
+        path: "EnrouteStations.CityId",
+        select: "lookup_value",
+        model: "admin_lookups",
+      },
+    ]);
+
+    if (!zatra) {
+      return res.json(__requestResponse("404", "Zatra not found", {}));
+    }
+
+    const list = (zatra.EnrouteStations || []).map((station) => ({
+      StateId: station.StateId?._id || null,
+      StateName: station.StateId?.lookup_value || null,
+      CityId: station.CityId?._id || null,
+      CityName: station.CityId?.lookup_value || null,
+    }));
+
+    if (list.length === 0) {
+      return res.json(__requestResponse("404", "No EnrouteStations found", []));
+    }
+
+    return res.json(
+      __requestResponse("200", "EnrouteStations fetched successfully", {
+        list,
+      })
+    );
+  } catch (error) {
+    console.error("ListZatra-EnrouteStations Error:", error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error.message));
+  }
+});
+
 
 // 🔹 Add/Edit Zatra
 router.post("/SaveZatra-new", validateSaveZatra, async (req, res) => {
