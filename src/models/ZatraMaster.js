@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // ZatraMaster
 const _SchemaDesign = new mongoose.Schema(
   {
-    ZatraTypeId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" }, // ZATRA_TYPE_ID
+    ZatraTypeId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" }, // lookup parameter zatra_category
     Name: { type: String, required: true }, // ZATRA Name
     ShortDescription: { type: String },
     LongDescription: { type: String },

@@ -3,6 +3,7 @@ const LoginMaster = require("../models/LoginMaster");
 const AssetUserMaster = require("../models/AssetUserMaster");
 const ZatraMaster = require("../models/ZatraMaster");
 const ZatraLogin = require("../models/ZatraLogin");
+const e = require("express");
 
 /**
  * Generate a strong password.
@@ -135,6 +136,7 @@ const createAssetLogin = async ({ assetId, Name, Phone, Password }) => {
 };
 
 const createZatraLogin = async ({
+  ZatraId,
   UserId,
   RoleId,
   FullName,
@@ -143,7 +145,7 @@ const createZatraLogin = async ({
   ValidFrom,
   ValidUpto,
 }) => {
-  if (!RoleId || !UserId || !MobileNumber) {
+  if (!ZatraId || !RoleId || !UserId || !MobileNumber) {
     throw new Error("Missing required fields to create login");
   }
   console.log("Creating Zatra login for UserId:", UserId, "RoleId:", RoleId);
@@ -156,6 +158,8 @@ const createZatraLogin = async ({
 
   if (existing) {
     // update existing login
+    // existing.ZatraId = ZatraId;
+    // existing.UserId = UserId;
     existing.RoleId = RoleId;
     existing.FullName = FullName;
     existing.MobileNumber = MobileNumber;
@@ -170,6 +174,7 @@ const createZatraLogin = async ({
 
   // 🔹 Create new login record
   const loginData = {
+    ZatraId: ZatraId,
     UserId,
     RoleId,
     FullName,

@@ -10,7 +10,10 @@ const {
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
-const { validateSaveZatra } = require("../Middleware/zatraMaster.validation");
+const {
+  validateSaveZatra,
+  validateSaveZatraEnrouteStations,
+} = require("../Middleware/zatraMaster.validation");
 const { createZatraLogin } = require("../../../utils/authHelper");
 const UserMaster = require("../../../models/UserMaster");
 const AdminLookups = require("../../../models/lookupmodel");
@@ -88,7 +91,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
               Password: String(user.PhoneNumber), // fallback password
               ValidFrom: payload.StartDate,
               ValidUpto: payload.EndDate,
-              // ZatraId: newRec._id,
+              ZatraId: newRec._id,
             });
           } catch (err) {
             console.error("⚠️ Failed to create ZatraAdmin login:", err.message);
@@ -115,7 +118,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
               Password: String(user.PhoneNumber),
               ValidFrom: payload.StartDate,
               ValidUpto: payload.EndDate,
-              // ZatraId: newRec._id,
+              ZatraId: newRec._id,
             });
           } catch (err) {
             console.error(
@@ -145,7 +148,7 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
               Password: String(user.PhoneNumber),
               ValidFrom: payload.StartDate,
               ValidUpto: payload.EndDate,
-              // ZatraId: newRec._id,
+              ZatraId: newRec._id,
             });
           } catch (err) {
             console.error(
@@ -192,6 +195,52 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
     return res.json(__requestResponse("500", __SOME_ERROR, error.message));
   }
 });
+
+router.post(
+  "/SaveZatra-EnrouteStations",
+  validateSaveZatraEnrouteStations,
+  async (req, res) => {
+    try {
+      const { _id, EnrouteStations } = req.body;
+
+      // 🔹 Find Zatra record
+      const oldRec = await ZatraMaster.findById(_id);
+      if (!oldRec) {
+        return res.json(__requestResponse("404", __RECORD_NOT_FOUND, {}));
+      }
+
+      // 🔹 Update EnrouteStations
+      const updated = await ZatraMaster.findByIdAndUpdate(
+        _id,
+        { $set: { EnrouteStations, updatedAt: new Date() } },
+        { new: true }
+      );
+
+      // 🔹 Audit Log
+      await __CreateAuditLog(
+        "zatra_master",
+        "Zatra.EnrouteStations.Edit",
+        null,
+        oldRec,
+        updated,
+        _id,
+        null,
+        null
+      );
+
+      return res.json(
+        __requestResponse(
+          "200",
+          "EnrouteStations updated successfully",
+          updated
+        )
+      );
+    } catch (error) {
+      console.error(" SaveZatra-EnrouteStations Error:", error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error.message));
+    }
+  }
+);
 
 // 🔹 Add/Edit Zatra
 router.post("/SaveZatra-new", validateSaveZatra, async (req, res) => {
