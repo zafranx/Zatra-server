@@ -13,6 +13,7 @@ const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const {
   validateSaveZatra,
   validateSaveZatraEnrouteStations,
+  validateSaveZatraSocialMedia,
 } = require("../Middleware/zatraMaster.validation");
 const { createZatraLogin } = require("../../../utils/authHelper");
 const UserMaster = require("../../../models/UserMaster");
@@ -210,10 +211,21 @@ router.post(
         return res.json(__requestResponse("404", __RECORD_NOT_FOUND, {}));
       }
 
-      // 🔹 Update EnrouteStations
+      // // 🔹 Update EnrouteStations
+      // const updated = await ZatraMaster.findByIdAndUpdate(
+      //   _id,
+      //   { $set: { EnrouteStations, updatedAt: new Date() } },
+      //   { new: true }
+      // );
+      // 🔹 Merge old and new EnrouteStations
       const updated = await ZatraMaster.findByIdAndUpdate(
         _id,
-        { $set: { EnrouteStations, updatedAt: new Date() } },
+        {
+          $push: {
+            EnrouteStations: { $each: EnrouteStations },
+          },
+          $set: { updatedAt: new Date() },
+        },
         { new: true }
       );
 
@@ -292,6 +304,61 @@ router.post("/ListZatra-EnrouteStations", async (req, res) => {
   }
 });
 
+// 🔹 SaveZatra-SocialMedia for a Zatra
+router.post(
+  "/SaveZatra-SocialMedia",
+  validateSaveZatraSocialMedia,
+  async (req, res) => {
+    try {
+      const { _id, ZatraSocialMedia } = req.body;
+
+      if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
+        return res.json(__requestResponse("400", "Invalid ZatraId", {}));
+      }
+
+      // 🔹 Find Zatra record
+      const oldRec = await ZatraMaster.findById(_id);
+      if (!oldRec) {
+        return res.json(__requestResponse("404", __RECORD_NOT_FOUND, {}));
+      }
+
+      // 🔹 Append new Social Media links instead of replacing
+      const updated = await ZatraMaster.findByIdAndUpdate(
+        _id,
+        {
+          $push: {
+            ZatraSocialMedia: { $each: ZatraSocialMedia },
+          },
+          $set: { updatedAt: new Date() },
+        },
+        { new: true }
+      ).populate("ZatraSocialMedia.SocialMediaId", "lookup_value");
+
+      // 🔹 Audit Log
+      await __CreateAuditLog(
+        "zatra_master",
+        "Zatra.SocialMedia.Edit",
+        null,
+        oldRec,
+        updated,
+        _id,
+        null,
+        null
+      );
+
+      return res.json(
+        __requestResponse(
+          "200",
+          "Zatra Social Media updated successfully",
+          updated
+        )
+      );
+    } catch (error) {
+      console.error(" SaveZatra-SocialMedia Error:", error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error.message));
+    }
+  }
+);
 
 // 🔹 Add/Edit Zatra
 router.post("/SaveZatra-new", validateSaveZatra, async (req, res) => {
@@ -458,9 +525,18 @@ router.post("/ZatraList", async (req, res) => {
         //   "Sponsors",
         //   "OrganizerName ContactName EmailAddress IsSponsor"
         // )
-        .populate("OrganizerAdmins", "UserId RoleId")
-        .populate("SponsorAdmins", "UserId RoleId")
-        .populate("ZatraAdmins", "UserId RoleId")
+        // .populate("OrganizerAdmins", "UserId RoleId")
+        // .populate("SponsorAdmins", "UserId RoleId")
+        .populate(
+          "OrganizerAdmins",
+          "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
+        )
+        .populate(
+          "SponsorAdmins",
+          "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
+        )
+        // .populate("ZatraAdmins", "UserId RoleId")
+        .populate("ZatraAdmins", "lookup_value")
         .populate("RegistrationFees.FeeCategory", "lookup_value")
         .populate("ZatraSocialMedia.SocialMediaId", "lookup_value")
         .sort({ createdAt: -1 })

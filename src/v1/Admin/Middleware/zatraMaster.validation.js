@@ -139,4 +139,56 @@ const validateSaveZatraEnrouteStations = (req, res, next) => {
   next();
 };
 
-module.exports = { validateSaveZatra, validateSaveZatraEnrouteStations };
+
+// 🔹 Schema
+const saveZatraSocialMediaSchema = Joi.object({
+  _id: objectId().required(),
+  ZatraSocialMedia: Joi.array()
+    .items(
+      Joi.object({
+        SocialMediaId: objectId().required(),
+        URL: Joi.string().uri().required(),
+      })
+    )
+    .min(1)
+    .required(),
+  // _id: objectId().required().messages({
+  //   "any.invalid": "Invalid ZatraId",
+  //   "any.required": "ZatraId (_id) is required",
+  // }),
+
+  // ZatraSocialMedia: Joi.array()
+  //   .items(
+  //     Joi.object({
+  //       SocialMediaId: objectId().optional().allow(null, ""),
+  //       URL: Joi.string().allow("", null).optional(),
+  //     })
+  //   )
+  //   .required()
+  //   .messages({
+  //     "array.base": "ZatraSocialMedia must be an array",
+  //   }),
+});
+
+// 🔹 Middleware
+const validateSaveZatraSocialMedia = (req, res, next) => {
+  const { error } = saveZatraSocialMediaSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.json(
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
+      })
+    );
+  }
+  next();
+};
+
+module.exports = {
+  validateSaveZatra,
+  validateSaveZatraEnrouteStations,
+  validateSaveZatraSocialMedia,
+};

@@ -89,6 +89,20 @@ router.post(
   async (req, res) => {
     try {
       const payload = req.body;
+      // 🔹 Pick RoleId based on IsSponsor
+      let roleType = payload.IsSponsor ? "Sponsor ADMIN" : "Organiser ADMIN";
+
+      const roleLookup = await AdminLookups.findOne({
+        lookup_type: "role_type",
+        lookup_value: roleType,
+        is_active: true,
+      });
+
+      if (!roleLookup) {
+        return res.json(
+          __requestResponse("400", `Role lookup for ${roleType} not found`)
+        );
+      }
 
       let record;
 
@@ -144,13 +158,14 @@ router.post(
             );
             await createZatraLogin({
               UserId: record._id,
-              RoleId: (
-                await AdminLookups.findOne({
-                  lookup_type: "role_type",
-                  lookup_value: "Organiser ADMIN",
-                  is_active: true,
-                })
-              )?._id,
+              // RoleId: (
+              //   await AdminLookups.findOne({
+              //     lookup_type: "role_type",
+              //     lookup_value: "Organiser ADMIN",
+              //     is_active: true,
+              //   })
+              // )?._id,
+              RoleId: roleLookup._id, // Sponsor Admin OR Organiser Admin
               FullName: payload.ContactName,
               MobileNumber: payload.ContactNumber,
               // Password: String(payload.PhoneNumber), // fallback password
