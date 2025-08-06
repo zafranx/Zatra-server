@@ -151,8 +151,8 @@ router.post(
                   is_active: true,
                 })
               )?._id,
-              FullName: payload.FullName,
-              MobileNumber: payload.PhoneNumber,
+              FullName: payload.ContactName,
+              MobileNumber: payload.ContactNumber,
               // Password: String(payload.PhoneNumber), // fallback password
               Password: payload.Password,
               ValidFrom: zatraRec.StartDate,

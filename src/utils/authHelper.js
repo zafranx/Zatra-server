@@ -145,6 +145,16 @@ const createZatraLogin = async ({
   ValidFrom,
   ValidUpto,
 }) => {
+  console.log(
+    ZatraId,
+    UserId,
+    RoleId,
+    FullName,
+    MobileNumber,
+    Password,
+    ValidFrom,
+    ValidUpto
+  );
   if (!ZatraId || !RoleId || !UserId || !MobileNumber) {
     throw new Error("Missing required fields to create login");
   }
