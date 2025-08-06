@@ -399,14 +399,14 @@ router.post("/ZatraList", async (req, res) => {
         .populate("ZatraTypeId", "lookup_value")
         .populate("EnrouteStations.StateId", "lookup_value")
         .populate("EnrouteStations.CityId", "lookup_value")
-        .populate(
-          "Organizers",
-          "OrganizerName ContactName EmailAddress IsSponsor"
-        )
-        .populate(
-          "Sponsors",
-          "OrganizerName ContactName EmailAddress IsSponsor"
-        )
+        // .populate(
+        //   "Organizers",
+        //   "OrganizerName ContactName EmailAddress IsSponsor"
+        // )
+        // .populate(
+        //   "Sponsors",
+        //   "OrganizerName ContactName EmailAddress IsSponsor"
+        // )
         .populate("OrganizerAdmins", "UserId RoleId")
         .populate("SponsorAdmins", "UserId RoleId")
         .populate("ZatraAdmins", "UserId RoleId")
