@@ -1,6 +1,8 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const { __requestResponse } = require("../../../utils/constent");
+const { __SOME_ERROR } = require("../../../utils/variable");
+const ZatraMaster = require("../../../models/ZatraMaster");
 
 // * Reusable ObjectId validation
 const objectId = () =>
@@ -83,23 +85,67 @@ const saveZatraSchema = Joi.object({
 });
 
 // * Middleware
-const validateSaveZatra = (req, res, next) => {
+const validateSaveZatra = async (req, res, next) => {
+  // 🔹 Joi validation
   const { error } = saveZatraSchema.validate(req.body, {
     abortEarly: false,
   });
 
   if (error) {
+    return res.json(
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
+      })
+    );
+  }
+
+  try {
+    const { _id, ZatraContacts = [] } = req.body;
+
+    // 🔹 Collect all phone numbers from payload
+    const phoneNumbers = ZatraContacts.map((c) => c.PhoneNumber).filter(
+      Boolean
+    );
+
+    if (phoneNumbers.length > 0) {
+      // 🔹 Check for duplicate numbers within request payload itself
+      const dupNumbers = phoneNumbers.filter(
+        (num, idx) => phoneNumbers.indexOf(num) !== idx
+      );
+      if (dupNumbers.length > 0) {
         return res.json(
           __requestResponse("400", {
             errorType: "Validation Error",
-            error: error.details.map((d) => d.message).join(". "),
+            error: `Duplicate phone numbers in request: ${[
+              ...new Set(dupNumbers),
+            ].join(", ")}`,
           })
         );
+      }
+
+      // 🔹 Check for duplicate phone numbers in DB
+      const duplicate = await ZatraMaster.findOne({
+        _id: { $ne: _id }, // exclude current record on edit
+        "ZatraContacts.PhoneNumber": { $in: phoneNumbers },
+      });
+
+      if (duplicate) {
+        return res.json(
+          __requestResponse(
+            "400",
+            `Phone number already used in another record`
+          )
+        );
+      }
+    }
+
+    next();
+  } catch (err) {
+    console.error("validateSaveZatra Error:", err);
+    return res.json(__requestResponse("500", __SOME_ERROR, err.message));
   }
-
-  next();
 };
-
 
 
 // 🔹 Schema
