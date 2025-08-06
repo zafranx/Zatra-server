@@ -30,7 +30,7 @@ const _SchemaDesign = new mongoose.Schema(
     SponsorAdmins: [
       { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
     ],
-
+    Logo: String, // URL of the logo image
     // Picture & Video Gallery
     PictureGallery: [String], // Array of image URLs
     VideoGallery: [String], // Array of video URLs

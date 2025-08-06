@@ -40,6 +40,7 @@ const saveZatraSchema = Joi.object({
   SponsorAdmins: Joi.array().items(objectId()).optional(),
   ZatraAdmins: Joi.array().items(objectId()).optional(),
 
+  Logo: Joi.string().allow("", null).optional(),
   PictureGallery: Joi.array().items(Joi.string().allow("", null)).optional(),
   VideoGallery: Joi.array().items(Joi.string().allow("", null)).optional(),
 
