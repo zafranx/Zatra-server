@@ -20,6 +20,7 @@ const _SchemaDesign = new mongoose.Schema(
     },
     // OrganizerId: { type: mongoose.SchemaTypes.ObjectId, ref: "user_master" },
     OrganizerName: String,
+    Logo: String,
     Website: String,
     ContactName: String,
     ContactNumber: String,

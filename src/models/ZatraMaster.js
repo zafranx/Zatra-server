@@ -16,19 +16,21 @@ const _SchemaDesign = new mongoose.Schema(
     ],
 
     // Organizers & Sponsors (linked to organizer_sponser_master)
-    Organizers: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    ],
-    Sponsors: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    ],
+    // Organizers: [
+    //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
+    // ],
+    // Sponsors: [
+    //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
+    // ],
 
     // Organizer & Sponsor Admins (linked to zatra_login_master)
     OrganizerAdmins: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+      // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
     ],
     SponsorAdmins: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+      // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
     ],
     Logo: String, // URL of the logo image
     // Picture & Video Gallery

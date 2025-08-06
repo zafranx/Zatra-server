@@ -10,9 +10,14 @@ const {
   __RECORD_NOT_FOUND,
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
+const { createZatraLogin } = require("../../../utils/authHelper");
+const {
+  validateSaveOrganizerSponser,
+} = require("../Middleware/orzanizerSponsorMaster.validation");
+const ZatraMaster = require("../../../models/ZatraMaster");
 
 // * Save (Add/Edit) Organizer or Sponsor
-router.post("/SaveOrganizerSponser", async (req, res) => {
+router.post("/SaveOrganizerSponserx", async (req, res) => {
   try {
     const payload = req.body;
 
@@ -25,16 +30,16 @@ router.post("/SaveOrganizerSponser", async (req, res) => {
         );
       }
 
-    //   const updated = await OrganizerSponser.findByIdAndUpdate(
-    //     payload._id,
-    //     { ...payload, updatedAt: new Date() },
-    //     { new: true }
-    //   );
-    const updated = await OrganizerSponser.findByIdAndUpdate(
-      payload._id,
-      { $set: payload },
-      { new: true }
-    );
+      //   const updated = await OrganizerSponser.findByIdAndUpdate(
+      //     payload._id,
+      //     { ...payload, updatedAt: new Date() },
+      //     { new: true }
+      //   );
+      const updated = await OrganizerSponser.findByIdAndUpdate(
+        payload._id,
+        { $set: payload },
+        { new: true }
+      );
 
       // Audit log
       await __CreateAuditLog(
@@ -75,6 +80,116 @@ router.post("/SaveOrganizerSponser", async (req, res) => {
     return res.json(__requestResponse("500", __SOME_ERROR, error.message));
   }
 });
+
+// * Save (Add/Edit) Organizer or Sponsor
+router.post(
+  "/SaveOrganizerSponser",
+  validateSaveOrganizerSponser,
+  async (req, res) => {
+    try {
+      const payload = req.body;
+
+      let record;
+
+      if (payload._id) {
+        // 🔹 Edit
+        const existing = await OrganizerSponser.findById(payload._id);
+        if (!existing) {
+          return res.json(
+            __requestResponse("404", "Organizer/Sponsor not found", {})
+          );
+        }
+
+        record = await OrganizerSponser.findByIdAndUpdate(
+          payload._id,
+          { $set: payload },
+          { new: true }
+        );
+
+        // Audit log
+        await __CreateAuditLog(
+          "organizer_sponser_master",
+          "OrganizerSponser.Edit",
+          null,
+          existing,
+          record,
+          record._id,
+          null
+        );
+      } else {
+        // 🔹 Add new
+        record = await OrganizerSponser.create(payload);
+
+        await __CreateAuditLog(
+          "organizer_sponser_master",
+          "OrganizerSponser.Save",
+          null,
+          null,
+          record,
+          record._id,
+          null
+        );
+      }
+
+      // 🔹 If marked as Organiser Admin → create login & update ZatraMaster
+      if (payload.IsOrganiserAdmin && payload.ZatraId) {
+        // Find related Zatra record
+        const zatraRec = await ZatraMaster.findById(payload.ZatraId);
+        if (zatraRec) {
+          try {
+            // Create Login
+            console.log(
+              `Creating OrganizerAdmin login for UserId: ${payload.UserId}`
+            );
+            await createZatraLogin({
+              UserId: record._id,
+              RoleId: (
+                await AdminLookups.findOne({
+                  lookup_type: "role_type",
+                  lookup_value: "Organiser ADMIN",
+                  is_active: true,
+                })
+              )?._id,
+              FullName: payload.FullName,
+              MobileNumber: payload.PhoneNumber,
+              // Password: String(payload.PhoneNumber), // fallback password
+              Password: payload.Password,
+              ValidFrom: zatraRec.StartDate,
+              ValidUpto: zatraRec.EndDate,
+              ZatraId: zatraRec._id,
+            });
+
+            // Push Organizer to ZatraMaster.OrganizerAdmins
+            await ZatraMaster.findByIdAndUpdate(
+              zatraRec._id,
+              { $addToSet: { OrganizerAdmins: record._id } }, // prevent duplicates
+              { new: true }
+            );
+          } catch (err) {
+            console.error(
+              "⚠️ Failed to create OrganizerAdmin login:",
+              err.message
+            );
+          }
+        } else {
+          console.warn("⚠️ No Zatra record found for OrganizerAdmin linking");
+        }
+      }
+
+      return res.json(
+        __requestResponse(
+          "200",
+          payload._id ? "Updated successfully" : "Created successfully",
+          record
+        )
+      );
+    } catch (error) {
+      console.error("Error in SaveOrganizerSponser:", error);
+      return res.json(__requestResponse("500", __SOME_ERROR, error.message));
+    }
+  }
+);
+
 
 //*  List Organizers/Sponsors (with filters + pagination)
 router.post("/ListOrganizerSponser", async (req, res) => {

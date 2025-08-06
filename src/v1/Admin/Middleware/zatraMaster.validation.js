@@ -34,8 +34,8 @@ const saveZatraSchema = Joi.object({
     )
     .optional(),
 
-  Organizers: Joi.array().items(objectId()).optional(),
-  Sponsors: Joi.array().items(objectId()).optional(),
+  // Organizers: Joi.array().items(objectId()).optional(),
+  // Sponsors: Joi.array().items(objectId()).optional(),
   OrganizerAdmins: Joi.array().items(objectId()).optional(),
   SponsorAdmins: Joi.array().items(objectId()).optional(),
   ZatraAdmins: Joi.array().items(objectId()).optional(),
