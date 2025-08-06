@@ -187,8 +187,81 @@ const validateSaveZatraSocialMedia = (req, res, next) => {
   next();
 };
 
+
+// Registration Fees validation
+const saveZatraRegistrationFeesSchema = Joi.object({
+  _id: objectId().required(),
+  RegistrationFees: Joi.array()
+    .items(
+      Joi.object({
+        FeeCategory: objectId().required(),
+        FeeAmount: Joi.number().min(0).required(),
+      })
+    )
+    .min(1)
+    .required(),
+});
+
+const validateSaveZatraRegistrationFees = (req, res, next) => {
+  const { error } = saveZatraRegistrationFeesSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.json(
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
+      })
+    );
+  }
+  next();
+};
+
+
+// no use
+const saveZatraExtrasSchema = Joi.object({
+  _id: objectId().required(),
+
+  ZatraSocialMedia: Joi.array()
+    .items(
+      Joi.object({
+        SocialMediaId: objectId().required(),
+        URL: Joi.string().uri().required(),
+      })
+    )
+    .optional(), //  optional, so no error if missing
+
+  RegistrationFees: Joi.array()
+    .items(
+      Joi.object({
+        FeeCategory: objectId().required(),
+        FeeAmount: Joi.number().min(0).required(),
+      })
+    )
+    .optional(), //  optional, so no error if missing
+});
+
+const validateSaveZatraExtras = (req, res, next) => {
+  const { error } = saveZatraExtrasSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.json(
+      __requestResponse("400", {
+        errorType: "Validation Error",
+        error: error.details.map((d) => d.message).join(". "),
+      })
+    );
+  }
+  next();
+};
+
 module.exports = {
   validateSaveZatra,
   validateSaveZatraEnrouteStations,
   validateSaveZatraSocialMedia,
+  validateSaveZatraRegistrationFees
+  // validateSaveZatraExtras,
 };
