@@ -15,6 +15,7 @@ const {
   validateSaveOrganizerSponser,
 } = require("../Middleware/orzanizerSponsorMaster.validation");
 const ZatraMaster = require("../../../models/ZatraMaster");
+const AdminLookups = require("../../../models/lookupmodel");
 
 // * Save (Add/Edit) Organizer or Sponsor
 router.post("/SaveOrganizerSponserx", async (req, res) => {
