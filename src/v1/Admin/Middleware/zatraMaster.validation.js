@@ -25,20 +25,20 @@ const saveZatraSchema = Joi.object({
   LongDescription: Joi.string().allow("", null).optional(),
 
   // Enroute Stations
-  EnrouteStations: Joi.array()
-    .items(
-      Joi.object({
-        StateId: objectId().optional(),
-        CityId: objectId().optional(),
-      })
-    )
-    .optional(),
+  // EnrouteStations: Joi.array()
+  //   .items(
+  //     Joi.object({
+  //       StateId: objectId().optional(),
+  //       CityId: objectId().optional(),
+  //     })
+  //   )
+  //   .optional(),
 
   // Organizers: Joi.array().items(objectId()).optional(),
   // Sponsors: Joi.array().items(objectId()).optional(),
-  OrganizerAdmins: Joi.array().items(objectId()).optional(),
-  SponsorAdmins: Joi.array().items(objectId()).optional(),
-  ZatraAdmins: Joi.array().items(objectId()).optional(),
+  // OrganizerAdmins: Joi.array().items(objectId()).optional(),
+  // SponsorAdmins: Joi.array().items(objectId()).optional(),
+  // ZatraAdmins: Joi.array().items(objectId()).optional(),
 
   Logo: Joi.string().allow("", null).optional(),
   PictureGallery: Joi.array().items(Joi.string().allow("", null)).optional(),
@@ -56,28 +56,28 @@ const saveZatraSchema = Joi.object({
     )
     .optional(),
 
-  ZatraSocialMedia: Joi.array()
-    .items(
-      Joi.object({
-        SocialMediaId: objectId().optional(),
-        URL: Joi.string().allow("", null).optional(),
-      })
-    )
-    .optional(),
+  // ZatraSocialMedia: Joi.array()
+  //   .items(
+  //     Joi.object({
+  //       SocialMediaId: objectId().optional(),
+  //       URL: Joi.string().allow("", null).optional(),
+  //     })
+  //   )
+  //   .optional(),
 
   IsOngoing: Joi.boolean().optional(),
   StartDate: Joi.date().optional(),
   EndDate: Joi.date().optional(),
   Instructions: Joi.string().allow("", null).optional(),
 
-  RegistrationFees: Joi.array()
-    .items(
-      Joi.object({
-        FeeCategory: objectId().optional(),
-        FeeAmount: Joi.number().optional(),
-      })
-    )
-    .optional(),
+  // RegistrationFees: Joi.array()
+  //   .items(
+  //     Joi.object({
+  //       FeeCategory: objectId().optional(),
+  //       FeeAmount: Joi.number().optional(),
+  //     })
+  //   )
+  //   .optional(),
 
   RegistrationLink: Joi.string().allow("", null).optional(),
 });

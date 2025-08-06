@@ -21,7 +21,7 @@ const UserMaster = require("../../../models/UserMaster");
 const AdminLookups = require("../../../models/lookupmodel");
 
 // 🔹 Add/Edit Zatra
-router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
+router.post("/SaveZatrax-old", validateSaveZatra, async (req, res) => {
   try {
     const payload = req.body;
 
@@ -197,6 +197,69 @@ router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
     return res.json(__requestResponse("500", __SOME_ERROR, error.message));
   }
 });
+
+// 🔹 Add/Edit Zatra
+router.post("/SaveZatra", validateSaveZatra, async (req, res) => {
+  try {
+    const payload = req.body;
+
+    let mongoId = null;
+    if (payload._id && mongoose.Types.ObjectId.isValid(payload._id)) {
+      mongoId = mongoose.Types.ObjectId(payload._id);
+    }
+
+    if (!mongoId) {
+      // Create new Zatra
+      const newRec = await ZatraMaster.create(payload);
+
+      await __CreateAuditLog(
+        "zatra_master",
+        "Zatra.Save",
+        null,
+        null,
+        newRec,
+        newRec._id,
+        null,
+        null
+      );
+
+      return res.json(
+        __requestResponse("200", "Zatra created successfully", newRec)
+      );
+    } else {
+      // Update existing
+      const oldRec = await ZatraMaster.findById(mongoId);
+      if (!oldRec) {
+        return res.json(__requestResponse("404", __RECORD_NOT_FOUND, {}));
+      }
+
+      const updated = await ZatraMaster.findByIdAndUpdate(
+        mongoId,
+        { ...payload, updatedAt: new Date() },
+        { new: true }
+      );
+
+      await __CreateAuditLog(
+        "zatra_master",
+        "Zatra.Edit",
+        null,
+        oldRec,
+        updated,
+        mongoId,
+        null,
+        null
+      );
+
+      return res.json(
+        __requestResponse("200", "Zatra updated successfully", updated)
+      );
+    }
+  } catch (error) {
+    console.error(" SaveZatra Error:", error);
+    return res.json(__requestResponse("500", __SOME_ERROR, error.message));
+  }
+});
+
 
 // 🔹 SaveZatra-EnrouteStations for a Zatra
 router.post(
