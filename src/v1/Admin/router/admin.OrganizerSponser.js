@@ -160,12 +160,23 @@ router.post(
               ZatraId: zatraRec._id,
             });
 
-            // Push Organizer to ZatraMaster.OrganizerAdmins
-            await ZatraMaster.findByIdAndUpdate(
-              zatraRec._id,
-              { $addToSet: { OrganizerAdmins: record._id } }, // prevent duplicates
-              { new: true }
-            );
+            if (payload.IsSponsor === true) {
+              // Push Organizer to ZatraMaster.SponsorAdmins
+              console.warn("Pushing to SponsorAdmins");
+              await ZatraMaster.findByIdAndUpdate(
+                zatraRec._id,
+                { $addToSet: { SponsorAdmins: record._id } }, // prevent duplicates
+                { new: true }
+              );
+            } else {
+              console.warn("Pushing to OrganizerAdmins");
+              // Push Organizer to ZatraMaster.OrganizerAdmins
+              await ZatraMaster.findByIdAndUpdate(
+                zatraRec._id,
+                { $addToSet: { OrganizerAdmins: record._id } }, // prevent duplicates
+                { new: true }
+              );
+            }
           } catch (err) {
             console.error(
               "⚠️ Failed to create OrganizerAdmin login:",
@@ -190,7 +201,6 @@ router.post(
     }
   }
 );
-
 
 //*  List Organizers/Sponsors (with filters + pagination)
 router.post("/ListOrganizerSponser", async (req, res) => {

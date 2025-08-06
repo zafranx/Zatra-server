@@ -145,7 +145,7 @@ const createZatraLogin = async ({
   ValidFrom,
   ValidUpto,
 }) => {
-  console.log(
+  console.warn(
     ZatraId,
     UserId,
     RoleId,
@@ -158,13 +158,13 @@ const createZatraLogin = async ({
   if (!ZatraId || !RoleId || !UserId || !MobileNumber) {
     throw new Error("Missing required fields to create login");
   }
-  console.log("Creating Zatra login for UserId:", UserId, "RoleId:", RoleId);
+  console.warn("Creating Zatra login for UserId:", UserId, "RoleId:", RoleId);
   // Use given password or fallback to mobile number
   const plainPassword = Password || MobileNumber?.toString() || "123456";
   const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-  // 🔹 Check if login already exists for this user & Zatra
-  let existing = await ZatraLogin.findOne({ UserId });
+  // 🔹 Check if login already exists for this User & Zatra
+  let existing = await ZatraLogin.findOne({ UserId, ZatraId });
 
   if (existing) {
     // update existing login
@@ -179,6 +179,9 @@ const createZatraLogin = async ({
     existing.ValidUpto = ValidUpto || null;
 
     await existing.save();
+    console.log(
+      `✅ Updated existing login (ID: ${existing._id}) for UserId: ${UserId} | Plain Password: ${plainPassword}`
+    );
     return existing.toObject();
   }
 
@@ -198,8 +201,78 @@ const createZatraLogin = async ({
   };
 
   const created = await ZatraLogin.create(loginData);
+  console.log(
+    `✅ Created new login (ID: ${created._id}) for UserId: ${UserId} | Plain Password: ${plainPassword}`
+  );
   return created.toObject();
 };
+
+const createZatraLogin2 = async ({
+  ZatraId,
+  UserId,
+  RoleId,
+  FullName,
+  MobileNumber,
+  Password,
+  ValidFrom,
+  ValidUpto,
+}) => {
+  if (!ZatraId || !RoleId || !UserId || !MobileNumber) {
+    throw new Error("Missing required fields to create login");
+  }
+
+  console.log(
+    `🔹 Creating Zatra login → UserId: ${UserId}, RoleId: ${RoleId}, ZatraId: ${ZatraId}`
+  );
+
+  // Use given password or fallback
+  const plainPassword = Password || MobileNumber?.toString() || "123456";
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+  // 🔹 Check if login already exists for this User & Zatra
+  let existing = await ZatraLogin.findOne({ UserId, ZatraId });
+
+  if (existing) {
+    // update existing login
+    existing.RoleId = RoleId;
+    existing.FullName = FullName;
+    existing.MobileNumber = MobileNumber;
+    existing.Password = hashedPassword;
+    existing.Blocked = false;
+    existing.ValidFrom = existing.ValidFrom || new Date();
+    existing.ValidUpto = ValidUpto || null;
+
+    await existing.save();
+
+    console.log(
+      `✅ Updated existing login (ID: ${existing._id}) for UserId: ${UserId} | Plain Password: ${plainPassword}`
+    );
+
+    return { ...existing.toObject(), plainPassword };
+  }
+
+  // 🔹 Create new login record
+  const loginData = {
+    ZatraId,
+    UserId,
+    RoleId,
+    FullName,
+    MobileNumber,
+    Password: hashedPassword,
+    ValidFrom: ValidFrom || new Date(),
+    ValidUpto: ValidUpto || null,
+    Blocked: false,
+  };
+
+  const created = await ZatraLogin.create(loginData);
+
+  console.log(
+    `✅ Created new login (ID: ${created._id}) for UserId: ${UserId} | Plain Password: ${plainPassword}`
+  );
+
+  return { ...created.toObject(), plainPassword };
+};
+
 
 module.exports = {
   generateStrongPassword,
