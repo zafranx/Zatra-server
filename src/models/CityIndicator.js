@@ -6,17 +6,36 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const _SchemaDesign = new Schema({
-  CityId: {
+  CityStationId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },
-  CityIndicatorName: String,
-  CityIndicatorValueUnit: String,
-  CityIndicatorValue: String,
-  CityIndicatorImage: String,
-  Destination: String,
+
+  // CityIndicatorName: String,
+  // CityIndicatorValueUnit: String,
+  // CityIndicatorValue: String,
+  // CityIndicatorImage: String,
+  // Destination: String,
+
+  PanchtatvaCategory_Level1_Id: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "admin_lookups",
+  },
+  PanchtatvaCategory_Level2_Id: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "admin_lookups",
+  },
+  PanchtatvaCategory_Level3_Id: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "admin_lookups",
+  },
+  Name: String,
   ShortDescription: String,
-  WikiPageLink: String,
+  LongDescription: String,
+  PictureGallery: [String],
+  VideoGallery: [String],
+
+  // WikiPageLink: String,
 });
 
 module.exports = mongoose.model("city_indicator", _SchemaDesign);

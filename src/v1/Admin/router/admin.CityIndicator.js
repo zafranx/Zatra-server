@@ -18,19 +18,27 @@ router.post("/SaveCityIndicator",validateCityIndicator, async (req, res) => {
   try {
     const {
       _id,
-      CityId,
-      CityIndicatorName,
-      CityIndicatorValueUnit,
-      CityIndicatorValue,
-      CityIndicatorImage,
+      CityStationId,
+      PanchtatvaCategory_Level1_Id,
+      PanchtatvaCategory_Level2_Id,
+      PanchtatvaCategory_Level3_Id,
+      Name,
+      ShortDescription,
+      LongDescription,
+      PictureGallery,
+      VideoGallery,
     } = req.body;
 
     const saveData = {
-      CityId,
-      CityIndicatorName,
-      CityIndicatorValueUnit,
-      CityIndicatorValue,
-      CityIndicatorImage,
+      CityStationId,
+      PanchtatvaCategory_Level1_Id,
+      PanchtatvaCategory_Level2_Id,
+      PanchtatvaCategory_Level3_Id,
+      Name,
+      ShortDescription,
+      LongDescription,
+      PictureGallery,
+      VideoGallery,
     };
 
     if (!_id) {

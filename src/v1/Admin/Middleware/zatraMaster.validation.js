@@ -147,7 +147,6 @@ const validateSaveZatra = async (req, res, next) => {
   }
 };
 
-
 // 🔹 Schema
 const saveZatraEnrouteStationsSchema = Joi.object({
   _id: objectId().required().messages({
@@ -158,6 +157,7 @@ const saveZatraEnrouteStationsSchema = Joi.object({
   EnrouteStations: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         StateId: objectId().optional().allow(null, ""),
         CityId: objectId().optional().allow(null, ""),
       })
@@ -185,13 +185,13 @@ const validateSaveZatraEnrouteStations = (req, res, next) => {
   next();
 };
 
-
 // 🔹 Schema
 const saveZatraSocialMediaSchema = Joi.object({
   _id: objectId().required(),
   ZatraSocialMedia: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         SocialMediaId: objectId().required(),
         URL: Joi.string().uri().required(),
       })
@@ -233,13 +233,13 @@ const validateSaveZatraSocialMedia = (req, res, next) => {
   next();
 };
 
-
 // Registration Fees validation
 const saveZatraRegistrationFeesSchema = Joi.object({
   _id: objectId().required(),
   RegistrationFees: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         FeeCategory: objectId().required(),
         FeeAmount: Joi.number().min(0).required(),
       })
@@ -264,7 +264,6 @@ const validateSaveZatraRegistrationFees = (req, res, next) => {
   next();
 };
 
-
 // no use
 const saveZatraExtrasSchema = Joi.object({
   _id: objectId().required(),
@@ -272,6 +271,7 @@ const saveZatraExtrasSchema = Joi.object({
   ZatraSocialMedia: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         SocialMediaId: objectId().required(),
         URL: Joi.string().uri().required(),
       })
@@ -281,6 +281,7 @@ const saveZatraExtrasSchema = Joi.object({
   RegistrationFees: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         FeeCategory: objectId().required(),
         FeeAmount: Joi.number().min(0).required(),
       })
@@ -308,6 +309,6 @@ module.exports = {
   validateSaveZatra,
   validateSaveZatraEnrouteStations,
   validateSaveZatraSocialMedia,
-  validateSaveZatraRegistrationFees
+  validateSaveZatraRegistrationFees,
   // validateSaveZatraExtras,
 };

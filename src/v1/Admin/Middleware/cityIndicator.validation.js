@@ -3,6 +3,18 @@ const { __requestResponse } = require("../../../utils/constent");
 const { default: mongoose } = require("mongoose");
 
 exports.validateCityIndicator = async (req, res, next) => {
+  // * Reusable ObjectId validation
+  const objectId = () =>
+    Joi.string()
+      .allow("", null)
+      .custom((value, helpers) => {
+        if (!value) return value; // allow empty/null
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return helpers.error("any.invalid");
+        }
+        return value;
+      }, "ObjectId Validation");
+
   const schema = Joi.object({
     // _id: Joi.string().optional(),
     _id: Joi.string()
@@ -15,14 +27,22 @@ exports.validateCityIndicator = async (req, res, next) => {
       .allow(null, "")
       .optional(),
 
-    CityId: Joi.string().required().messages({
-      "any.required": "City is required",
-      "string.empty": "City cannot be empty",
+    CityStationId: Joi.string().required().messages({
+      "any.required": "CityStation is required",
+      "string.empty": "CityStaion cannot be empty",
     }),
-    CityIndicatorName: Joi.string().optional().allow(""),
-    CityIndicatorValueUnit: Joi.string().optional().allow(""),
-    CityIndicatorValue: Joi.string().optional().allow(""),
-    CityIndicatorImage: Joi.string().optional().allow(""),
+    PanchtatvaCategory_Level1_Id: objectId().optional(),
+    PanchtatvaCategory_Level2_Id: objectId().optional(),
+    PanchtatvaCategory_Level3_Id: objectId().optional(),
+    Name: Joi.string().allow("", null).optional(),
+    ShortDescription: Joi.string().allow("", null).optional(),
+    LongDescription: Joi.string().allow("", null).optional(),
+    PictureGallery: Joi.array().items(Joi.string().allow("", null)).optional(),
+    VideoGallery: Joi.array().items(Joi.string().allow("", null)).optional(),
+    // CityIndicatorName: Joi.string().optional().allow(""),
+    // CityIndicatorValueUnit: Joi.string().optional().allow(""),
+    // CityIndicatorValue: Joi.string().optional().allow(""),
+    // CityIndicatorImage: Joi.string().optional().allow(""),
   });
 
   const { error } = schema.validate(req.body, { abortEarly: false });

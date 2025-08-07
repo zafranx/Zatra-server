@@ -44,9 +44,9 @@ const schema = Joi.object({
   // ------------------------
   IsDestination: Joi.boolean().default(false),
   EstablishmentId: objectId().optional(),
-  PanchtatvaCategoryId: objectId().optional(),
-  PanchtatvaSubCategoryId: objectId().optional(),
-  Panchtatva_Sub_Sub_CategoryId: objectId().optional(),
+  PanchtatvaCategoryId: objectId().optional(), //Level 1
+  PanchtatvaSubCategoryId: objectId().optional(), // Level 2
+  Panchtatva_Sub_Sub_CategoryId: objectId().optional(), // Level 3
   IndustryId: objectId().optional(),
   DestinationName: Joi.string().allow("", null),
 
@@ -142,6 +142,7 @@ const schema = Joi.object({
   SocialMedia: Joi.array().items(
     Joi.object({
       // SocialMediaAsset: objectId().required(),
+      _id: Joi.string().optional().allow("", null),
       SocialMediaAsset: Joi.string().allow("", null),
       // URL: Joi.string().uri().allow("", null),
       URL: Joi.string().allow("", null),
@@ -199,6 +200,7 @@ const schema = Joi.object({
   TodayVisitorCount: Joi.number().integer().min(0),
   TicketCharges: Joi.array().items(
     Joi.object({
+      _id: Joi.string().optional().allow("", null),
       TicketCategory: Joi.string().allow("", null), // if ref then use objectId()
       TicketFee: Joi.number().min(0),
     })
