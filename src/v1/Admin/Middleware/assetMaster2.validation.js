@@ -45,6 +45,8 @@ const schema = Joi.object({
   IsDestination: Joi.boolean().default(false),
   EstablishmentId: objectId().optional(),
   PanchtatvaCategoryId: objectId().optional(),
+  PanchtatvaSubCategoryId: objectId().optional(),
+  Panchtatva_Sub_Sub_CategoryId: objectId().optional(),
   IndustryId: objectId().optional(),
   DestinationName: Joi.string().allow("", null),
 
@@ -236,7 +238,7 @@ const schema = Joi.object({
   // 16. Other Metadata
   // ------------------------
   CityIndicatorId: Joi.array().items(objectId()),
-  CityId: objectId().optional(),
+  // CityId: objectId().optional(),
   AssetType: Joi.string().allow("", null),
 
   // ------------------------

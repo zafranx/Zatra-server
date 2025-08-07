@@ -17,6 +17,14 @@ const _SchemaDesign = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "admin_lookups",
     },
+    PanchtatvaSubCategoryId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
+    Panchtatva_Sub_Sub_CategoryId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "admin_lookups",
+    },
     IndustryId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
     DestinationName: String,
 
@@ -147,7 +155,7 @@ const _SchemaDesign = new mongoose.Schema(
     CityIndicatorId: [
       { type: mongoose.SchemaTypes.ObjectId, ref: "city_indicator" },
     ],
-    CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
+    // CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
     // DestinationId: {
     //   type: mongoose.SchemaTypes.ObjectId,
     //   ref: "destination_master",

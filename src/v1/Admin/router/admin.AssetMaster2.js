@@ -91,6 +91,8 @@ router.post("/SaveAsset3", validateSaveAssetMaster2, async (req, res) => {
       IsDestination,
       EstablishmentId,
       PanchtatvaCategoryId,
+      PanchtatvaSubCategoryId,
+      Panchtatva_Sub_Sub_CategoryId,
       // IndustryId,
       DestinationName,
       LegalEntityTypeId,
@@ -165,6 +167,8 @@ router.post("/SaveAsset3", validateSaveAssetMaster2, async (req, res) => {
       IsDestination,
       EstablishmentId,
       PanchtatvaCategoryId,
+      PanchtatvaSubCategoryId,
+      Panchtatva_Sub_Sub_CategoryId,
       // IndustryId,
       DestinationName,
       LegalEntityTypeId,
@@ -291,7 +295,7 @@ router.post("/GetAssetList", async (req, res) => {
       LegalEntityTypeId,
       Industry_Sector,
       Industry_Sub_Sector,
-      CityId,
+      StationId,
       DestinationId,
       AssetType,
       EstablishmentId,
@@ -307,7 +311,7 @@ router.post("/GetAssetList", async (req, res) => {
     if (LegalEntityTypeId) filter.LegalEntityTypeId = LegalEntityTypeId;
     if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
     if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
-    if (CityId) filter.CityId = CityId;
+    if (StationId) filter.StationId = StationId;
     if (DestinationId) filter.DestinationId = DestinationId;
     if (AssetType) filter.AssetType = AssetType;
     if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
@@ -316,13 +320,17 @@ router.post("/GetAssetList", async (req, res) => {
     const total = await AssetMaster.countDocuments(filter);
 
     let list = await AssetMaster.find(filter)
-      .populate("CityId", "lookup_value")
+      // .populate("CityId", "lookup_value")
+      .populate("StationId", "lookup_value")
       .populate("LegalEntityTypeId", "lookup_value")
       .populate("Industry_Sector", "lookup_value")
       .populate("Industry_Sub_Sector", "lookup_value")
       .populate("CityIndicatorId", "CityIndicatorName")
       .populate("EstablishmentId", "lookup_value")
       .populate("PanchtatvaCategoryId", "lookup_value")
+      .populate("PanchtatvaSubCategoryId", "lookup_value")
+      .populate("Panchtatva_Sub_Sub_CategoryId", "lookup_value")
+      .populate("DestinationId", "Destination")
       .populate("DestinationAmenities.AmenityId", "AmenityName")
       .sort({ createdAt: -1 })
       .skip((pageInt - 1) * limitInt)
