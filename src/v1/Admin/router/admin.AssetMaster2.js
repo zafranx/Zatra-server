@@ -321,7 +321,7 @@ router.post("/GetAssetList", async (req, res) => {
     let list = await AssetMaster.find(filter)
       // .populate("CityId", "lookup_value")
       .populate("StationId", "lookup_value")
-      .populate("ParentAssetId", "DestinationName") //it is a destination Id
+      // .populate("ParentAssetId", "DestinationName") //it is a destination Id
       .populate("LegalEntityTypeId", "lookup_value")
       .populate("Industry_Sector", "lookup_value")
       .populate("Industry_Sub_Sector", "lookup_value")
