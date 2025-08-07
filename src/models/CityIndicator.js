@@ -17,15 +17,7 @@ const _SchemaDesign = new Schema({
   // CityIndicatorImage: String,
   // Destination: String,
 
-  PanchtatvaCategory_Level1_Id: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "admin_lookups",
-  },
-  PanchtatvaCategory_Level2_Id: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "admin_lookups",
-  },
-  PanchtatvaCategory_Level3_Id: {
+  PanchtatvaCategoryId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "admin_lookups",
   },

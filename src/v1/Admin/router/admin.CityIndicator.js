@@ -19,9 +19,7 @@ router.post("/SaveCityIndicator",validateCityIndicator, async (req, res) => {
     const {
       _id,
       CityStationId,
-      PanchtatvaCategory_Level1_Id,
-      PanchtatvaCategory_Level2_Id,
-      PanchtatvaCategory_Level3_Id,
+      PanchtatvaCategoryId,
       Name,
       ShortDescription,
       LongDescription,
@@ -31,9 +29,7 @@ router.post("/SaveCityIndicator",validateCityIndicator, async (req, res) => {
 
     const saveData = {
       CityStationId,
-      PanchtatvaCategory_Level1_Id,
-      PanchtatvaCategory_Level2_Id,
-      PanchtatvaCategory_Level3_Id,
+      PanchtatvaCategoryId,
       Name,
       ShortDescription,
       LongDescription,
