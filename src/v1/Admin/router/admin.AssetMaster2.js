@@ -296,7 +296,6 @@ router.post("/GetAssetList", async (req, res) => {
       Industry_Sector,
       Industry_Sub_Sector,
       StationId,
-      DestinationId,
       AssetType,
       EstablishmentId,
       CityIndicatorId,
@@ -312,7 +311,7 @@ router.post("/GetAssetList", async (req, res) => {
     if (Industry_Sector) filter.Industry_Sector = Industry_Sector;
     if (Industry_Sub_Sector) filter.Industry_Sub_Sector = Industry_Sub_Sector;
     if (StationId) filter.StationId = StationId;
-    if (DestinationId) filter.DestinationId = DestinationId;
+    // if (DestinationId) filter.DestinationId = DestinationId;
     if (AssetType) filter.AssetType = AssetType;
     if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
     if (CityIndicatorId) filter.CityIndicatorId = CityIndicatorId;
@@ -322,7 +321,7 @@ router.post("/GetAssetList", async (req, res) => {
     let list = await AssetMaster.find(filter)
       // .populate("CityId", "lookup_value")
       .populate("StationId", "lookup_value")
-      .populate("ParentAssetId", "DestinationName")
+      .populate("ParentAssetId", "DestinationName") //it is a destination Id
       .populate("LegalEntityTypeId", "lookup_value")
       .populate("Industry_Sector", "lookup_value")
       .populate("Industry_Sub_Sector", "lookup_value")
@@ -331,7 +330,7 @@ router.post("/GetAssetList", async (req, res) => {
       .populate("PanchtatvaCategoryId", "lookup_value")
       .populate("PanchtatvaSubCategoryId", "lookup_value")
       .populate("Panchtatva_Sub_Sub_CategoryId", "lookup_value")
-      .populate("DestinationId", "Destination")
+      // .populate("DestinationId", "Destination")
       .populate("DestinationAmenities.AmenityId", "AmenityName")
       .sort({ createdAt: -1 })
       .skip((pageInt - 1) * limitInt)
