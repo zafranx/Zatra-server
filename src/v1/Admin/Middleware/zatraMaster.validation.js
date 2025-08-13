@@ -51,6 +51,7 @@ const saveZatraSchema = Joi.object({
   ZatraContacts: Joi.array()
     .items(
       Joi.object({
+        _id: Joi.string().optional().allow("", null),
         Name: Joi.string().allow("", null).optional(),
         PhoneNumber: Joi.string().allow("", null).optional(),
         EmailAddress: Joi.string().allow("", null).optional(),
@@ -68,8 +69,8 @@ const saveZatraSchema = Joi.object({
   //   .optional(),
 
   IsOngoing: Joi.boolean().optional(),
-  StartDate: Joi.date().optional(),
-  EndDate: Joi.date().optional(),
+  StartDate: Joi.string().optional(),
+  EndDate: Joi.string().optional(),
   Instructions: Joi.string().allow("", null).optional(),
 
   // RegistrationFees: Joi.array()
