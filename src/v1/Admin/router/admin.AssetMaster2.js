@@ -345,6 +345,18 @@ router.post("/GetAssetList", async (req, res) => {
             .populate("PanchtatvaCategoryLevel1_Id", "lookup_value")
             .populate("PanchtatvaCategoryLevel2_Id", "lookup_value")
             .populate("PanchtatvaCategoryLevel3_Id", "lookup_value")
+            .populate("MedicalSpecialities", "lookup_value")
+            .populate("Amenities.AmenityId", "lookup_value")
+            .populate("CallToAction.CallToActionType", "lookup_value")
+            .populate(
+                "BrandsMapping ODOPMapping ExportsMapping LocalCropsMapping LocalProductsMapping LocalSweetsMapping LocalSnacksMapping LocalCuisineMapping LocalSpicesMapping LocalFoodsMapping",
+                "Name"
+            )
+            .populate(
+                "RegistrationFeeCategoryAmount.FeeCategory",
+                "lookup_value"
+            )
+            .populate("BankName", "lookup_value")
             // // .populate("DestinationId", "Destination")
             // .populate("DestinationAmenities.AmenityId", "AmenityName")
             .sort({ createdAt: -1 })
@@ -416,6 +428,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             IsDestination,
             ZatraId,
             StationId,
+            ParentAssetId,
             NearbyAssetIds,
             PanchtatvaCategoryLevel1_Id,
             PanchtatvaCategoryLevel2_Id,
@@ -446,6 +459,64 @@ router.post("/AddEditNewAsset", async (req, res) => {
             AssetType,
             MinInvestments,
             AssuredRois,
+            MedicalSpecialities,
+            LiveFeedUrl,
+            WebSiteUrl,
+            WikipediaUrl,
+            FacebookPageUrl,
+            InstagramPageUrl,
+            LinkedinPageUrl,
+            YouTubeChannelUrl,
+            WhatsAppCommunityUrl,
+            TelegramUrl,
+            Amenities,
+            BtvFrom,
+            BtvTo,
+            WeeklyOff,
+            OpeningTime,
+            ClosingTime,
+            MbtFrom,
+            MbtTo,
+            SpecialDarshansName,
+            SpecialDarshansTime,
+            Insturctions,
+            RegistrationFeeCategoryAmount,
+            FeeCollectionLink,
+            PaymentOrCode,
+            AccountName,
+            BankName,
+            IFSCcode,
+            AccountNumber,
+            ContactName,
+            ContactPhoneNumber,
+            ContactEmailAddress,
+            AdminLogin,
+            PakageTitle,
+            PakageDescripton,
+            PakagePrice,
+            PakagePoster,
+            PakageVideo,
+            BrandsMapping,
+            ODOPMapping,
+            VocalForLocal,
+            ExportsMapping,
+            LocalCropsMapping,
+            LocalProductsMapping,
+            LocalSweetsMapping,
+            LocalSnacksMapping,
+            LocalCuisineMapping,
+            LocalSpicesMapping,
+            LocalFoodsMapping,
+            CallToAction,
+            AddressLine1,
+            AddressLine2,
+            PostalCode,
+            AddressGeoLocation,
+            LaneFloorName,
+            LaneFloorNumber,
+            HallNumber,
+            HallName,
+            AllocationBoothNumber,
         } = req.body;
         console.log(req.body);
 
@@ -454,6 +525,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             IsDestination,
             ZatraId,
             StationId,
+            ParentAssetId,
             NearbyAssetIds,
             PanchtatvaCategoryLevel1_Id,
             PanchtatvaCategoryLevel2_Id,
@@ -484,6 +556,64 @@ router.post("/AddEditNewAsset", async (req, res) => {
             AssetType,
             MinInvestments,
             AssuredRois,
+            MedicalSpecialities,
+            LiveFeedUrl,
+            WebSiteUrl,
+            WikipediaUrl,
+            FacebookPageUrl,
+            InstagramPageUrl,
+            LinkedinPageUrl,
+            YouTubeChannelUrl,
+            WhatsAppCommunityUrl,
+            TelegramUrl,
+            Amenities,
+            BtvFrom,
+            BtvTo,
+            WeeklyOff,
+            OpeningTime,
+            ClosingTime,
+            MbtFrom,
+            MbtTo,
+            SpecialDarshansName,
+            SpecialDarshansTime,
+            Insturctions,
+            RegistrationFeeCategoryAmount,
+            FeeCollectionLink,
+            PaymentOrCode,
+            AccountName,
+            BankName,
+            IFSCcode,
+            AccountNumber,
+            ContactName,
+            ContactPhoneNumber,
+            ContactEmailAddress,
+            AdminLogin,
+            PakageTitle,
+            PakageDescripton,
+            PakagePrice,
+            PakagePoster,
+            PakageVideo,
+            BrandsMapping,
+            ODOPMapping,
+            VocalForLocal,
+            ExportsMapping,
+            LocalCropsMapping,
+            LocalProductsMapping,
+            LocalSweetsMapping,
+            LocalSnacksMapping,
+            LocalCuisineMapping,
+            LocalSpicesMapping,
+            LocalFoodsMapping,
+            CallToAction,
+            AddressLine1,
+            AddressLine2,
+            PostalCode,
+            AddressGeoLocation,
+            LaneFloorName,
+            LaneFloorNumber,
+            HallNumber,
+            HallName,
+            AllocationBoothNumber,
         };
         if (!AssetId) {
             const newRec = await AssetMaster.create(saveData);
@@ -507,53 +637,6 @@ router.post("/AddEditNewAsset", async (req, res) => {
         return res.json(
             __requestResponse("200", __SUCCESS, { AssetId: AssetId })
         );
-
-        let _id = null;
-        if (rawId && mongoose.Types.ObjectId.isValid(rawId)) {
-            _id = mongoose.Types.ObjectId(rawId);
-        }
-
-        if (!_id) {
-            // --- Add New Asset
-            const newRec = await AssetMaster.create(saveData);
-
-            // --- Create login if needed
-            if (IsAccountLogin) {
-                try {
-                    await createAssetLogin({
-                        assetId: newRec._id,
-                        Name: newRec.LegalEntityName || newRec.DestinationName,
-                        Phone: newRec.Phone,
-                        Password: Password,
-                    });
-                } catch (err) {
-                    console.error("Login creation failed:", err.message);
-                }
-            }
-
-            return res.json(__requestResponse("200", __SUCCESS, newRec));
-        } else {
-            // --- Edit Existing Asset
-            const oldRec = await AssetMaster.findById(_id);
-            if (!oldRec)
-                return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
-
-            const updated = await AssetMaster.updateOne(
-                { _id },
-                { $set: saveData }
-            );
-
-            await __CreateAuditLog(
-                "asset_master2",
-                "AssetMaster.Edit",
-                null,
-                oldRec,
-                saveData,
-                _id
-            );
-
-            return res.json(__requestResponse("200", __SUCCESS, updated));
-        }
     } catch (error) {
         console.error(error);
         return res.json(__requestResponse("500", error.message, __SOME_ERROR));

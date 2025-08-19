@@ -86,7 +86,7 @@ const _SchemaDesign = new mongoose.Schema(
         HallName: String,
         HallNumber: String,
         AllocationBoothNumber: String,
-        Geolocation: {
+        AddressGeoLocation: {
             type: { type: String, enum: ["Point"], default: "Point" },
             coordinates: { type: [Number], required: true }, // [lng, lat]
         },
@@ -113,158 +113,97 @@ const _SchemaDesign = new mongoose.Schema(
         MinInvestments: String,
         AssuredRois: String,
 
-        // 2. Destination & Establishment
-
-        PanchtatvaSubCategoryId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "admin_lookups",
-        },
-        Panchtatva_Sub_Sub_CategoryId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "admin_lookups",
-        },
-
-        DestinationName: String,
-
-        // 3. Legal Entity
-        LegalEntityTypeId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "admin_lookups",
-        },
-        LegalEntityName: String,
-        Registration_Number: String,
-
-        Registration_Address: String,
-
-        // 4. Verification
-        IsVerified: { type: Boolean, default: false },
-        VerificationReport: String,
-        VerifiedBy: { type: String, default: "" },
-        VerificationDate: { type: Date },
-
-        // 5. Allocation & Layout
-        AllocationNumber: String, // Shop No, Booth No
-        Lane: String,
-        LaneNumber: String,
-        Floor: String,
-        FloorNumber: String,
-        Hall: String,
-        HallNumber: String,
-
-        // 7. Descriptions
-
-        // 8. Media
-
-        // 9. Timings & Hours
-        OpeningDays: [String], // Sunday - Saturday
-        OpeningTime: String,
-        ClosingTime: String,
-        DayBreakTime: String, // Example: 1:00 PM - 2:00 PM
-        BusinessHours: { from: String, to: String },
-        GeneralPublicHour: { from: String, to: String },
-
-        // 10. Social Media
-        SocialMedia: [
+        // 9. Business Mapping
+        BrandsMapping: [
             {
-                SocialMediaAsset: {
-                    type: mongoose.SchemaTypes.ObjectId,
-                    ref: "admin_lookups",
-                },
-                URL: String,
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        ODOPMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        VocalForLocal: { type: Boolean },
+        ExportsMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalCropsMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalProductsMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalSweetsMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalSnacksMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalCuisineMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalSpicesMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
+            },
+        ],
+        LocalFoodsMapping: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "Station_Speciality",
             },
         ],
 
-        // 11. Layout Plan
-        // LayoutPlan: [
-        //   {
-        //     LaneNumber: String,
-        //     LaneName: String,
-        //     FloorNumber: String,
-        //     FloorName: String,
-        //     HallNumber: String,
-        //     HallName: String,
-        //   },
-        // ],
-        Lane: [
+        //10- MedicalSpecialities
+        MedicalSpecialities: [
             {
-                LaneNumber: String,
-                LaneName: String,
-            },
-        ],
-        Hall: [
-            {
-                HallNumber: String,
-                HallName: String,
-            },
-        ],
-        Floor: [
-            {
-                FloorNumber: String,
-                FloorName: String,
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "admin_lookups",
             },
         ],
 
-        // 12. Visitors & Tickets
-        MaxLimitOfVisitorsPerDay: Number,
-        TodayVisitorCount: Number,
-        TicketCharges: [
-            {
-                TicketCategory: String,
-                TicketFee: Number,
-            },
-        ],
-        OnlineBookingURL: String,
+        // 11- Service Packages
+        PakageTitle: String,
+        PakageDescripton: String,
+        PakagePrice: String,
+        PakagePoster: String,
+        PakageVideo: String,
 
-        // 13. Authorized Representative
-        AuthorizedRepresentativeName: String,
-        AuthorizedRepresentativePhoneNo: String,
-        AuthorizedRepresentativeWhatsApp: String,
-        AuthorizedRepresentativeEmail: String,
+        // 12- MedicalSpecialities
+        LiveFeedUrl: String,
+        WebSiteUrl: String,
+        WikipediaUrl: String,
+        FacebookPageUrl: String,
+        InstagramPageUrl: String,
+        LinkedinPageUrl: String,
+        YouTubeChannelUrl: String,
+        WhatsAppCommunityUrl: String,
+        TelegramUrl: String,
 
-        // 14. Office Address & Location
-        OfficeAddress: String,
-        OfficeGeoLocation: {
-            type: { type: String, enum: ["Point"], default: "Point" },
-            coordinates: { type: [Number] },
-        },
-
-        // 15. Status & System Fields
-        IsOpen: { type: Boolean, default: true },
-        LiveFeedURL: String,
-        AllocatedQRCode: String,
-        IsAccountLogin: { type: Boolean, default: false },
-        IsActive: { type: Boolean, default: true },
-
-        // 16. Other Metadata
-        CityIndicatorId: [
-            { type: mongoose.SchemaTypes.ObjectId, ref: "city_indicator" },
-        ],
-        // CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
-        // DestinationId: {
-        //   type: mongoose.SchemaTypes.ObjectId,
-        //   ref: "destination_master",
-        // },
-
-        // 17. Industry Relations
-        Industry_Sector: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "admin_lookups",
-        },
-        Industry_Sub_Sector: {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "admin_lookups",
-        },
-
-        // 18. Contact Details : Authorized Representative
-        Phone: Number,
-        EmailAddress: String,
-        // Website: String,
-        // LinkedIn: String,
-        // Instagram: String,
-        // Facebook: String,
-
-        // 19. Destination Amenities
-        DestinationAmenities: [
+        // 14.  Amenities
+        Amenities: [
             {
                 AmenityId: {
                     type: mongoose.SchemaTypes.ObjectId,
@@ -276,6 +215,227 @@ const _SchemaDesign = new mongoose.Schema(
                 },
             },
         ],
+        // 15. Schedule
+        BtvFrom: String,
+        BtvTo: String,
+        WeeklyOff: [String],
+        OpeningTime: String,
+        ClosingTime: String,
+        MbtFrom: String,
+        MbtTo: String,
+        SpecialDarshansName: String,
+        SpecialDarshansTime: String,
+        Insturctions: String,
+        // 16. Registration Fee
+        RegistrationFeeCategoryAmount: [
+            {
+                FeeCategory: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                Amount: String,
+            },
+        ],
+        FeeCollectionLink: String,
+        PaymentOrCode: String,
+        AccountName: String,
+        BankName: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "admin_lookups",
+        },
+        IFSCcode: String,
+        AccountNumber: String,
+        // 17. Call to action
+        CallToAction: [
+            {
+                CallToActionType: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                URL: String,
+                Name: String,
+                ContactNumber: String,
+                EmailAddress: String,
+            },
+        ],
+
+        // 18. Contact Information
+        ContactName: String,
+        ContactPhoneNumber: String,
+        ContactEmailAddress: String,
+        // 19. AdminLogin
+        AdminLogin: [
+            {
+                Name: String,
+                MobileNumber: String,
+                Email: String,
+                Password: String,
+            },
+        ],
+
+        // // 2. Destination & Establishment
+
+        // PanchtatvaSubCategoryId: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+        //     ref: "admin_lookups",
+        // },
+        // Panchtatva_Sub_Sub_CategoryId: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+        //     ref: "admin_lookups",
+        // },
+
+        // DestinationName: String,
+
+        // // 3. Legal Entity
+        // LegalEntityTypeId: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+        //     ref: "admin_lookups",
+        // },
+        // LegalEntityName: String,
+        // Registration_Number: String,
+
+        // Registration_Address: String,
+
+        // // 4. Verification
+        // IsVerified: { type: Boolean, default: false },
+        // VerificationReport: String,
+        // VerifiedBy: { type: String, default: "" },
+        // VerificationDate: { type: Date },
+
+        // // 5. Allocation & Layout
+        // AllocationNumber: String, // Shop No, Booth No
+        // Lane: String,
+        // LaneNumber: String,
+        // Floor: String,
+        // FloorNumber: String,
+        // Hall: String,
+        // HallNumber: String,
+
+        // // 7. Descriptions
+
+        // // 8. Media
+
+        // // 9. Timings & Hours
+        // OpeningDays: [String], // Sunday - Saturday
+        // OpeningTime: String,
+        // ClosingTime: String,
+        // DayBreakTime: String, // Example: 1:00 PM - 2:00 PM
+        // BusinessHours: { from: String, to: String },
+        // GeneralPublicHour: { from: String, to: String },
+
+        // // 10. Social Media
+        // SocialMedia: [
+        //     {
+        //         SocialMediaAsset: {
+        //             type: mongoose.SchemaTypes.ObjectId,
+        //             ref: "admin_lookups",
+        //         },
+        //         URL: String,
+        //     },
+        // ],
+
+        // // 11. Layout Plan
+        // // LayoutPlan: [
+        // //   {
+        // //     LaneNumber: String,
+        // //     LaneName: String,
+        // //     FloorNumber: String,
+        // //     FloorName: String,
+        // //     HallNumber: String,
+        // //     HallName: String,
+        // //   },
+        // // ],
+        // Lane: [
+        //     {
+        //         LaneNumber: String,
+        //         LaneName: String,
+        //     },
+        // ],
+        // Hall: [
+        //     {
+        //         HallNumber: String,
+        //         HallName: String,
+        //     },
+        // ],
+        // Floor: [
+        //     {
+        //         FloorNumber: String,
+        //         FloorName: String,
+        //     },
+        // ],
+
+        // // 12. Visitors & Tickets
+        // MaxLimitOfVisitorsPerDay: Number,
+        // TodayVisitorCount: Number,
+        // TicketCharges: [
+        //     {
+        //         TicketCategory: String,
+        //         TicketFee: Number,
+        //     },
+        // ],
+        // OnlineBookingURL: String,
+
+        // // 13. Authorized Representative
+        // AuthorizedRepresentativeName: String,
+        // AuthorizedRepresentativePhoneNo: String,
+        // AuthorizedRepresentativeWhatsApp: String,
+        // AuthorizedRepresentativeEmail: String,
+
+        // // 14. Office Address & Location
+        // OfficeAddress: String,
+        // OfficeGeoLocation: {
+        //     type: { type: String, enum: ["Point"], default: "Point" },
+        //     coordinates: { type: [Number] },
+        // },
+
+        // // 15. Status & System Fields
+        // IsOpen: { type: Boolean, default: true },
+        // LiveFeedURL: String,
+        // AllocatedQRCode: String,
+        // IsAccountLogin: { type: Boolean, default: false },
+        // IsActive: { type: Boolean, default: true },
+
+        // // 16. Other Metadata
+        // CityIndicatorId: [
+        //     { type: mongoose.SchemaTypes.ObjectId, ref: "city_indicator" },
+        // ],
+        // // CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
+        // // DestinationId: {
+        // //   type: mongoose.SchemaTypes.ObjectId,
+        // //   ref: "destination_master",
+        // // },
+
+        // // 17. Industry Relations
+        // Industry_Sector: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+        //     ref: "admin_lookups",
+        // },
+        // Industry_Sub_Sector: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+        //     ref: "admin_lookups",
+        // },
+
+        // // 18. Contact Details : Authorized Representative
+        // Phone: Number,
+        // EmailAddress: String,
+        // // Website: String,
+        // // LinkedIn: String,
+        // // Instagram: String,
+        // // Facebook: String,
+
+        // // 19. Destination Amenities
+        // DestinationAmenities: [
+        //     {
+        //         AmenityId: {
+        //             type: mongoose.SchemaTypes.ObjectId,
+        //             ref: "admin_lookups",
+        //         }, // from AMENITIES_MASTER
+        //         GeoLocation: {
+        //             type: { type: String, enum: ["Point"], default: "Point" },
+        //             coordinates: { type: [Number] }, // [lng, lat]
+        //         },
+        //     },
+        // ],
     },
     {
         timestamps: true,
