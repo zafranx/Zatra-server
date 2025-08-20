@@ -58,6 +58,7 @@ const _SchemaDesign = new mongoose.Schema(
         PAN: String,
 
         // 5. Verification Details (Radio Button - Pass, Fail, in Process, Not Applicable)
+        IsVerified: Boolean,
         CriminalRecord: String,
         CompanyIncorporation: String,
         CIBILRecord: String,
