@@ -79,17 +79,25 @@ router.post("/SaveODOP", async (req, res) => {
 // (City ID, Search, Page, Limit)
 router.post("/ODOPList", async (req, res) => {
     try {
-        const { CityId, search, page = 1, limit = 10 } = req.body;
+        const {
+            StationId,
+            StationSpecialityTypeId,
+            search,
+            page = 1,
+            limit = 10,
+        } = req.body;
 
         const filter = {};
-        if (CityId) filter.CityId = CityId;
-        if (search) filter.ProductName = { $regex: search, $options: "i" };
+        if (StationId) filter.CityId = StationId;
+        if (StationSpecialityTypeId)
+            filter.StationSpecialityTypeId = StationSpecialityTypeId;
+        if (search) filter.Name = { $regex: search, $options: "i" };
 
         const skip = (page - 1) * limit;
 
         const [data, total] = await Promise.all([
             ODOPMaster.find(filter)
-                .populate("CityId", "lookup_value")
+                .populate("CityId StationSpecialityTypeId", "lookup_value")
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)

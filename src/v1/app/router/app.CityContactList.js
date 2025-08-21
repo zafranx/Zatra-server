@@ -14,6 +14,7 @@ const AssetMaster = require("../../../models/AssetMaster");
 const ProductVariantMaster = require("../../../models/ProductVariantMaster");
 const AncillaryServicesMaster = require("../../../models/AncillaryServicesMaster");
 const AssetMaster2 = require("../../../models/AssetMaster2");
+const ODOPMaster = require("../../../models/ODOPMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
@@ -231,6 +232,7 @@ router.post("/DestinationList", async (req, res) => {
             limit = 10,
             search = "",
             AssetId,
+            AssetIds,
 
             StationId,
             PanchtatvaCategoryLevel1_Id,
@@ -244,6 +246,7 @@ router.post("/DestinationList", async (req, res) => {
         const filter = {};
         // if (search) filter.DestinationName = { $regex: search, $options: "i" };
         if (AssetId) filter._id = AssetId;
+        if (AssetIds) filter._id = { $in: AssetIds };
         if (StationId) filter.StationId = StationId;
         if (PanchtatvaCategoryLevel1_Id)
             filter.PanchtatvaCategoryLevel1_Id = PanchtatvaCategoryLevel1_Id;
@@ -638,6 +641,48 @@ router.post("/AncillaryServiceList", async (req, res) => {
                 page,
                 limit,
                 list: __deepClone(list),
+            })
+        );
+    } catch (error) {
+        console.error(error);
+        return res.json(__requestResponse("500", __SOME_ERROR, error));
+    }
+});
+
+router.post("/ODOPList", async (req, res) => {
+    try {
+        const {
+            StationId,
+            StationSpecialityTypeId,
+            search,
+            page = 1,
+            limit = 10,
+        } = req.body;
+
+        const filter = {};
+        if (StationId) filter.CityId = StationId;
+        if (StationSpecialityTypeId)
+            filter.StationSpecialityTypeId = StationSpecialityTypeId;
+        if (search) filter.Name = { $regex: search, $options: "i" };
+
+        const skip = (page - 1) * limit;
+
+        const [data, total] = await Promise.all([
+            ODOPMaster.find(filter)
+                .populate("CityId StationSpecialityTypeId", "lookup_value")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            ODOPMaster.countDocuments(filter),
+        ]);
+
+        return res.json(
+            __requestResponse("200", __SUCCESS, {
+                list: __deepClone(data),
+                total,
+                page,
+                limit,
             })
         );
     } catch (error) {
