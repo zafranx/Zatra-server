@@ -346,6 +346,7 @@ router.post("/GetAssetList", async (req, res) => {
             .populate("PanchtatvaCategoryLevel2_Id", "lookup_value")
             .populate("PanchtatvaCategoryLevel3_Id", "lookup_value")
             .populate("MedicalSpecialities", "lookup_value")
+            .populate("Advisory", "lookup_value")
             .populate("Amenities.AmenityId", "lookup_value")
             .populate("CallToAction.CallToActionType", "lookup_value")
             .populate(
@@ -481,6 +482,8 @@ router.post("/AddEditNewAsset", async (req, res) => {
             SpecialDarshansName,
             SpecialDarshansTime,
             Insturctions,
+            NoOfVisitors,
+            Advisory,
             RegistrationFeeCategoryAmount,
             FeeCollectionLink,
             PaymentOrCode,
@@ -579,6 +582,8 @@ router.post("/AddEditNewAsset", async (req, res) => {
             SpecialDarshansName,
             SpecialDarshansTime,
             Insturctions,
+            NoOfVisitors,
+            Advisory,
             RegistrationFeeCategoryAmount,
             FeeCollectionLink,
             PaymentOrCode,

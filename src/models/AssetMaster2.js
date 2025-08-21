@@ -227,6 +227,11 @@ const _SchemaDesign = new mongoose.Schema(
         SpecialDarshansName: String,
         SpecialDarshansTime: String,
         Insturctions: String,
+        NoOfVisitors: String,
+        Advisory: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "admin_lookups",
+        },
         // 16. Registration Fee
         RegistrationFeeCategoryAmount: [
             {
