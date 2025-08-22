@@ -202,6 +202,7 @@ const _SchemaDesign = new mongoose.Schema(
         YouTubeChannelUrl: String,
         WhatsAppCommunityUrl: String,
         TelegramUrl: String,
+        QRCode: String,
 
         // 14.  Amenities
         Amenities: [
