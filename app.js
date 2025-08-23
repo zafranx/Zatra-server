@@ -10,7 +10,7 @@ const xss = require("xss-clean"); // sanitize input against XSS
 const cloudinary = require("cloudinary");
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8012;
 const host = process.env.HOST;
 
 const { __connectToMongo } = require("./src/database/db");
