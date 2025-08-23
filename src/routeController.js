@@ -15,7 +15,7 @@ const V1 = {
     require("./v1/Admin/router/admin.ZatraMaster"),
     require("./v1/Admin/router/admin.DestinationMaster"),
     require("./v1/Admin/router/admin.CityContacts"),
-    require("./v1/Admin/router/admin.Helpline.js"),
+    require("./v1/Admin/router/admin.HelpLine.js"),
     require("./v1/Admin/router/admin.GovtPolicy"),
     require("./v1/Admin/router/admin.ProjectMaster"),
     require("./v1/Admin/router/admin.AncillaryServices"),
