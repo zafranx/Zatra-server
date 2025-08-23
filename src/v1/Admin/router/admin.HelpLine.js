@@ -8,7 +8,7 @@ const {
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const { validateSaveHelpline } = require("../Middleware/helpline.validation");
-const HelplineMaster = require("../../../models/HelplineMaster.js");
+const HelplineMaster = require("../../../models/HelpLineMaster.js");
 
 // Add / Edit Helpline
 router.post("/SaveHelpline", validateSaveHelpline, async (req, res) => {
