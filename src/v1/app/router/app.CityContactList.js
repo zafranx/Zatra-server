@@ -233,11 +233,13 @@ router.post("/DestinationList", async (req, res) => {
             search = "",
             AssetId,
             AssetIds,
+            MedicalSpecialities,
 
             StationId,
             PanchtatvaCategoryLevel1_Id,
             PanchtatvaCategoryLevel2_Id,
             PanchtatvaCategoryLevel3_Id,
+            EstablishmentId,
         } = req.body;
 
         const pageInt = parseInt(page);
@@ -246,7 +248,10 @@ router.post("/DestinationList", async (req, res) => {
         const filter = {};
         // if (search) filter.DestinationName = { $regex: search, $options: "i" };
         if (AssetId) filter._id = AssetId;
-        if (AssetIds) filter._id = { $in: AssetIds };
+        if (AssetIds && AssetIds.length > 0) filter._id = { $in: AssetIds };
+        if (MedicalSpecialities && MedicalSpecialities.length > 0)
+            filter.MedicalSpecialities = { $in: MedicalSpecialities };
+
         if (StationId) filter.StationId = StationId;
         if (PanchtatvaCategoryLevel1_Id)
             filter.PanchtatvaCategoryLevel1_Id = PanchtatvaCategoryLevel1_Id;
@@ -254,6 +259,7 @@ router.post("/DestinationList", async (req, res) => {
             filter.PanchtatvaCategoryLevel2_Id = PanchtatvaCategoryLevel2_Id;
         if (PanchtatvaCategoryLevel3_Id)
             filter.PanchtatvaCategoryLevel3_Id = PanchtatvaCategoryLevel3_Id;
+        if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
 
         const total = await AssetMaster2.countDocuments(filter);
 

@@ -186,11 +186,16 @@ const _SchemaDesign = new mongoose.Schema(
         ],
 
         // 11- Service Packages
-        PakageTitle: String,
-        PakageDescripton: String,
-        PakagePrice: String,
-        PakagePoster: String,
-        PakageVideo: String,
+        Packages: [
+            {
+                PakageTitle: String,
+                PakageDescripton: String,
+                PakagePrice: String,
+                DiscountPrice: String,
+                PakagePoster: String,
+                PakageVideo: String,
+            },
+        ],
 
         // 12- MedicalSpecialities
         LiveFeedUrl: String,
