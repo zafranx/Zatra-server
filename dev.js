@@ -15,7 +15,7 @@ const { __connectToMongo } = require("./src/database/db");
 __connectToMongo();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8012;
 const host = process.env.HOST;
 
 app.use(cors());
