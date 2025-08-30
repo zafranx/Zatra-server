@@ -52,14 +52,14 @@ app.use(xss());
 // );
 app.use(cors());
 
-// Rate Limiter (100 requests / 15 mins per IP)
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use("/api", apiLimiter);
+// // Rate Limiter (100 requests / 15 mins per IP)
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
+// app.use("/api", apiLimiter);
 
 // Body parser with size limit
 app.use(express.json({ limit: "50mb" }));
