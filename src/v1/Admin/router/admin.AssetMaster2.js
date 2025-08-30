@@ -348,6 +348,7 @@ router.post("/GetAssetList", async (req, res) => {
             .populate("MedicalSpecialities", "lookup_value")
             .populate("Advisory", "lookup_value")
             .populate("Amenities.AmenityId", "lookup_value")
+            .populate("Packages.PackageType", "lookup_value")
             .populate("CallToAction.CallToActionType", "lookup_value")
             .populate(
                 "BrandsMapping ODOPMapping ExportsMapping LocalCropsMapping LocalProductsMapping LocalSweetsMapping LocalSnacksMapping LocalCuisineMapping LocalSpicesMapping LocalFoodsMapping",

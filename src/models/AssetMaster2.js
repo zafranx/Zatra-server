@@ -188,6 +188,10 @@ const _SchemaDesign = new mongoose.Schema(
         // 11- Service Packages
         Packages: [
             {
+                PackageType: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
                 PakageTitle: String,
                 PakageDescripton: String,
                 PakagePrice: String,

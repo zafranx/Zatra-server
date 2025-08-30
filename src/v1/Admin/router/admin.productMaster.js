@@ -155,10 +155,14 @@ router.post("/ProductList", async (req, res) => {
 
         const [data, total] = await Promise.all([
             ProductMaster.find(filter)
-                .populate("AssetId", "Name")
+                .populate("AssetId", "AssetName")
                 .populate("CategoryId", "lookup_value")
                 .populate("SubCategoryId", "lookup_value")
                 .populate("BrandId", "BrandName")
+                .populate(
+                    "BrandsMapping ODOPMapping ExportsMapping LocalCropsMapping LocalProductsMapping LocalSweetsMapping LocalSnacksMapping LocalCuisineMapping LocalSpicesMapping LocalFoodsMapping",
+                    "Name"
+                )
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
