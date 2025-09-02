@@ -192,12 +192,18 @@ const _SchemaDesign = new mongoose.Schema(
                     type: mongoose.SchemaTypes.ObjectId,
                     ref: "admin_lookups",
                 },
+                Currency: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
                 PakageTitle: String,
                 PakageDescripton: String,
                 PakagePrice: String,
                 DiscountPrice: String,
                 PakagePoster: String,
                 PakageVideo: String,
+                PictureGallery: [String],
+                VideoGallery: [String],
             },
         ],
 
@@ -288,170 +294,6 @@ const _SchemaDesign = new mongoose.Schema(
                 Password: String,
             },
         ],
-
-        // // 2. Destination & Establishment
-
-        // PanchtatvaSubCategoryId: {
-        //     type: mongoose.SchemaTypes.ObjectId,
-        //     ref: "admin_lookups",
-        // },
-        // Panchtatva_Sub_Sub_CategoryId: {
-        //     type: mongoose.SchemaTypes.ObjectId,
-        //     ref: "admin_lookups",
-        // },
-
-        // DestinationName: String,
-
-        // // 3. Legal Entity
-        // LegalEntityTypeId: {
-        //     type: mongoose.SchemaTypes.ObjectId,
-        //     ref: "admin_lookups",
-        // },
-        // LegalEntityName: String,
-        // Registration_Number: String,
-
-        // Registration_Address: String,
-
-        // // 4. Verification
-        // IsVerified: { type: Boolean, default: false },
-        // VerificationReport: String,
-        // VerifiedBy: { type: String, default: "" },
-        // VerificationDate: { type: Date },
-
-        // // 5. Allocation & Layout
-        // AllocationNumber: String, // Shop No, Booth No
-        // Lane: String,
-        // LaneNumber: String,
-        // Floor: String,
-        // FloorNumber: String,
-        // Hall: String,
-        // HallNumber: String,
-
-        // // 7. Descriptions
-
-        // // 8. Media
-
-        // // 9. Timings & Hours
-        // OpeningDays: [String], // Sunday - Saturday
-        // OpeningTime: String,
-        // ClosingTime: String,
-        // DayBreakTime: String, // Example: 1:00 PM - 2:00 PM
-        // BusinessHours: { from: String, to: String },
-        // GeneralPublicHour: { from: String, to: String },
-
-        // // 10. Social Media
-        // SocialMedia: [
-        //     {
-        //         SocialMediaAsset: {
-        //             type: mongoose.SchemaTypes.ObjectId,
-        //             ref: "admin_lookups",
-        //         },
-        //         URL: String,
-        //     },
-        // ],
-
-        // // 11. Layout Plan
-        // // LayoutPlan: [
-        // //   {
-        // //     LaneNumber: String,
-        // //     LaneName: String,
-        // //     FloorNumber: String,
-        // //     FloorName: String,
-        // //     HallNumber: String,
-        // //     HallName: String,
-        // //   },
-        // // ],
-        // Lane: [
-        //     {
-        //         LaneNumber: String,
-        //         LaneName: String,
-        //     },
-        // ],
-        // Hall: [
-        //     {
-        //         HallNumber: String,
-        //         HallName: String,
-        //     },
-        // ],
-        // Floor: [
-        //     {
-        //         FloorNumber: String,
-        //         FloorName: String,
-        //     },
-        // ],
-
-        // // 12. Visitors & Tickets
-        // MaxLimitOfVisitorsPerDay: Number,
-        // TodayVisitorCount: Number,
-        // TicketCharges: [
-        //     {
-        //         TicketCategory: String,
-        //         TicketFee: Number,
-        //     },
-        // ],
-        // OnlineBookingURL: String,
-
-        // // 13. Authorized Representative
-        // AuthorizedRepresentativeName: String,
-        // AuthorizedRepresentativePhoneNo: String,
-        // AuthorizedRepresentativeWhatsApp: String,
-        // AuthorizedRepresentativeEmail: String,
-
-        // // 14. Office Address & Location
-        // OfficeAddress: String,
-        // OfficeGeoLocation: {
-        //     type: { type: String, enum: ["Point"], default: "Point" },
-        //     coordinates: { type: [Number] },
-        // },
-
-        // // 15. Status & System Fields
-        // IsOpen: { type: Boolean, default: true },
-        // LiveFeedURL: String,
-        // AllocatedQRCode: String,
-        // IsAccountLogin: { type: Boolean, default: false },
-        // IsActive: { type: Boolean, default: true },
-
-        // // 16. Other Metadata
-        // CityIndicatorId: [
-        //     { type: mongoose.SchemaTypes.ObjectId, ref: "city_indicator" },
-        // ],
-        // // CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
-        // // DestinationId: {
-        // //   type: mongoose.SchemaTypes.ObjectId,
-        // //   ref: "destination_master",
-        // // },
-
-        // // 17. Industry Relations
-        // Industry_Sector: {
-        //     type: mongoose.SchemaTypes.ObjectId,
-        //     ref: "admin_lookups",
-        // },
-        // Industry_Sub_Sector: {
-        //     type: mongoose.SchemaTypes.ObjectId,
-        //     ref: "admin_lookups",
-        // },
-
-        // // 18. Contact Details : Authorized Representative
-        // Phone: Number,
-        // EmailAddress: String,
-        // // Website: String,
-        // // LinkedIn: String,
-        // // Instagram: String,
-        // // Facebook: String,
-
-        // // 19. Destination Amenities
-        // DestinationAmenities: [
-        //     {
-        //         AmenityId: {
-        //             type: mongoose.SchemaTypes.ObjectId,
-        //             ref: "admin_lookups",
-        //         }, // from AMENITIES_MASTER
-        //         GeoLocation: {
-        //             type: { type: String, enum: ["Point"], default: "Point" },
-        //             coordinates: { type: [Number] }, // [lng, lat]
-        //         },
-        //     },
-        // ],
     },
     {
         timestamps: true,
