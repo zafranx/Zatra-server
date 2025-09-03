@@ -6,7 +6,11 @@ const AssetMaster = require("../../../models/AssetMaster2");
 const {
     validateSaveAssetMaster2,
 } = require("../Middleware/assetMaster2.validation");
-const { __requestResponse, __deepClone } = require("../../../utils/constent");
+const {
+    __requestResponse,
+    __deepClone,
+    __generateAuthToken,
+} = require("../../../utils/constent");
 const {
     __SUCCESS,
     __SOME_ERROR,
@@ -641,6 +645,43 @@ router.post("/AddEditNewAsset", async (req, res) => {
         );
     } catch (error) {
         console.error(error);
+        return res.json(__requestResponse("500", error.message, __SOME_ERROR));
+    }
+});
+
+router.post("/AssetLogin", async (req, res) => {
+    try {
+        const { MobileNumber, Password } = req.body;
+
+        const result = await AssetMaster.findOne(
+            { "AdminLogin.MobileNumber": MobileNumber },
+            { "AdminLogin.$": 1 }
+        );
+
+        console.log(result);
+        if (!result || !result.AdminLogin || result.AdminLogin.length === 0) {
+            return res.json(__requestResponse("404", "Login Not Found"));
+        }
+        const UserData = result.AdminLogin.find(
+            (user) => user.MobileNumber === MobileNumber
+        );
+        if (!UserData || UserData.Password !== Password) {
+            return res.json(__requestResponse("401", "Invalid Credentials"));
+        }
+
+        const token = __generateAuthToken({
+            _id: result._id,
+            AdminData: UserData,
+        });
+        return res.json(
+            __requestResponse("200", __SUCCESS, {
+                AssetId: result._id,
+                AdminData: UserData,
+                AuthToken: token,
+            })
+        );
+    } catch (error) {
+        console.log(error);
         return res.json(__requestResponse("500", error.message, __SOME_ERROR));
     }
 });

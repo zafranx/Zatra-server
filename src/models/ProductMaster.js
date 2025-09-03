@@ -8,7 +8,7 @@ const _SchemaDesign = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "asset_master2",
         }, // LegalEntityID means AssetID
-        BrandId: { type: mongoose.Schema.Types.ObjectId, ref: "admin_lookups" },
+        BrandName: String,
         CategoryId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "admin_lookups",
@@ -17,7 +17,11 @@ const _SchemaDesign = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "admin_lookups",
         },
-        BrandId: { type: mongoose.Schema.Types.ObjectId, ref: "brand_master" },
+        Currency: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "admin_lookups",
+        },
+        // BrandId: { type: mongoose.Schema.Types.ObjectId, ref: "brand_master" },
         ProductName: String,
         ShortDesc: String,
         LongDesc: String,
@@ -27,8 +31,16 @@ const _SchemaDesign = new mongoose.Schema(
         StockQuantity: String,
         ProductImages: [{ type: String }],
         ProductVideos: [{ type: String }],
+        ProductVariants: [
+            {
+                ProductVariantName: String,
+                Color: String,
+                Size: String,
+                StockSize: String,
+                ProductImages: [String],
+            },
+        ],
 
-        // 9. Business Mapping
         BrandsMapping: [
             {
                 type: mongoose.SchemaTypes.ObjectId,

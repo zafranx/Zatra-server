@@ -32,7 +32,8 @@ router.post(
                 AssetId,
                 CategoryId,
                 SubCategoryId,
-                BrandId,
+                BrandName,
+                Currency,
                 ProductName,
                 ShortDesc,
                 LongDesc,
@@ -40,6 +41,7 @@ router.post(
                 ProductVideos,
                 DiscountedPrice,
                 Price,
+                ProductVariants,
 
                 StockQuantity,
                 WeightAndDimensions,
@@ -61,7 +63,8 @@ router.post(
                 AssetId,
                 CategoryId,
                 SubCategoryId,
-                BrandId,
+                BrandName,
+                Currency,
                 ProductName,
                 ShortDesc,
                 LongDesc,
@@ -69,6 +72,7 @@ router.post(
                 ProductVideos,
                 DiscountedPrice,
                 Price,
+                ProductVariants,
 
                 StockQuantity,
                 WeightAndDimensions,
@@ -158,7 +162,8 @@ router.post("/ProductList", async (req, res) => {
                 .populate("AssetId", "AssetName")
                 .populate("CategoryId", "lookup_value")
                 .populate("SubCategoryId", "lookup_value")
-                .populate("BrandId", "BrandName")
+                .populate("Currency", "lookup_value")
+                // .populate("BrandId", "BrandName")
                 .populate(
                     "BrandsMapping ODOPMapping ExportsMapping LocalCropsMapping LocalProductsMapping LocalSweetsMapping LocalSnacksMapping LocalCuisineMapping LocalSpicesMapping LocalFoodsMapping",
                     "Name"

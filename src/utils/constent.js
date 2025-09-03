@@ -12,14 +12,14 @@ const fs = require("fs");
  * @returns {object} - The response object.
  */
 function __requestResponse(response_code, response_message, data) {
-  // console.log(data, "data in __requestResponse ");
-  return {
-    response: {
-      response_code,
-      response_message,
-    },
-    data,
-  };
+    // console.log(data, "data in __requestResponse ");
+    return {
+        response: {
+            response_code,
+            response_message,
+        },
+        data,
+    };
 }
 
 /**
@@ -31,6 +31,7 @@ function __requestResponse(response_code, response_message, data) {
 function __generateAuthToken(user) {
     const data = {
         user: {
+            ...user,
             id: user._id,
         },
     };
