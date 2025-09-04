@@ -1,94 +1,109 @@
 const mongoose = require("mongoose");
 // ZatraMaster
 const _SchemaDesign = new mongoose.Schema(
-  {
-    ZatraTypeId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" }, // lookup parameter zatra_category
-    Name: { type: String, required: true }, // ZATRA Name
-    ShortDescription: { type: String },
-    LongDescription: { type: String },
+    {
+        ZatraTypeId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "admin_lookups",
+        }, // lookup parameter zatra_category
+        Name: { type: String, required: true }, // ZATRA Name
+        ShortDescription: { type: String },
+        LongDescription: { type: String },
 
-    // Enroute Stations (states + cities from lookup)
-    EnrouteStations: [
-      {
-        StateId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
-        CityId: { type: mongoose.SchemaTypes.ObjectId, ref: "admin_lookups" },
-      },
-    ],
+        // Enroute Stations (states + cities from lookup)
+        EnrouteStations: [
+            {
+                StateId: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                CityId: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+            },
+        ],
 
-    // Organizers & Sponsors (linked to organizer_sponser_master)
-    // Organizers: [
-    //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    // ],
-    // Sponsors: [
-    //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    // ],
+        // Organizers & Sponsors (linked to organizer_sponser_master)
+        // Organizers: [
+        //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
+        // ],
+        // Sponsors: [
+        //   { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
+        // ],
 
-    // Organizer & Sponsor Admins (linked to zatra_login_master)
-    OrganizerAdmins: [
-      // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
-      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    ],
-    SponsorAdmins: [
-      // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
-      { type: mongoose.SchemaTypes.ObjectId, ref: "organizer_sponser_master" },
-    ],
-    Logo: String, // URL of the logo image
-    // Picture & Video Gallery
-    PictureGallery: [String], // Array of image URLs
-    VideoGallery: [String], // Array of video URLs
+        // Organizer & Sponsor Admins (linked to zatra_login_master)
+        OrganizerAdmins: [
+            // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "organizer_sponser_master",
+            },
+        ],
+        SponsorAdmins: [
+            // { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "organizer_sponser_master",
+            },
+        ],
+        Logo: String, // URL of the logo image
+        // Picture & Video Gallery
+        PictureGallery: [String], // Array of image URLs
+        VideoGallery: [String], // Array of video URLs
 
-    // External Reference
-    WikipediaPage: String,
+        // External Reference
+        WikipediaPage: String,
 
-    // Zatra Contacts
-    ZatraContacts: [
-      {
-        Name: String,
-        PhoneNumber: String,
-        EmailAddress: String,
-      },
-    ],
+        // Zatra Contacts
+        ZatraContacts: [
+            {
+                Name: String,
+                PhoneNumber: String,
+                EmailAddress: String,
+            },
+        ],
 
-    // Social Media
-    ZatraSocialMedia: [
-      {
-        SocialMediaId: {
-          type: mongoose.SchemaTypes.ObjectId,
-          ref: "admin_lookups", // SOCIAL_MEDIA_ASSET
-        },
-        URL: String,
-      },
-    ],
+        // Social Media
+        ZatraSocialMedia: [
+            {
+                SocialMediaId: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups", // SOCIAL_MEDIA_ASSET
+                },
+                URL: String,
+            },
+        ],
 
-    // Status & Timeline
-    IsOngoing: { type: Boolean, default: false },
-    StartDate: Date,
-    EndDate: Date,
+        // Status & Timeline
+        IsOngoing: { type: Boolean, default: false },
+        StartDate: Date,
+        EndDate: Date,
 
-    // Instructions
-    Instructions: String,
+        // Instructions
+        Instructions: String,
 
-    // Registration Fee
-    RegistrationFees: [
-      {
-        FeeCategory: {
-          type: mongoose.SchemaTypes.ObjectId,
-          ref: "admin_lookups",
-        },
-        FeeAmount: Number,
-      },
-    ],
+        // Registration Fee
+        RegistrationFees: [
+            {
+                FeeCategory: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                FeeAmount: Number,
+            },
+        ],
 
-    RegistrationLink: String, // URL
+        RegistrationLink: String, // URL
 
-    // ZATRA Admins (linked to zatra_login_master)
-    ZatraAdmins: [
-      { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
-    ],
-  },
-  {
-    timestamps: true,
-  }
+        // ZATRA Admins (linked to zatra_login_master)
+        ZatraAdmins: [
+            { type: mongoose.SchemaTypes.ObjectId, ref: "zatra_login_master" },
+        ],
+    },
+    {
+        timestamps: true,
+    }
 );
 module.exports = mongoose.model("zatra_master", _SchemaDesign);
 

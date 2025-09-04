@@ -27,6 +27,7 @@ const V1 = {
         require("./v1/Admin/router/admin.OrganizerSponser"),
         require("./v1/Admin/router/admin.AssetMaster2"),
         require("./v1/Admin/router/admin.ServiceProvider"),
+        require("./v1/Admin/router/admin.ServicePackage"),
     ],
     COMMON_ROUTE: [
         require("./v1/Common/router/lookup"),
