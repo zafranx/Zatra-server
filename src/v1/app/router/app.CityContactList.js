@@ -18,81 +18,81 @@ const ODOPMaster = require("../../../models/ODOPMaster");
 
 // List City Contacts with optional filter & pagination
 router.post("/CityContactList", async (req, res) => {
-  try {
-    const {
-      search = "",
-      page = 1,
-      limit = 10,
-      CityId,
-      ContactTypeId,
-    } = req.body;
-    const pageInt = parseInt(page);
-    const limitInt = parseInt(limit);
-    const skip = (pageInt - 1) * limitInt;
+    try {
+        const {
+            search = "",
+            page = 1,
+            limit = 10,
+            CityId,
+            ContactTypeId,
+        } = req.body;
+        const pageInt = parseInt(page);
+        const limitInt = parseInt(limit);
+        const skip = (pageInt - 1) * limitInt;
 
-    const filter = {};
-    if (search) {
-      filter.ContactName = { $regex: search, $options: "i" };
+        const filter = {};
+        if (search) {
+            filter.ContactName = { $regex: search, $options: "i" };
+        }
+        if (CityId) filter.CityId = CityId;
+        if (ContactTypeId) filter.ContactTypeId = ContactTypeId;
+
+        const total = await CityContactMaster.countDocuments(filter);
+        const list = await CityContactMaster.find(filter)
+            .populate("CityId", "lookup_value")
+            .populate("ContactTypeId", "lookup_value")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitInt)
+            .lean();
+
+        return res.json(
+            __requestResponse("200", __SUCCESS, {
+                total,
+                page: pageInt,
+                limit: limitInt,
+                list: __deepClone(list),
+            })
+        );
+    } catch (error) {
+        console.error(error);
+        return res.json(__requestResponse("500", error, __SOME_ERROR));
     }
-    if (CityId) filter.CityId = CityId;
-    if (ContactTypeId) filter.ContactTypeId = ContactTypeId;
-
-    const total = await CityContactMaster.countDocuments(filter);
-    const list = await CityContactMaster.find(filter)
-      .populate("CityId", "lookup_value")
-      .populate("ContactTypeId", "lookup_value")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitInt)
-      .lean();
-
-    return res.json(
-      __requestResponse("200", __SUCCESS, {
-        total,
-        page: pageInt,
-        limit: limitInt,
-        list: __deepClone(list),
-      })
-    );
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", error, __SOME_ERROR));
-  }
 });
 
 // List Helplines with pagination and search
 router.post("/HelplineList", async (req, res) => {
-  try {
-    const { page = 1, limit = 10, search = "", CityId } = req.body;
+    try {
+        const { page = 1, limit = 10, search = "", CityId } = req.body;
 
-    const filter = {};
-    if (search) {
-      filter.ContactPersonName = { $regex: search, $options: "i" };
+        const filter = {};
+        if (search) {
+            filter.ContactPersonName = { $regex: search, $options: "i" };
+        }
+        if (CityId) {
+            filter.CityId = CityId;
+        }
+
+        const total = await HelplineMaster.countDocuments(filter);
+        const list = await HelplineMaster.find(filter)
+            .populate("CityId", "lookup_value")
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean();
+
+        return res.json(
+            __requestResponse("200", __SUCCESS, {
+                total,
+                page,
+                limit,
+                list: __deepClone(list),
+            })
+        );
+    } catch (error) {
+        console.error(error);
+        return res.json(__requestResponse("500", error, __SOME_ERROR));
     }
-    if (CityId) {
-      filter.CityId = CityId;
-    }
-
-    const total = await HelplineMaster.countDocuments(filter);
-    const list = await HelplineMaster.find(filter)
-      .populate("CityId", "lookup_value")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
-
-    return res.json(
-      __requestResponse("200", __SUCCESS, {
-        total,
-        page,
-        limit,
-        list: __deepClone(list),
-      })
-    );
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", error, __SOME_ERROR));
-  }
 });
 
 // List GovtPolicy with pagination and search
@@ -240,6 +240,7 @@ router.post("/DestinationList", async (req, res) => {
             PanchtatvaCategoryLevel2_Id,
             PanchtatvaCategoryLevel3_Id,
             EstablishmentId,
+            ParentAssetId,
         } = req.body;
 
         const pageInt = parseInt(page);
@@ -248,6 +249,7 @@ router.post("/DestinationList", async (req, res) => {
         const filter = {};
         // if (search) filter.DestinationName = { $regex: search, $options: "i" };
         if (AssetId) filter._id = AssetId;
+        if (ParentAssetId) filter.ParentAssetId = ParentAssetId;
         if (AssetIds && AssetIds.length > 0) filter._id = { $in: AssetIds };
         if (MedicalSpecialities && MedicalSpecialities.length > 0)
             filter.MedicalSpecialities = { $in: MedicalSpecialities };
@@ -274,6 +276,7 @@ router.post("/DestinationList", async (req, res) => {
             // .populate("Industry_Sub_Sector", "lookup_value")
             // .populate("IndustrySectorId", "CityIndicatorName")
             .populate("EstablishmentId", "lookup_value")
+            .populate("ShopType", "lookup_value")
             .populate("LegalStatusId", "lookup_value")
             .populate("IndustrySectorId", "lookup_value")
             .populate("SubIndustrySectorId", "lookup_value")

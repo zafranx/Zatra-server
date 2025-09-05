@@ -4,7 +4,11 @@ const router = express.Router();
 
 const ZatraLogin = require("../../../models/ZatraLogin");
 const LoginLog = require("../../../models/ZatraLoginLog");
-const { __requestResponse, __deepClone } = require("../../../utils/constent");
+const {
+    __requestResponse,
+    __deepClone,
+    __generateAuthToken,
+} = require("../../../utils/constent");
 const {
     __SUCCESS,
     __SOME_ERROR,
@@ -265,6 +269,38 @@ router.post("/ZatraLoginList", async (req, res) => {
         );
     } catch (error) {
         console.error(error);
+        return res.json(__requestResponse("500", __SOME_ERROR, error));
+    }
+});
+
+// 🔑 Login API
+router.post("/NewZatraLogin", async (req, res) => {
+    try {
+        const { MobileNumber, Password, LoginAssetRef = [] } = req.body;
+
+        const user = await ZatraLoginMaster.findOne({
+            PhoneNumber: MobileNumber,
+            LoginAssetRef: { $in: LoginAssetRef || [] },
+        }).populate({ path: "LoginAssetType", select: "lookup_value" });
+        if (!user) return res.json(__requestResponse("404", "User not found"));
+
+        const isMatch = await bcrypt.compare(Password, user.Password || "");
+        if (!isMatch)
+            return res.json(__requestResponse("401", "Invalid credentials"));
+
+        const token = __generateAuthToken({
+            _id: user._id,
+            AdminData: user,
+        });
+        return res.json(
+            __requestResponse("200", "Login successful", {
+                AssetId: user.LoginAssetId,
+                AdminData: user,
+                AuthToken: token,
+            })
+        );
+    } catch (error) {
+        console.error("❌ ZatraLogin Error:", error);
         return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
 });

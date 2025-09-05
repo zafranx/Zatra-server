@@ -341,6 +341,7 @@ router.post("/GetAssetList", async (req, res) => {
             // .populate("Industry_Sub_Sector", "lookup_value")
             // .populate("IndustrySectorId", "CityIndicatorName")
             .populate("EstablishmentId", "lookup_value")
+            .populate("ShopType", "lookup_value")
             .populate("LegalStatusId", "lookup_value")
             .populate("IndustrySectorId", "lookup_value")
             .populate("SubIndustrySectorId", "lookup_value")
@@ -440,6 +441,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             PanchtatvaCategoryLevel2_Id,
             PanchtatvaCategoryLevel3_Id,
             EstablishmentId,
+            ShopType,
             LegalStatusId,
             RegistrationBodyId,
             RegistrationNumber,
@@ -537,6 +539,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             PanchtatvaCategoryLevel2_Id,
             PanchtatvaCategoryLevel3_Id,
             EstablishmentId,
+            ShopType,
             LegalStatusId,
             RegistrationBodyId,
             RegistrationNumber,

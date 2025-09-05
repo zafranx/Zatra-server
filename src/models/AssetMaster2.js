@@ -43,6 +43,12 @@ const _SchemaDesign = new mongoose.Schema(
             type: mongoose.SchemaTypes.ObjectId,
             ref: "admin_lookups",
         },
+        ShopType: [
+            {
+                type: mongoose.SchemaTypes.ObjectId,
+                ref: "admin_lookups",
+            },
+        ],
 
         // 4. Incorporation Details
         LegalStatusId: {
