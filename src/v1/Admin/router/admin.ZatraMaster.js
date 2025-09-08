@@ -700,12 +700,12 @@ router.post("/ZatraList", async (req, res) => {
                 // .populate("OrganizerAdmins", "UserId RoleId")
                 // .populate("SponsorAdmins", "UserId RoleId")
                 .populate(
-                    "OrganizerAdmins",
-                    "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
+                    "OrganizerAdmins"
+                    // "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
                 )
                 .populate(
-                    "SponsorAdmins",
-                    "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
+                    "SponsorAdmins"
+                    // "OrganizerName ContactName EmailAddress IsSponsor OrganizerTypeId"
                 )
                 // .populate("ZatraAdmins", "UserId RoleId")
                 .populate("ZatraAdmins", "lookup_value")

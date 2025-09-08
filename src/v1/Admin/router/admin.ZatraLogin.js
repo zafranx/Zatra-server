@@ -16,6 +16,7 @@ const {
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const ZatraLoginMaster = require("../../../models/ZatraLoginMaster");
+const LookupModel = require("../../../models/lookupmodel");
 
 // Add / Edit Zatra Login
 router.post("/SaveZatraLogin", async (req, res) => {
@@ -292,10 +293,31 @@ router.post("/NewZatraLogin", async (req, res) => {
             _id: user._id,
             AdminData: user,
         });
+
+        console.log(user);
+
+        let stationData = null;
+        if (user?.LoginAssetType?.lookup_value == "Station") {
+            stationData = await LookupModel.findById(
+                user.LoginAssetId,
+                "lookup_value parent_lookup_id"
+            ).populate("parent_lookup_id", "lookup_value");
+        }
+        // console.log(stationData);
+
         return res.json(
             __requestResponse("200", "Login successful", {
                 AssetId: user.LoginAssetId,
-                AdminData: user,
+                AdminData: {
+                    ...__deepClone(user),
+                    ...(stationData && {
+                        StationId: stationData?._id,
+                        StationName: stationData?.lookup_value,
+                        StateId: stationData?.parent_lookup_id?._id || null,
+                        StateName:
+                            stationData?.parent_lookup_id?.lookup_value || null,
+                    }),
+                },
                 AuthToken: token,
             })
         );

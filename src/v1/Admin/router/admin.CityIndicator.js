@@ -4,116 +4,113 @@ const mongoose = require("mongoose");
 const CityIndicator = require("../../../models/CityIndicator");
 const { __requestResponse, __deepClone } = require("../../../utils/constent");
 const {
-  __SUCCESS,
-  __SOME_ERROR,
-  __RECORD_NOT_FOUND,
+    __SUCCESS,
+    __SOME_ERROR,
+    __RECORD_NOT_FOUND,
 } = require("../../../utils/variable");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const {
-  validateCityIndicator,
+    validateCityIndicator,
 } = require("../Middleware/cityIndicator.validation");
-  
+
 //  Save City Indicator (Add / Edit)
-router.post("/SaveCityIndicator",validateCityIndicator, async (req, res) => {
-  try {
-    const {
-      _id,
-      CityStationId,
-      PanchtatvaCategoryId,
-      Name,
-      ShortDescription,
-      LongDescription,
-      PictureGallery,
-      VideoGallery,
-    } = req.body;
+router.post(
+    "/SaveCityIndicator",
+    // validateCityIndicator,
+    async (req, res) => {
+        try {
+            const { _id, StationId, IndicatorType, UnitValue, Value } =
+                req.body;
 
-    const saveData = {
-      CityStationId,
-      PanchtatvaCategoryId,
-      Name,
-      ShortDescription,
-      LongDescription,
-      PictureGallery,
-      VideoGallery,
-    };
+            const saveData = {
+                StationId,
+                IndicatorType,
+                UnitValue,
+                Value,
+            };
 
-    if (!_id) {
-      const newRec = await CityIndicator.create(saveData);
-      await __CreateAuditLog(
-        "city_indicator",
-        "CityIndicator.Add",
-        null,
-        null,
-        saveData,
-        newRec._id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, newRec));
-    } else {
-      const oldRec = await CityIndicator.findById(_id);
-      if (!oldRec)
-        return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
+            if (!_id) {
+                const newRec = await CityIndicator.create(saveData);
+                await __CreateAuditLog(
+                    "city_indicator",
+                    "CityIndicator.Add",
+                    null,
+                    null,
+                    saveData,
+                    newRec._id
+                );
+                return res.json(__requestResponse("200", __SUCCESS, newRec));
+            } else {
+                const oldRec = await CityIndicator.findById(_id);
+                if (!oldRec)
+                    return res.json(
+                        __requestResponse("400", __RECORD_NOT_FOUND)
+                    );
 
-      //   await CityIndicator.updateOne({ _id }, { $set: saveData });
-      const updated = await CityIndicator.updateOne(
-        { _id },
-        { $set: saveData }
-      );
+                //   await CityIndicator.updateOne({ _id }, { $set: saveData });
+                const updated = await CityIndicator.updateOne(
+                    { _id },
+                    { $set: saveData }
+                );
 
-      await __CreateAuditLog(
-        "city_indicator",
-        "CityIndicator.Edit",
-        null,
-        oldRec,
-        saveData,
-        _id
-      );
-      return res.json(__requestResponse("200", __SUCCESS, updated));
+                await __CreateAuditLog(
+                    "city_indicator",
+                    "CityIndicator.Edit",
+                    null,
+                    oldRec,
+                    saveData,
+                    _id
+                );
+                return res.json(__requestResponse("200", __SUCCESS, updated));
+            }
+        } catch (error) {
+            console.error(error);
+            return res.json(__requestResponse("500", __SOME_ERROR, error));
+        }
     }
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
-  }
-});
+);
 
 // City Indicator List
 // (City ID, Search, Page, Limit)
 router.post("/CityIndicatorList", async (req, res) => {
-  try {
-    const {
-      CityId,
-      search,
-      page = 1,
-      limit = 10,
-    } = req.body;
-    
-    const filter = {};
-    if (CityId) filter.CityId = CityId;
-    if (search) filter.Destination = { $regex: search, $options: "i" };
+    try {
+        const {
+            StationId,
+            IndicatorType,
+            search,
+            page = 1,
+            limit = 10,
+        } = req.body;
 
-    const skip = (page - 1) * limit;
+        const filter = {};
+        if (StationId) filter.StationId = StationId;
+        if (IndicatorType) filter.IndicatorType = IndicatorType;
+        if (search) filter.Value = { $regex: search, $options: "i" };
 
-    const [data, total] = await Promise.all([
-      CityIndicator.find(filter)
-        .populate("CityId", "lookup_value")
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      CityIndicator.countDocuments(filter),
-    ]);
+        const skip = (page - 1) * limit;
 
-    return res.json(
-      __requestResponse("200", __SUCCESS, {
-        list: __deepClone(data),
-        total,
-        page,
-        limit,
-      })
-    );
-  } catch (error) {
-    console.error(error);
-    return res.json(__requestResponse("500", __SOME_ERROR, error));
-  }
+        const [data, total] = await Promise.all([
+            CityIndicator.find(filter)
+                .populate("StationId IndicatorType", "lookup_value")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            CityIndicator.countDocuments(filter),
+        ]);
+
+        return res.json(
+            __requestResponse("200", __SUCCESS, {
+                list: __deepClone(data),
+                total,
+                page,
+                limit,
+            })
+        );
+    } catch (error) {
+        console.error(error);
+        return res.json(__requestResponse("500", __SOME_ERROR, error));
+    }
 });
 
 module.exports = router;
