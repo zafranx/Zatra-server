@@ -18,9 +18,8 @@ const {
 const TlbLookup = require("../../../models/lookupmodel");
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 
-
 router.get("/LookupTypeListx", (req, res) => {
-  res.send("Hello World");
+    res.send("Hello World");
 });
 // LookupTypeList -for lookup type like city , event_type , amenity_type
 router.get("/LookupTypeList", async (req, res) => {
@@ -176,6 +175,14 @@ router.post("/SaveLookup", checkLookupforInsert, async (req, res) => {
         );
 
         return res.json(__requestResponse("200", __SUCCESS, _updateLookup));
+    }
+});
+router.post("/DeleteLookup", async (req, res) => {
+    try {
+        await _lookup.findByIdAndDelete(req.body?.LookupId);
+        return res.json(__requestResponse("200", __SUCCESS));
+    } catch (error) {
+        return res.json(__requestResponse("500", error.message));
     }
 });
 
@@ -511,7 +518,6 @@ router.post("/AdminLookupDisplayList", async (req, res) => {
             .json(__requestResponse("500", "Internal Server Error", error));
     }
 });
-
 
 // router.get("/SignupCoverageList", (req, res) => {
 //   //Get the list of PinCodes in Signup Coverage
