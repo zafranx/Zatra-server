@@ -310,6 +310,7 @@ router.post("/GetAssetList", async (req, res) => {
             AssetType,
             EstablishmentId,
             CityIndicatorId,
+            IsDestination,
         } = req.body;
 
         const pageInt = parseInt(page);
@@ -327,6 +328,7 @@ router.post("/GetAssetList", async (req, res) => {
         if (AssetType) filter.AssetType = AssetType;
         if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
         if (CityIndicatorId) filter.CityIndicatorId = CityIndicatorId;
+        if (IsDestination) filter.IsDestination = IsDestination;
 
         const total = await AssetMaster.countDocuments(filter);
 
