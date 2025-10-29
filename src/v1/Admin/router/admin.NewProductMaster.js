@@ -176,11 +176,10 @@ router.post("/deleteProduct", async (req, res) => {
         if (!ProductId)
             return res.json(__requestResponse("400", "Product ID required"));
 
-        const oldRec = await ProductMaster.findById(ProductId);
+        const oldRec = await ProductMaster.findByIdAndDelete(ProductId);
         if (!oldRec)
             return res.json(__requestResponse("400", __RECORD_NOT_FOUND));
 
-        await ProductMaster.deleteOne({ ProductId });
         await __CreateAuditLog(
             "n_product_master",
             "Product.Delete",

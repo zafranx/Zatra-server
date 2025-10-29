@@ -85,7 +85,7 @@ router.post("/deleteProductVariant", async (req, res) => {
             null,
             deleted,
             null,
-            id
+            ProductVariantId
         );
 
         return res.json(
