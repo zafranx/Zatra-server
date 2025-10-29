@@ -8,10 +8,13 @@ const _SchemaDesign = new mongoose.Schema(
             default: function () {
                 // Generate SKU: Current Year + Random 6 digit number
                 const year = new Date().getFullYear();
-                const month = new Date().getMonth();
-                const date = new Date().getDate();
+                const month = String(new Date().getMonth() + 1).padStart(
+                    2,
+                    "0"
+                );
+                const date = String(new Date().getDate()).padStart(2, "0");
                 const random = Math.floor(100000 + Math.random() * 900000);
-                return `SKU-${year}${month}${date}${random}`;
+                return `P-SKU-${year}${month}${date}${random}`;
             },
         },
         ProductName: String,
@@ -55,7 +58,7 @@ const _SchemaDesign = new mongoose.Schema(
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "admin_lookups",
                 },
-                MRP: "",
+                MRP: String,
             },
         ],
         DiscountWithCurrency: [
@@ -64,7 +67,7 @@ const _SchemaDesign = new mongoose.Schema(
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "admin_lookups",
                 },
-                Discount: "",
+                Discount: String,
             },
         ],
         IsActive: { type: Boolean, default: true },
@@ -88,10 +91,10 @@ _SchemaDesign.pre("save", async function (next) {
         } else {
             // Regenerate SKU if duplicate found
             const year = new Date().getFullYear();
-            const month = new Date().getMonth();
-            const date = new Date().getDate();
+            const month = String(new Date().getMonth() + 1).padStart(2, "0");
+            const date = String(new Date().getDate()).padStart(2, "0");
             const random = Math.floor(100000 + Math.random() * 900000);
-            this.ProductSKU = `SKU-${year}${month}${date}${random}`;
+            this.ProductSKU = `P-SKU-${year}${month}${date}${random}`;
         }
     }
     next();
