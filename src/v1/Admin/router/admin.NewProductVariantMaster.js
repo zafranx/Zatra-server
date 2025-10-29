@@ -71,7 +71,7 @@ router.post("/SaveProductVariant", async (req, res) => {
 // ✅ Delete Product Variant
 router.post("/deleteProductVariant", async (req, res) => {
     try {
-        const { ProductVariantId } = req.params;
+        const { ProductVariantId } = req.body;
         const deleted = await ProductVariant.findByIdAndDelete(
             ProductVariantId
         );
