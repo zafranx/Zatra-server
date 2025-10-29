@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 const _SchemaDesign = new mongoose.Schema(
     {
+        ProductSKU: {
+            type: String,
+            unique: true,
+            required: true,
+            default: function () {
+                // Generate SKU: Current Year + Random 6 digit number
+                const year = new Date().getFullYear();
+                const month = new Date().getMonth();
+                const date = new Date().getDate();
+                const random = Math.floor(100000 + Math.random() * 900000);
+                return `SKU-${year}${month}${date}${random}`;
+            },
+        },
         ProductName: String,
         ShortDescription: String,
         LongDescription: String,
@@ -58,4 +71,30 @@ const _SchemaDesign = new mongoose.Schema(
     },
     { timestamps: true }
 );
+// Add a pre-save middleware to ensure SKU is generated
+_SchemaDesign.pre("save", async function (next) {
+    if (!this.isNew) {
+        return next();
+    }
+
+    // Keep trying to generate a unique SKU if there's a collision
+    let isUnique = false;
+    while (!isUnique) {
+        const existingSKU = await mongoose.models.n_product_master.findOne({
+            ProductSKU: this.ProductSKU,
+        });
+        if (!existingSKU) {
+            isUnique = true;
+        } else {
+            // Regenerate SKU if duplicate found
+            const year = new Date().getFullYear();
+            const month = new Date().getMonth();
+            const date = new Date().getDate();
+            const random = Math.floor(100000 + Math.random() * 900000);
+            this.ProductSKU = `SKU-${year}${month}${date}${random}`;
+        }
+    }
+    next();
+});
+
 module.exports = mongoose.model("n_product_master", _SchemaDesign);
