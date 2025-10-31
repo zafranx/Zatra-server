@@ -50,7 +50,7 @@ const _SchemaDesign = new mongoose.Schema(
         }, // Manufacturer
         BrandId: {
             type: mongoose.Schema.Types.ObjectId,
-            // ref: "asset_master2",
+            ref: "n_brand_master",
         }, // ManufaBrand Mastercturer
         MrpWithCurrency: [
             {

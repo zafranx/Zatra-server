@@ -145,6 +145,7 @@ router.post("/listProducts", async (req, res) => {
                 .populate("Stations.StationsId", "lookup_value")
                 .populate("Stations.StationsSpecialityId", "lookup_value")
                 .populate("AssetId", "AssetName")
+                .populate("BrandId", "BrandName")
                 .populate("MrpWithCurrency.Currency", "lookup_value")
                 .populate("DiscountWithCurrency.Currency", "lookup_value")
                 .sort({ createdAt: -1 })
