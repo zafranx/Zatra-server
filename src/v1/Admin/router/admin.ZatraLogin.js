@@ -17,6 +17,7 @@ const {
 const { __CreateAuditLog } = require("../../../utils/auditlog");
 const ZatraLoginMaster = require("../../../models/ZatraLoginMaster");
 const LookupModel = require("../../../models/lookupmodel");
+const AssetMaster2 = require("../../../models/AssetMaster2");
 
 // Add / Edit Zatra Login
 router.post("/SaveZatraLogin", async (req, res) => {
@@ -297,11 +298,18 @@ router.post("/NewZatraLogin", async (req, res) => {
         console.log(user);
 
         let stationData = null;
+        let AssetData = null;
         if (user?.LoginAssetType?.lookup_value == "Station") {
             stationData = await LookupModel.findById(
                 user.LoginAssetId,
                 "lookup_value parent_lookup_id"
             ).populate("parent_lookup_id", "lookup_value");
+        }
+        if (user?.LoginAssetType?.lookup_value == "Destination") {
+            AssetData = await AssetMaster2.findById(user.LoginAssetId).populate(
+                "StationId"
+            );
+            // StationId
         }
         // console.log(stationData);
 
@@ -310,6 +318,10 @@ router.post("/NewZatraLogin", async (req, res) => {
                 AssetId: user.LoginAssetId,
                 AdminData: {
                     ...__deepClone(user),
+                    ...(AssetData && {
+                        StationId: AssetData?.StationId?._id,
+                        StationName: AssetData?.StationId?.lookup_value,
+                    }),
                     ...(stationData && {
                         StationId: stationData?._id,
                         StationName: stationData?.lookup_value,
