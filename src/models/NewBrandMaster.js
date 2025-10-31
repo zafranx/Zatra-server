@@ -3,11 +3,11 @@ const _SchemaDesign = new mongoose.Schema(
     {
         AssetId: {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "asset_master",
+            ref: "asset_master2",
         },
         BrandName: String,
         Logo: String,
-        PictureGallery: String,
+        PictureGallery: [String],
         Wordmark: String,
     },
     {

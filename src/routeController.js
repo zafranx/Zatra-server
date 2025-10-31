@@ -3,6 +3,7 @@ const V1 = {
         require("./v1/app/router/app.ZatraList"),
         require("./v1/app/router/app.CityContactList"),
         require("./v1/app/router/app.auth"),
+        require("./v1/app/router/app.ProductMaster"),
     ],
     ADMIN_ROUTE: [
         require("./v1/Admin/router/admin.lookup"),
@@ -15,6 +16,7 @@ const V1 = {
         require("./v1/Admin/router/admin.NewProductMaster"),
         require("./v1/Admin/router/admin.NewProductVariantMaster"),
         require("./v1/Admin/router/admin.newProductSupplierMapping"),
+        require("./v1/Admin/router/admin.NewBrandMaster"),
         require("./v1/Admin/router/admin.ZatraMaster"),
         require("./v1/Admin/router/admin.DestinationMaster"),
         require("./v1/Admin/router/admin.CityContacts"),
