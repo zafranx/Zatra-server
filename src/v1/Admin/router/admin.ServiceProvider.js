@@ -117,7 +117,7 @@ router.post("/ServiceProviderList", async (req, res) => {
             filter.ServiceProvider = { $regex: search, $options: "i" };
         }
         if (ServiceType) filter.ServiceType = ServiceType;
-        if (ServiceType) filter.AssetId = AssetId;
+        if (AssetId) filter.AssetId = AssetId;
 
         const total = await ServiceProviderMaster.countDocuments(filter);
         const list = await ServiceProviderMaster.find(filter)
