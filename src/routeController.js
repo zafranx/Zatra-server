@@ -17,6 +17,7 @@ const V1 = {
         require("./v1/Admin/router/admin.NewProductVariantMaster"),
         require("./v1/Admin/router/admin.newProductSupplierMapping"),
         require("./v1/Admin/router/admin.NewBrandMaster"),
+        require("./v1/Admin/router/admin.NewInventory"),
         require("./v1/Admin/router/admin.ZatraMaster"),
         require("./v1/Admin/router/admin.DestinationMaster"),
         require("./v1/Admin/router/admin.CityContacts"),
