@@ -4,6 +4,7 @@ const V1 = {
         require("./v1/app/router/app.CityContactList"),
         require("./v1/app/router/app.auth"),
         require("./v1/app/router/app.ProductMaster"),
+        require("./v1/app/router/app.CartAndWishlist"),
     ],
     ADMIN_ROUTE: [
         require("./v1/Admin/router/admin.lookup"),
