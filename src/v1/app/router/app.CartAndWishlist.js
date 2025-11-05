@@ -50,6 +50,7 @@ router.post("/GetCartWishlist", async (req, res) => {
                 populate: [{ path: "ProductId" }],
             })
             .lean();
+        if (!rec) return res.json(__requestResponse("400", "Record not found"));
 
         const clone = __deepClone(rec)?.ProductVariantIds;
 
@@ -103,7 +104,6 @@ router.post("/RemoveCartWishlistItem", async (req, res) => {
 
         return res.json(__requestResponse("200", `${Type} Item Removed`));
     } catch (error) {
-        console.error("❌ Error in RemoveCartWishlistItem:", error);
         return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
 });
@@ -116,7 +116,6 @@ router.post("/ClearCartWishlist", async (req, res) => {
 
         return res.json(__requestResponse("200", `${Type} Cleared`));
     } catch (error) {
-        console.error("❌ Error in ClearCartWishlist:", error);
         return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
 });
