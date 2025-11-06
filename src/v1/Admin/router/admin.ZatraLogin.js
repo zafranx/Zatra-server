@@ -305,9 +305,14 @@ router.post("/NewZatraLogin", async (req, res) => {
                 "lookup_value parent_lookup_id"
             ).populate("parent_lookup_id", "lookup_value");
         }
-        if (user?.LoginAssetType?.lookup_value == "Destination") {
+        // if (user?.LoginAssetType?.lookup_value == "Destination") {
+        if (
+            ["Destination", "Asset"].includes(
+                user?.LoginAssetType?.lookup_value
+            )
+        ) {
             AssetData = await AssetMaster2.findById(user.LoginAssetId).populate(
-                "StationId"
+                "StationId AssetType"
             );
             // StationId
         }
@@ -321,6 +326,7 @@ router.post("/NewZatraLogin", async (req, res) => {
                     ...(AssetData && {
                         StationId: AssetData?.StationId?._id,
                         StationName: AssetData?.StationId?.lookup_value,
+                        Role: AssetData?.AssetType?.lookup_value || null,
                     }),
                     ...(stationData && {
                         StationId: stationData?._id,

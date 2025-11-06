@@ -33,7 +33,6 @@ router.post("/AddCartWishlist", async (req, res) => {
 
         return res.json(__requestResponse("200", `${Type} Updated`, rec));
     } catch (error) {
-        console.error("❌ Error in AddCartWishlist:", error);
         return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
 });
@@ -77,7 +76,6 @@ router.post("/GetCartWishlist", async (req, res) => {
             )
         );
     } catch (error) {
-        console.error("❌ Error in GetCartWishlist:", error);
         return res.json(__requestResponse("500", __SOME_ERROR, error));
     }
 });
