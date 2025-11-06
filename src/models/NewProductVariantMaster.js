@@ -23,6 +23,7 @@ const _SchemaDesign = new mongoose.Schema(
         },
         Color: String,
         Size: String,
+        VariantInventory: { type: Number, default: 0 },
         PictureGallery: [String],
         VideoGallery: [String],
         IsActive: { type: Boolean, default: true },
