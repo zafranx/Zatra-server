@@ -6,6 +6,7 @@ const V1 = {
         require("./v1/app/router/app.ProductMaster"),
         require("./v1/app/router/app.CartAndWishlist"),
         require("./v1/app/router/app.OrderMaster"),
+        require("./v1/app/router/app.Service.js"),
     ],
     ADMIN_ROUTE: [
         require("./v1/Admin/router/admin.lookup"),
