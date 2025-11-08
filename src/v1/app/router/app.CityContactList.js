@@ -241,6 +241,7 @@ router.post("/DestinationList", async (req, res) => {
             PanchtatvaCategoryLevel3_Id,
             EstablishmentId,
             ParentAssetId,
+            IsDestination,
         } = req.body;
 
         const pageInt = parseInt(page);
@@ -262,6 +263,7 @@ router.post("/DestinationList", async (req, res) => {
         if (PanchtatvaCategoryLevel3_Id)
             filter.PanchtatvaCategoryLevel3_Id = PanchtatvaCategoryLevel3_Id;
         if (EstablishmentId) filter.EstablishmentId = EstablishmentId;
+        if (IsDestination) filter.IsDestination = IsDestination;
 
         const total = await AssetMaster2.countDocuments(filter);
 
