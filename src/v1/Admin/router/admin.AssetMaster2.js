@@ -365,6 +365,14 @@ router.post("/GetAssetList", async (req, res) => {
                 "RegistrationFeeCategoryAmount.FeeCategory",
                 "lookup_value"
             )
+            .populate(
+                "SpecialDarshansFeeCategoryAmount.FeeCategory",
+                "lookup_value"
+            )
+            .populate(
+                "CameraAndShootingFeeCategoryAmount.FeeCategory",
+                "lookup_value"
+            )
             .populate("BankName", "lookup_value")
             // // .populate("DestinationId", "Destination")
             // .populate("DestinationAmenities.AmenityId", "AmenityName")
@@ -494,7 +502,10 @@ router.post("/AddEditNewAsset", async (req, res) => {
             Insturctions,
             NoOfVisitors,
             Advisory,
+            AmenitiesProvided,
             RegistrationFeeCategoryAmount,
+            SpecialDarshansFeeCategoryAmount,
+            CameraAndShootingFeeCategoryAmount,
             FeeCollectionLink,
             PaymentOrCode,
             AccountName,
@@ -592,7 +603,10 @@ router.post("/AddEditNewAsset", async (req, res) => {
             Insturctions,
             NoOfVisitors,
             Advisory,
+            AmenitiesProvided,
             RegistrationFeeCategoryAmount,
+            SpecialDarshansFeeCategoryAmount,
+            CameraAndShootingFeeCategoryAmount,
             FeeCollectionLink,
             PaymentOrCode,
             AccountName,
