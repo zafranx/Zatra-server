@@ -255,7 +255,27 @@ const _SchemaDesign = new mongoose.Schema(
             ref: "admin_lookups",
         },
         // 16. Registration Fee
+        AmenitiesProvided: [String],
+
         RegistrationFeeCategoryAmount: [
+            {
+                FeeCategory: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                Amount: String,
+            },
+        ],
+        SpecialDarshansFeeCategoryAmount: [
+            {
+                FeeCategory: {
+                    type: mongoose.SchemaTypes.ObjectId,
+                    ref: "admin_lookups",
+                },
+                Amount: String,
+            },
+        ],
+        CameraAndShootingFeeCategoryAmount: [
             {
                 FeeCategory: {
                     type: mongoose.SchemaTypes.ObjectId,
