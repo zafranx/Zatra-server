@@ -466,7 +466,13 @@ router.post(
     // validateSaveZatraRegistrationFees,
     async (req, res) => {
         try {
-            const { _id, RegistrationFees } = req.body;
+            const {
+                _id,
+                RegistrationFees,
+                AmenitiesProvided,
+                SpecialDarshansFeeCategoryAmount,
+                CameraAndShootingFeeCategoryAmount,
+            } = req.body;
 
             if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
                 return res.json(
@@ -486,10 +492,15 @@ router.post(
             const updated = await ZatraMaster.findByIdAndUpdate(
                 _id,
                 {
-                    $push: {
-                        RegistrationFees: { $each: RegistrationFees },
+                    // $push: {
+                    //     RegistrationFees: { $each: RegistrationFees },
+                    // },
+                    $set: {
+                        RegistrationFees,
+                        AmenitiesProvided,
+                        SpecialDarshansFeeCategoryAmount,
+                        CameraAndShootingFeeCategoryAmount,
                     },
-                    $set: { updatedAt: new Date() },
                 },
                 { new: true }
             ).populate("RegistrationFees.FeeCategory", "lookup_value");
