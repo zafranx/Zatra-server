@@ -116,8 +116,8 @@ router.post("/CityContactList", async (req, res) => {
             .populate("CityId", "lookup_value")
             .populate("ContactTypeId", "lookup_value")
             .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limitInt)
+            // .skip(skip)
+            // .limit(limitInt)
             .lean();
 
         return res.json(
