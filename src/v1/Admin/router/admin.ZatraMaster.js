@@ -424,10 +424,10 @@ router.post(
             const updated = await ZatraMaster.findByIdAndUpdate(
                 _id,
                 {
-                    $push: {
-                        ZatraSocialMedia: { $each: ZatraSocialMedia },
-                    },
-                    $set: { updatedAt: new Date() },
+                    // $push: {
+                    //     ZatraSocialMedia: { $each: ZatraSocialMedia },
+                    // },
+                    $set: { ZatraSocialMedia, updatedAt: new Date() },
                 },
                 { new: true }
             ).populate("ZatraSocialMedia.SocialMediaId", "lookup_value");
@@ -722,6 +722,14 @@ router.post("/ZatraList", async (req, res) => {
                 .populate("ZatraAdmins", "lookup_value")
                 .populate("RegistrationFees.FeeCategory", "lookup_value")
                 .populate("ZatraSocialMedia.SocialMediaId", "lookup_value")
+                .populate(
+                    "SpecialDarshansFeeCategoryAmount.FeeCategory",
+                    "lookup_value"
+                )
+                .populate(
+                    "CameraAndShootingFeeCategoryAmount.FeeCategory",
+                    "lookup_value"
+                )
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
