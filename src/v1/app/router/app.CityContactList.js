@@ -298,6 +298,14 @@ router.post("/DestinationList", async (req, res) => {
                 "RegistrationFeeCategoryAmount.FeeCategory",
                 "lookup_value"
             )
+            .populate(
+                "SpecialDarshansFeeCategoryAmount.FeeCategory",
+                "lookup_value"
+            )
+            .populate(
+                "CameraAndShootingFeeCategoryAmount.FeeCategory",
+                "lookup_value"
+            )
             .populate("BankName", "lookup_value")
             // // .populate("DestinationId", "Destination")
             // .populate("DestinationAmenities.AmenityId", "AmenityName")
