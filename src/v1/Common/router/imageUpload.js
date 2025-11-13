@@ -75,14 +75,16 @@ router.post("/AddImage", __uploadImage, async (req, res) => {
                 uploadedFiles.push({
                     filename: file.filename,
                     file_type: "pdf",
-                    full_URL:
-                        process.env.NODE_ENV === "development"
-                            ? `${process.env.LOCAL_IMAGE_URL}/uploads/${file.filename}`
-                            : `${__ImagePathDetails?.EnvSettingTextValue}/uploads/${file.filename}`,
-                    base_URL:
-                        process.env.NODE_ENV === "development"
-                            ? process.env.LOCAL_IMAGE_URL
-                            : __ImagePathDetails?.EnvSettingTextValue,
+                    // full_URL:
+                    //     process.env.NODE_ENV === "development"
+                    //         ? `${process.env.LOCAL_IMAGE_URL}/uploads/${file.filename}`
+                    //         : `${__ImagePathDetails?.EnvSettingTextValue}/uploads/${file.filename}`,
+                    full_URL: `https://zatra-server.onrender.com/uploads/${file.filename}`,
+                    // base_URL:
+                    //     process.env.NODE_ENV === "development"
+                    //         ? process.env.LOCAL_IMAGE_URL
+                    //         : __ImagePathDetails?.EnvSettingTextValue,
+                    base_URL: "https://zatra-server.onrender.com",
                 });
             } else {
                 // Upload image/video to Cloudinary
