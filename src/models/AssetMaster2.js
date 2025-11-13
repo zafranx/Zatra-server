@@ -103,6 +103,8 @@ const _SchemaDesign = new mongoose.Schema(
         VideoGallery: [String],
         ShortDescription: String,
         LongDescription: String,
+        // new
+        TimeNeededToVisit: String,
 
         // 8. Business Details
         IndustrySectorId: {

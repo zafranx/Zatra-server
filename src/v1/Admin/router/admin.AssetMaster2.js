@@ -538,6 +538,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             HallNumber,
             HallName,
             AllocationBoothNumber,
+            TimeNeededToVisit,
         } = req.body;
         console.log(req.body);
 
@@ -563,6 +564,7 @@ router.post("/AddEditNewAsset", async (req, res) => {
             VideoGallery,
             ShortDescription,
             LongDescription,
+            TimeNeededToVisit,
             IsVerified,
             CriminalRecord,
             CompanyIncorporation,

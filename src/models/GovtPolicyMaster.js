@@ -3,21 +3,22 @@
 const mongoose = require("mongoose");
 // Government Policy Master
 const _SchemaDesign = new mongoose.Schema(
-  {
-    CityId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "admin_lookups",
+    {
+        CityId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "admin_lookups",
+        },
+        PolicyTitle: String,
+        ShortDesc: String,
+        LongDesc: String,
+        Eligibility: String,
+        GovernmentAuthority: String,
+        PolicyDocument: String, //document
+        PolicyImage: String, //image
+        URL: String, //image
     },
-    PolicyTitle: String,
-    ShortDesc: String,
-    LongDesc: String,
-    Eligibility: String,
-    GovernmentAuthority: String,
-    PolicyDocument: String, //document
-    PolicyImage: String, //image
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 module.exports = mongoose.model("govt_policy_master", _SchemaDesign);
